@@ -1,60 +1,71 @@
-import React, { Component } from "react";
+import React from 'react';
 
 import { hot } from 'react-hot-loader/root';
 
-import * as $ from "jquery";
-import { authEndpoint, clientId, redirectUri, scopes } from "./config";
-import hash from "./hash";
-import Player from "./player";
-import logo from "./logo.svg";
-import "./App.css";
+import * as $ from 'jquery';
+import { authEndpoint, clientId, redirectUri, scopes } from './config';
+import hash from './utils/hash';
+import Player from './components/player/player';
+import logo from './logo.svg';
+import './App.css';
 
-class App extends Component {
-  constructor() {
-    super();
+interface AppProps {}
+
+interface AppState {
+  token: string | null;
+  item: any;
+  is_playing: string;
+  progress_ms: number;
+}
+
+class App extends React.Component<AppProps, AppState> {
+  constructor(props: AppProps) {
+    super(props);
     this.state = {
       token: null,
       item: {
         album: {
-          images: [{ url: "" }]
+          images: [{ url: '' }],
         },
-        name: "",
-        artists: [{ name: "" }],
-        duration_ms: 0
+        name: '',
+        artists: [{ name: '' }],
+        duration_ms: 0,
       },
-      is_playing: "Paused",
-      progress_ms: 0
+      is_playing: 'Paused',
+      progress_ms: 0,
     };
     this.getCurrentlyPlaying = this.getCurrentlyPlaying.bind(this);
   }
   componentDidMount() {
     // Set token
     let _token = hash.access_token;
+    console.log({ _token });
 
     if (_token) {
       // Set token
       this.setState({
-        token: _token
+        token: _token,
       });
       this.getCurrentlyPlaying(_token);
     }
   }
 
-  getCurrentlyPlaying(token) {
+  getCurrentlyPlaying(token: string) {
     // Make a call using the token
     $.ajax({
-      url: "https://api.spotify.com/v1/me/player",
-      type: "GET",
-      beforeSend: xhr => {
-        xhr.setRequestHeader("Authorization", "Bearer " + token);
+      url: 'https://api.spotify.com/v1/me/player',
+      type: 'GET',
+      beforeSend: (xhr: any) => {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
       },
-      success: data => {
+      success: (data) => {
+        console.log(data);
         this.setState({
           item: data.item,
           is_playing: data.is_playing,
-          progress_ms: data.progress_ms
+          progress_ms: data.progress_ms,
         });
-      }
+      },
     });
   }
 
@@ -67,18 +78,14 @@ class App extends Component {
             <a
               className="btn btn--loginApp-link"
               href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-                "%20"
+                '%20'
               )}&response_type=token&show_dialog=true`}
             >
               Login to Spotify
             </a>
           )}
           {this.state.token && (
-            <Player
-              item={this.state.item}
-              is_playing={this.state.is_playing}
-              progress_ms={this.progress_ms}
-            />
+            <Player item={this.state.item} is_playing={this.state.is_playing} progress_ms={this.state.progress_ms} />
           )}
         </header>
       </div>
