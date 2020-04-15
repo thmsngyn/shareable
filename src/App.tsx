@@ -2,12 +2,14 @@ import React from 'react';
 
 import { hot } from 'react-hot-loader/root';
 
-import * as $ from 'jquery';
-import { authEndpoint, clientId, redirectUri, scopes } from './config';
+import './App.css';
+import { clientId, redirectUri, scopes } from './config';
 import hash from './utils/hash';
 import Player from './components/player/player';
 import logo from './logo.svg';
-import './App.css';
+import { SpotifyService, AUTH_API } from './services';
+import { StorageService } from './services/storage';
+import { StorageKeys } from './services/storage/storage.constants';
 
 interface AppProps {}
 
@@ -34,38 +36,37 @@ class App extends React.Component<AppProps, AppState> {
       is_playing: 'Paused',
       progress_ms: 0,
     };
-    this.getCurrentlyPlaying = this.getCurrentlyPlaying.bind(this);
   }
   componentDidMount() {
-    // Set token
-    let _token = hash.access_token;
-    console.log({ _token });
+    this.setUserToken();
+  }
 
-    if (_token) {
+  setUserToken() {
+    // Set token
+    let token = hash.access_token;
+    const tokenFromStorage = StorageService.get(StorageKeys.SpotifyToken);
+
+    if (token || tokenFromStorage) {
+      token = token || tokenFromStorage;
+
+      if (!tokenFromStorage) {
+        StorageService.set(StorageKeys.SpotifyToken, token);
+        StorageService.setExpiration(StorageKeys.SpotifyToken, 36000000); // 1 hr
+      } else {
+        StorageService.checkExpiration();
+      }
+
       // Set token
-      this.setState({
-        token: _token,
-      });
-      this.getCurrentlyPlaying(_token);
+      this.setState({ token });
+      SpotifyService.getCurrentlyPlaying(token, this.setCurrentlyPlaying.bind(this));
     }
   }
 
-  getCurrentlyPlaying(token: string) {
-    // Make a call using the token
-    $.ajax({
-      url: 'https://api.spotify.com/v1/me/player',
-      type: 'GET',
-      beforeSend: (xhr: any) => {
-        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-      },
-      success: (data) => {
-        console.log(data);
-        this.setState({
-          item: data.item,
-          is_playing: data.is_playing,
-          progress_ms: data.progress_ms,
-        });
-      },
+  setCurrentlyPlaying(data: any) {
+    this.setState({
+      item: data.item,
+      is_playing: data.is_playing,
+      progress_ms: data.progress_ms,
     });
   }
 
@@ -77,7 +78,7 @@ class App extends React.Component<AppProps, AppState> {
           {!this.state.token && (
             <a
               className="btn btn--loginApp-link"
-              href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
+              href={`${AUTH_API}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
                 '%20'
               )}&response_type=token&show_dialog=true`}
             >
