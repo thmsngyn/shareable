@@ -1,8 +1,8 @@
 import hash from '../../utils/hash';
 import { StorageService, StorageKeys } from '../storage';
 
-import { PLAYER_API, SpotifyErrorMessage } from './spotify.constants';
-import { CurrentPlayback } from './spotify.types';
+import { PLAYER_API } from './spotify.constants';
+import { CurrentPlayback, SpotifyErrorMessages } from './spotify.types';
 
 export const SpotifyService = new (class {
   token: string = '';
@@ -44,7 +44,7 @@ export const SpotifyService = new (class {
         const { error } = currentPlaying;
         if (error) {
           switch (error.message) {
-            case SpotifyErrorMessage.TokenExpired:
+            case SpotifyErrorMessages.TokenExpired:
               StorageService.remove(StorageKeys.SpotifyToken);
           }
         }

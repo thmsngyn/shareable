@@ -1,20 +1,10 @@
-import React, { Fragment } from 'react';
-import { AUTH_API } from '../../services';
-import { clientId, redirectUri, scopes } from '../../config';
+import React from 'react';
+import { LOGIN_OAUTH } from '../../services';
 
 export class Login extends React.Component {
-  // constructor(props: any) {
-  //   super(props);
-  // }
-
   render() {
     return (
-      <a
-        className="btn btn--loginApp-link"
-        href={`${AUTH_API}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-          '%20'
-        )}&response_type=token&show_dialog=true`}
-      >
+      <a className="btn btn--loginApp-link" href={LOGIN_OAUTH}>
         Login to Spotify
       </a>
     );

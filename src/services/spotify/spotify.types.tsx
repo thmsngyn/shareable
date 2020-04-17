@@ -125,3 +125,7 @@ export interface SpotifyError {
   status: number;
   message: string;
 }
+
+export enum SpotifyErrorMessages {
+  TokenExpired = 'The access token expired',
+}
