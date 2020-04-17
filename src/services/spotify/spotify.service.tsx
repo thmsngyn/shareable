@@ -8,6 +8,15 @@ export const SpotifyService = new (class {
   token: string = '';
   constructor() {}
 
+  private resolveTokenInStorage(hasTokenInStorage: boolean, token: string) {
+    if (!hasTokenInStorage) {
+      StorageService.set(StorageKeys.SpotifyToken, token);
+      StorageService.setExpiration(StorageKeys.SpotifyToken, 36000000); // 1 hr
+    } else {
+      StorageService.checkExpiration();
+    }
+  }
+
   resolveUserToken(): string {
     // Set token
     this.token = hash.access_token;
@@ -15,13 +24,7 @@ export const SpotifyService = new (class {
 
     if (!!tokenFromStorage || !!this.token) {
       this.token = tokenFromStorage || this.token;
-
-      if (!tokenFromStorage) {
-        StorageService.set(StorageKeys.SpotifyToken, this.token);
-        StorageService.setExpiration(StorageKeys.SpotifyToken, 36000000); // 1 hr
-      } else {
-        StorageService.checkExpiration();
-      }
+      this.resolveTokenInStorage(!!tokenFromStorage, this.token);
 
       return this.token;
     }
