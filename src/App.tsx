@@ -4,7 +4,7 @@ import { hot } from 'react-hot-loader/root';
 
 import logo from './logo.svg';
 import { Login, Player } from './components';
-import { SpotifyService, CurrentPlayback } from './services';
+import { SpotifyService, CurrentPlayback, SpotifyError } from './services';
 
 import './App.css';
 
@@ -38,7 +38,7 @@ class App extends React.Component<AppProps, AppState> {
   componentDidMount() {
     if (SpotifyService.resolveUserToken()) {
       this.setState({ loggedIn: true });
-      this.setCurrentlyPlayingState((error) => {
+      this.setCurrentlyPlayingState((error: SpotifyError) => {
         this.setState({ loggedIn: false });
       });
     } else {
