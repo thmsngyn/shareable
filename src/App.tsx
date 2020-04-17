@@ -35,19 +35,30 @@ class App extends React.Component<AppProps, AppState> {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     if (SpotifyService.resolveUserToken()) {
       this.setState({ loggedIn: true });
-
-      const currentlyPlaying: CurrentPlayback = await SpotifyService.getCurrentlyPlaying();
-      this.setState({
-        item: currentlyPlaying.item,
-        is_playing: currentlyPlaying.is_playing,
-        progress_ms: currentlyPlaying.progress_ms,
+      this.setCurrentlyPlayingState((error) => {
+        this.setState({ loggedIn: false });
       });
     } else {
       this.setState({ loggedIn: false });
     }
+  }
+
+  async setCurrentlyPlayingState(onError: Function) {
+    const currentlyPlaying: CurrentPlayback = await SpotifyService.getCurrentlyPlaying();
+    const { error } = currentlyPlaying;
+
+    if (error) {
+      return onError(error);
+    }
+
+    this.setState({
+      item: currentlyPlaying.item,
+      is_playing: currentlyPlaying.is_playing,
+      progress_ms: currentlyPlaying.progress_ms,
+    });
   }
 
   render() {
