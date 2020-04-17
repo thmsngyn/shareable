@@ -1,7 +1,7 @@
 import React from 'react';
 import './player.css';
 
-const Player = (props: any) => {
+export const Player = (props: any) => {
   const backgroundStyles = {
     backgroundImage: `url(${props.item.album.images[0].url})`,
   };
@@ -29,5 +29,3 @@ const Player = (props: any) => {
     </div>
   );
 };
-
-export default Player;
