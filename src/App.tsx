@@ -7,7 +7,7 @@ import { Login, Player } from './components';
 import { SpotifyService, CurrentPlaybackResponse, LikesResponse, SpotifyError, ItemsEntity } from './services';
 
 import './App.css';
-import { Spacing } from './styles';
+import { Spacing, FontSizes } from './styles';
 
 interface AppProps {}
 
@@ -83,16 +83,21 @@ class App extends React.Component<AppProps, AppState> {
     return (
       <div className="App">
         <header className="App-header">
-          <div style={styles.appContainer}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <img src={logo} className="App-logo" alt="logo" />
+            <div style={FontSizes.ExtraLarge}>Shareable</div>
+          </div>
+          <div style={styles.appContainer}>
             {!this.state.loggedIn && <Login></Login>}
             {this.state.loggedIn && (
               <Fragment>
+                <div style={FontSizes.Large}>Currently playing</div>
                 <Player
                   item={this.state.item}
                   is_playing={this.state.is_playing}
                   progress_ms={this.state.progress_ms}
                 />
+                <div style={FontSizes.Large}>Likes</div>
                 {this.state.likes.map((like) => {
                   return (
                     <Player item={like.track} is_playing={this.state.is_playing} progress_ms={this.state.progress_ms} />
@@ -111,7 +116,8 @@ export default hot(App);
 
 const styles: Record<string, React.CSSProperties> = {
   appContainer: {
-    marginLeft: Spacing.s224,
-    marginRight: Spacing.s224,
+    paddingLeft: Spacing.s224,
+    paddingRight: Spacing.s224,
+    width: '100%',
   },
 };
