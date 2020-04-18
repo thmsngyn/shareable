@@ -12,7 +12,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .App-link {
