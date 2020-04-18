@@ -37,6 +37,7 @@
   height: 6px;
   border-radius: 3px;
   overflow: hidden;
+  width: 100%;
 }
 
 .progress__bar {
