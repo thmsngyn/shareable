@@ -1,12 +1,18 @@
-import hash from '../../utils/hash';
+import { hash, parseJson } from '../../utils';
 import { StorageService, StorageKeys } from '../storage';
 
-import { PLAYER_API } from './spotify.constants';
-import { CurrentPlayback, SpotifyErrorMessages } from './spotify.types';
+import { PLAYER_API, SAVED_TRACKS_API } from './spotify.constants';
+import { CurrentPlaybackResponse, LikesResponse, SpotifyErrorMessages } from './spotify.types';
 
 export const SpotifyService = new (class {
   token: string = '';
   constructor() {}
+
+  private get headers() {
+    return new Headers({
+      Authorization: 'Bearer ' + this.token,
+    });
+  }
 
   private resolveTokenInStorage(hasTokenInStorage: boolean, token: string) {
     if (!hasTokenInStorage) {
@@ -31,26 +37,44 @@ export const SpotifyService = new (class {
     return '';
   }
 
-  getCurrentlyPlaying(): Promise<CurrentPlayback> {
+  getCurrentlyPlaying(): Promise<CurrentPlaybackResponse> {
     // Make a call using the token
     return fetch(PLAYER_API, {
       method: 'GET',
-      headers: new Headers({
-        Authorization: 'Bearer ' + this.token,
-      }),
+      headers: this.headers,
     })
-      .then((response) => response.json())
-      .then((currentPlaying: CurrentPlayback) => {
-        const { error } = currentPlaying;
-        if (error) {
-          switch (error.message) {
-            case SpotifyErrorMessages.TokenExpired:
-              StorageService.remove(StorageKeys.SpotifyToken);
-          }
+      .then(parseJson)
+      .then(this.errorHandler.bind(this))
+      .then((currentPlaying: CurrentPlaybackResponse) => {
+        if (!currentPlaying) {
+          return {
+            item: undefined,
+            is_playing: undefined,
+            progress_ms: undefined,
+          } as any;
         }
         return currentPlaying;
       });
   }
 
-  // getLikes(token: string, )
+  getLikes(): Promise<LikesResponse> {
+    return fetch(`${SAVED_TRACKS_API}/?limit=10`, {
+      method: 'GET',
+      headers: this.headers,
+    })
+      .then(parseJson)
+      .then(this.errorHandler.bind(this))
+      .then((likes: LikesResponse) => likes);
+  }
+
+  errorHandler(response: any) {
+    const { error } = response;
+    if (error) {
+      switch (error.message) {
+        case SpotifyErrorMessages.TokenExpired:
+          StorageService.remove(StorageKeys.SpotifyToken);
+      }
+    }
+    return response;
+  }
 })();
