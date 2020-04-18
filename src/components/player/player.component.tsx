@@ -30,6 +30,14 @@ export class Player extends React.Component<PlayerProps> {
     };
   }
 
+  renderArtists() {
+    return <div style={styles.artistName}>{this.props.item.artists.map((artist: any) => artist.name).join(', ')}</div>;
+  }
+
+  renderTrackTitle() {
+    return <div>{this.props.item.name}</div>;
+  }
+
   render() {
     return (
       <div className="track" style={styles.track}>
@@ -39,8 +47,8 @@ export class Player extends React.Component<PlayerProps> {
               <img className="art" src={this.props.item.album.images[0].url} />
             </div>
             <div className="track__content">
-              <div style={styles.artistName}>{this.props.item.artists[0].name}</div>
-              <div className="">{this.props.item.name}</div>
+              {this.renderArtists()}
+              {this.renderTrackTitle()}
               <div style={styles.progress} className="progress">
                 <div className="progress__bar" style={this.progressBarStyles()} />
               </div>
