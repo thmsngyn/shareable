@@ -35,7 +35,7 @@ export class Player extends React.Component<PlayerProps> {
       <div className="track" style={styles.track}>
         {this.props.item ? (
           <Fragment>
-            <div className="track__cover-art">
+            <div style={styles.coverArt}>
               <img className="art" src={this.props.item.album.images[0].url} />
             </div>
             <div className="track__content">
@@ -47,7 +47,7 @@ export class Player extends React.Component<PlayerProps> {
             </div>
           </Fragment>
         ) : (
-          <div>Not playing</div>
+          <div style={FontSizes.Medium}>Nothing found</div>
         )}
       </div>
     );
@@ -63,5 +63,8 @@ const styles: Record<any, React.CSSProperties> = {
   },
   track: {
     marginBottom: Spacing.s24,
+  },
+  coverArt: {
+    marginRight: Spacing.s16,
   },
 };
