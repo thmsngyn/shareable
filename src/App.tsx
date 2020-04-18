@@ -83,7 +83,7 @@ class App extends React.Component<AppProps, AppState> {
     return (
       <div className="App">
         <header className="App-header">
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={styles.header}>
             <img src={logo} className="App-logo" alt="logo" />
             <div style={FontSizes.ExtraLarge}>Shareable</div>
           </div>
@@ -119,5 +119,10 @@ const styles: Record<string, React.CSSProperties> = {
     paddingLeft: Spacing.s224,
     paddingRight: Spacing.s224,
     width: '100%',
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: Spacing.s48,
   },
 };
