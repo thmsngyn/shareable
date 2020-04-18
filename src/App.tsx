@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 
 import { hot } from 'react-hot-loader/root';
+import SpotifyPlayer from 'react-spotify-web-playback';
 
 import logo from './logo.svg';
 import { Login, Player } from './components';
@@ -17,12 +18,14 @@ interface AppState {
   progress_ms: number;
   loggedIn: boolean;
   likes: ItemsEntity[];
+  token: string;
 }
 
 class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
     this.state = {
+      token: '',
       item: {
         album: {
           images: [{ url: '', height: 0, width: 0 }],
@@ -39,8 +42,9 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   componentDidMount() {
-    if (SpotifyService.resolveUserToken()) {
-      this.setState({ loggedIn: true });
+    const token = SpotifyService.resolveUserToken();
+    if (token) {
+      this.setState({ loggedIn: true, token });
       this.setCurrentlyPlayingState((error: SpotifyError) => {
         this.setState({ loggedIn: false });
       });
@@ -91,6 +95,10 @@ class App extends React.Component<AppProps, AppState> {
             {!this.state.loggedIn && <Login></Login>}
             {this.state.loggedIn && (
               <Fragment>
+                <div style={styles.section}>
+                  <div style={FontSizes.Large}>Player</div>
+                  <SpotifyPlayer token={this.state.token} uris={['spotify:artist:6HQYnRM4OzToCYPpVBInuU']} />
+                </div>
                 <div style={FontSizes.Large}>Currently playing</div>
                 <Player
                   item={this.state.item}
@@ -124,5 +132,8 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     marginLeft: Spacing.s48,
+  },
+  section: {
+    marginBottom: Spacing.s24,
   },
 };
