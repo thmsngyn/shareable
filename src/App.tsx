@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
@@ -7,9 +7,9 @@ import { hot } from 'react-hot-loader/root';
 import logo from './logo.svg';
 
 import { Spacing, FontSizes } from './styles';
-import { Login, Track, Player } from './components';
+import { Login, Footer, Header } from './components';
 import { Stream } from './pages';
-import { SpotifyService, CurrentPlaybackResponse, LikesResponse, SpotifyError, ItemsEntity } from './services';
+import { SpotifyService } from './services';
 
 import './App.css';
 
@@ -33,20 +33,23 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ loggedIn });
   }
 
+  renderRoutes() {
+    const { loggedIn } = this.state;
+    return (
+      <div style={styles.routeContainer}>
+        {!loggedIn && <Login></Login>}
+        {loggedIn && <Route path="/" component={Stream}></Route>}
+      </div>
+    );
+  }
+
   render() {
     return (
       <Router>
-        <div className="App">
-          <div className="App-header">
-            <div style={styles.header}>
-              <img src={logo} className="App-logo" alt="logo" />
-              <div style={FontSizes.ExtraLarge}>Shareable</div>
-            </div>
-            <div style={styles.appContainer}>
-              {!this.state.loggedIn && <Login></Login>}
-              {this.state.loggedIn && <Route path="/" component={Stream}></Route>}
-            </div>
-          </div>
+        <div style={styles.app}>
+          <Header />
+          {this.renderRoutes()}
+          <Footer />
         </div>
       </Router>
     );
@@ -56,17 +59,18 @@ class App extends React.Component<AppProps, AppState> {
 export default hot(App);
 
 const styles: Record<string, React.CSSProperties> = {
-  appContainer: {
+  app: {
+    backgroundColor: '#282c34',
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    color: 'white',
+    alignItems: 'flex-start',
+  },
+  routeContainer: {
     paddingLeft: Spacing.s224,
     paddingRight: Spacing.s224,
+    paddingBottom: Spacing.s48,
     width: '100%',
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    marginLeft: Spacing.s48,
-  },
-  section: {
-    marginBottom: Spacing.s24,
   },
 };
