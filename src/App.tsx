@@ -1,10 +1,9 @@
 import React, { Fragment } from 'react';
 
 import { hot } from 'react-hot-loader/root';
-import SpotifyPlayer from 'react-spotify-web-playback';
 
 import logo from './logo.svg';
-import { Login, Player } from './components';
+import { Login, Track, Player } from './components';
 import { SpotifyService, CurrentPlaybackResponse, LikesResponse, SpotifyError, ItemsEntity } from './services';
 
 import './App.css';
@@ -97,18 +96,19 @@ class App extends React.Component<AppProps, AppState> {
               <Fragment>
                 <div style={styles.section}>
                   <div style={FontSizes.Large}>Player</div>
-                  <SpotifyPlayer token={this.state.token} uris={['spotify:artist:6HQYnRM4OzToCYPpVBInuU']} />
+                  <Player />
                 </div>
                 <div style={FontSizes.Large}>Currently playing</div>
-                <Player
-                  item={this.state.item}
-                  is_playing={this.state.is_playing}
-                  progress_ms={this.state.progress_ms}
-                />
+                <Track item={this.state.item} is_playing={this.state.is_playing} progress_ms={this.state.progress_ms} />
                 <div style={FontSizes.Large}>Likes</div>
-                {this.state.likes.map((like) => {
+                {this.state.likes.map((like, index) => {
                   return (
-                    <Player item={like.track} is_playing={this.state.is_playing} progress_ms={this.state.progress_ms} />
+                    <Track
+                      key={index}
+                      item={like.track}
+                      is_playing={this.state.is_playing}
+                      progress_ms={this.state.progress_ms}
+                    />
                   );
                 })}
               </Fragment>
