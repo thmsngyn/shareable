@@ -1,9 +1,10 @@
 import React from 'react';
 
 import SpotifyPlayer from 'react-spotify-web-playback';
-import { IProps } from 'react-spotify-web-playback/lib/types/common';
+import { IProps, IStylesProps } from 'react-spotify-web-playback/lib/types/common';
 
 import { SpotifyService } from '../../services';
+import { Colors } from '../../styles';
 
 type ReducedSpotifyPlayerProps = Pick<IProps, Exclude<keyof IProps, 'token'>>;
 interface PlayerProps extends ReducedSpotifyPlayerProps {}
@@ -27,6 +28,13 @@ export class Player extends React.Component<PlayerProps, PlayerState> {
   }
 
   render() {
-    return <SpotifyPlayer token={this.state.token} autoPlay={true} showSaveIcon={true} />;
+    return <SpotifyPlayer styles={styles.custom} token={this.state.token} autoPlay={true} showSaveIcon={true} />;
   }
 }
+
+const styles: Record<string, React.CSSProperties & IStylesProps> = {
+  custom: {
+    sliderColor: Colors.ShareableLavender,
+    savedColor: Colors.ShareableLavender,
+  },
+};
