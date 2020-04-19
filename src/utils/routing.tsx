@@ -1,4 +1,4 @@
-import { Home, Stream, Account } from '../pages';
+import { Home, Stream, Account, Stats } from '../pages';
 
 /**
  * @prop path - required
@@ -6,14 +6,14 @@ import { Home, Stream, Account } from '../pages';
  * @prop header - optional, value to display on header nav
  * @prop rightAlignedHeader - optional, if the header is right aligned
  */
-export interface Route {
+export interface AppRoute {
   path: string;
   page: any;
   header?: string;
   rightAlignedHeader?: boolean;
 }
 
-export const Routes: Route[] = [
+export const AppRoutes: AppRoute[] = [
   // Header routes
   {
     path: '/',
@@ -32,9 +32,9 @@ export const Routes: Route[] = [
     rightAlignedHeader: true,
   },
   {
-    path: '/personalization',
-    page: undefined,
-    header: 'personalization',
+    path: '/stats',
+    page: Stats,
+    header: 'stats',
   },
   // Other routes
 ];

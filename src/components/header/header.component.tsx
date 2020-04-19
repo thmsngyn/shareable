@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 import logo from '../../assets/gradient-logo.png';
 import { FontSizes, Colors, APP_MARGIN, APP_HEADER_HEIGHT } from '../../styles';
-import { Routes, Route } from '../../utils/route';
+import { AppRoutes, AppRoute } from '../../utils';
 
 interface HeaderProps {}
 interface HeaderState {}
@@ -16,14 +16,14 @@ export class Header extends React.Component<HeaderProps, HeaderState> {
   componentDidMount() {}
 
   renderHeaderItem(isRightAligned: boolean = false) {
-    const keepRightHeaders = (route: Route) => {
+    const keepRightHeaders = (route: AppRoute) => {
       return !route.header || (route.header && route.rightAlignedHeader === true);
     };
-    const keepLeftHeaders = (route: Route) => {
+    const keepLeftHeaders = (route: AppRoute) => {
       return !route.header || (route.header && !route.rightAlignedHeader);
     };
 
-    return Routes.filter((route) => (isRightAligned ? keepRightHeaders(route) : keepLeftHeaders(route))).map(
+    return AppRoutes.filter((route) => (isRightAligned ? keepRightHeaders(route) : keepLeftHeaders(route))).map(
       (route) => {
         return (
           <NavLink exact to={route.path} style={styles.headerItem} activeStyle={styles.headerItemActive}>

@@ -6,11 +6,11 @@ import { hot } from 'react-hot-loader/root';
 
 import { Spacing, Colors, APP_MARGIN, APP_FOOTER_HEIGHT } from './styles';
 import { Footer, Header } from './components';
-import { Stream, Home, Account } from './pages';
+import { Home } from './pages';
 import { SpotifyService } from './services';
+import { AppRoutes } from './utils';
 
 import './App.css';
-import { Routes } from './utils/route';
 
 interface AppProps {}
 
@@ -47,7 +47,7 @@ class App extends React.Component<AppProps, AppState> {
     return (
       <div style={styles.routeContainer}>
         <Switch>
-          {Routes.map((route) => {
+          {AppRoutes.map((route) => {
             const { path, page } = route;
             return <Route exact path={path} component={page} />;
           })}
