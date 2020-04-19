@@ -17,6 +17,7 @@ export class Section extends React.Component<SectionProps> {
     const { headerText, subText, children } = this.props;
     return (
       <div style={styles.streamSection}>
+        {}
         <div style={styles.headerText}>{headerText}</div>
         {subText && <div style={styles.subText}>{subText}</div>}
         {children}

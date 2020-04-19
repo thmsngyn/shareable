@@ -53,7 +53,11 @@ export class Track extends React.Component<TrackProps, TrackState> {
         {this.props.item ? (
           <Fragment>
             <div style={styles.coverArt}>
-              <img className="art" src={this.props.item.album.images[0].url} />
+              <img
+                className="art"
+                src={this.props.item.album.images[0].url}
+                onClick={() => window.open(this.props.item.external_urls.spotify, '_blank')}
+              />
             </div>
             <div className="track__content">
               {this.renderArtists()}

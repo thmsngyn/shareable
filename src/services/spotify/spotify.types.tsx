@@ -132,3 +132,11 @@ export interface SpotifyError {
 export enum SpotifyErrorMessages {
   TokenExpired = 'The access token expired',
 }
+
+export interface SpotifyUserProfile {
+  name: string;
+  externalUrl: string;
+  imageUrl: string;
+  email: string;
+  country: string;
+}
