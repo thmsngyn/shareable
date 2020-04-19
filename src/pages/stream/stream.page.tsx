@@ -1,17 +1,15 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import { Track, Section } from '../../components';
-import { FontSizes, Spacing } from '../../styles';
 import { ItemsEntity, SpotifyService, SpotifyError, CurrentPlaybackResponse, LikesResponse } from '../../services';
+import { SharedLayout, SharedLayoutState } from '../shared-layout';
 
 interface StreamProps {}
-interface StreamState {
+interface StreamState extends SharedLayoutState {
   item: any;
   is_playing: boolean;
   progress_ms: number;
-  loggedIn: boolean;
   likes: ItemsEntity[];
-  token: string;
 }
 
 export class Stream extends React.Component<StreamProps, StreamState> {
@@ -19,7 +17,6 @@ export class Stream extends React.Component<StreamProps, StreamState> {
     super(props);
 
     this.state = {
-      token: '',
       item: {
         album: {
           images: [{ url: '', height: 0, width: 0 }],
@@ -30,24 +27,20 @@ export class Stream extends React.Component<StreamProps, StreamState> {
       },
       is_playing: true,
       progress_ms: 0,
-      loggedIn: false,
       likes: [],
+      hasError: false,
     };
   }
 
   componentDidMount() {
-    const token = SpotifyService.resolveUserToken();
-    if (token) {
-      this.setState({ loggedIn: true, token });
-      this.setCurrentlyPlayingState((error: SpotifyError) => {
-        this.setState({ loggedIn: false });
-      });
-      this.setLikesState((error: SpotifyError) => {
-        this.setState({ loggedIn: false });
-      });
-    } else {
-      this.setState({ loggedIn: false });
-    }
+    this.setCurrentlyPlayingState((error: SpotifyError) => {
+      // Something bad happened
+      this.setState({ hasError: true });
+    });
+    this.setLikesState((error: SpotifyError) => {
+      // Something bad happened
+      this.setState({ hasError: true });
+    });
   }
 
   async setCurrentlyPlayingState(onError: Function) {
@@ -77,8 +70,10 @@ export class Stream extends React.Component<StreamProps, StreamState> {
   }
 
   render() {
+    const { hasError } = this.state;
+
     return (
-      <Fragment>
+      <SharedLayout hasError={hasError}>
         <Section headerText={'Currently playing'}>
           <Track item={this.state.item} is_playing={this.state.is_playing} progress_ms={this.state.progress_ms} />
         </Section>
@@ -94,7 +89,7 @@ export class Stream extends React.Component<StreamProps, StreamState> {
             );
           })}
         </Section>
-      </Fragment>
+      </SharedLayout>
     );
   }
 }

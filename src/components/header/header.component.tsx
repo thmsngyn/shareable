@@ -31,7 +31,7 @@ export class Header extends React.Component<HeaderProps, HeaderState> {
             {this.renderHeaderItem('shareable', '/')}
             {this.renderHeaderItem('stream', '/stream')}
           </div>
-          <div style={styles.headerRight}>{this.renderHeaderItem('account', '/')}</div>
+          <div style={styles.headerRight}>{this.renderHeaderItem('account', '/account')}</div>
         </div>
       </div>
     );

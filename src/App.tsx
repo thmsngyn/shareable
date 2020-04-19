@@ -1,12 +1,12 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import { hot } from 'react-hot-loader/root';
 
 import { Spacing, Colors, APP_MARGIN, APP_FOOTER_HEIGHT } from './styles';
-import { Login, Footer, Header } from './components';
-import { Stream, Home } from './pages';
+import { Footer, Header } from './components';
+import { Stream, Home, Account } from './pages';
 import { SpotifyService } from './services';
 
 import './App.css';
@@ -27,7 +27,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   componentDidMount() {
-    const loggedIn = !!SpotifyService.resolveUserToken();
+    const loggedIn = SpotifyService.userIsLoggedIn();
     this.setState({ loggedIn });
   }
 
@@ -35,11 +35,12 @@ class App extends React.Component<AppProps, AppState> {
     const { loggedIn } = this.state;
     return (
       <div style={styles.routeContainer}>
-        {!loggedIn && <Login></Login>}
+        {!loggedIn && <Home></Home>}
         {loggedIn && (
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/stream" component={Stream} />
+            <Route path="/account" component={Account} />
           </Switch>
         )}
       </div>
