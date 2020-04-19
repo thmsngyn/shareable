@@ -12,3 +12,7 @@ export enum Spacing {
   s128 = 128,
   s224 = 224,
 }
+
+export const APP_MARGIN = Spacing.s224;
+export const APP_HEADER_HEIGHT = Spacing.s48;
+export const APP_FOOTER_HEIGHT = Spacing.s48;

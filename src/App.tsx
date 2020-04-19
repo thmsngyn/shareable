@@ -6,7 +6,7 @@ import { hot } from 'react-hot-loader/root';
 
 import logo from './logo.svg';
 
-import { Spacing, FontSizes } from './styles';
+import { Spacing, FontSizes, Colors, APP_MARGIN, APP_FOOTER_HEIGHT } from './styles';
 import { Login, Footer, Header } from './components';
 import { Stream } from './pages';
 import { SpotifyService } from './services';
@@ -60,17 +60,21 @@ export default hot(App);
 
 const styles: Record<string, React.CSSProperties> = {
   app: {
-    backgroundColor: '#282c34',
+    backgroundColor: Colors.ScreenBackground,
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
-    color: 'white',
+    color: Colors.c100,
     alignItems: 'flex-start',
+    fontFamily: 'CentraNo2-Book ',
   },
   routeContainer: {
-    paddingLeft: Spacing.s224,
-    paddingRight: Spacing.s224,
-    paddingBottom: Spacing.s48,
+    paddingLeft: APP_MARGIN,
+    paddingRight: APP_MARGIN,
+    paddingTop: APP_FOOTER_HEIGHT,
+    paddingBottom: APP_FOOTER_HEIGHT,
     width: '100%',
+    backgroundClip: 'content-box',
+    boxShadow: `inset ${Spacing.s224}px 0 ${Spacing.s128}px -${Spacing.s128}px ${Colors.ShareableLavender}, inset -${Spacing.s224}px 0 ${Spacing.s128}px -${Spacing.s128}px ${Colors.ShareableLavender}`,
   },
 };
