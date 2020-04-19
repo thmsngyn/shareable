@@ -1,14 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import { hot } from 'react-hot-loader/root';
 
-import logo from './logo.svg';
-
-import { Spacing, FontSizes, Colors, APP_MARGIN, APP_FOOTER_HEIGHT } from './styles';
+import { Spacing, Colors, APP_MARGIN, APP_FOOTER_HEIGHT } from './styles';
 import { Login, Footer, Header } from './components';
-import { Stream } from './pages';
+import { Stream, Home } from './pages';
 import { SpotifyService } from './services';
 
 import './App.css';
@@ -38,7 +36,12 @@ class App extends React.Component<AppProps, AppState> {
     return (
       <div style={styles.routeContainer}>
         {!loggedIn && <Login></Login>}
-        {loggedIn && <Route path="/" component={Stream}></Route>}
+        {loggedIn && (
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/stream" component={Stream} />
+          </Switch>
+        )}
       </div>
     );
   }
@@ -67,6 +70,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: Colors.c100,
     alignItems: 'flex-start',
     fontFamily: 'CentraNo2-Book ',
+    boxShadow: `inset ${Spacing.s224}px 0 ${Spacing.s128}px -${Spacing.s128}px ${Colors.ShareableLavender}, inset -${Spacing.s224}px 0 ${Spacing.s128}px -${Spacing.s128}px ${Colors.ShareableLavender}`,
   },
   routeContainer: {
     paddingLeft: APP_MARGIN,
@@ -74,7 +78,5 @@ const styles: Record<string, React.CSSProperties> = {
     paddingTop: APP_FOOTER_HEIGHT,
     paddingBottom: APP_FOOTER_HEIGHT,
     width: '100%',
-    backgroundClip: 'content-box',
-    boxShadow: `inset ${Spacing.s224}px 0 ${Spacing.s128}px -${Spacing.s128}px ${Colors.ShareableLavender}, inset -${Spacing.s224}px 0 ${Spacing.s128}px -${Spacing.s128}px ${Colors.ShareableLavender}`,
   },
 };

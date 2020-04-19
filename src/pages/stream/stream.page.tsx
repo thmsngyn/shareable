@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { Track } from '../../components';
+import { Track, Section } from '../../components';
 import { FontSizes, Spacing } from '../../styles';
 import { ItemsEntity, SpotifyService, SpotifyError, CurrentPlaybackResponse, LikesResponse } from '../../services';
 
@@ -73,50 +73,28 @@ export class Stream extends React.Component<StreamProps, StreamState> {
       return onError(error);
     }
 
-    console.log(likes);
     this.setState({ likes: likes.items! });
-  }
-
-  renderStreamSection(content: any) {
-    return <div style={styles.streamSection}>{content}</div>;
   }
 
   render() {
     return (
       <Fragment>
-        {this.renderStreamSection(
-          <Fragment>
-            <div style={styles.heading}>Currently playing</div>
-            <Track item={this.state.item} is_playing={this.state.is_playing} progress_ms={this.state.progress_ms} />
-          </Fragment>
-        )}
-        {this.renderStreamSection(
-          <Fragment>
-            <div style={styles.heading}>Likes</div>
-            {this.state.likes.map((like, index) => {
-              return (
-                <Track
-                  key={index}
-                  item={like.track}
-                  is_playing={this.state.is_playing}
-                  progress_ms={this.state.progress_ms}
-                />
-              );
-            })}
-          </Fragment>
-        )}
+        <Section headerText={'Currently playing'}>
+          <Track item={this.state.item} is_playing={this.state.is_playing} progress_ms={this.state.progress_ms} />
+        </Section>
+        <Section headerText={'Likes'}>
+          {this.state.likes.map((like, index) => {
+            return (
+              <Track
+                key={index}
+                item={like.track}
+                is_playing={this.state.is_playing}
+                progress_ms={this.state.progress_ms}
+              />
+            );
+          })}
+        </Section>
       </Fragment>
     );
   }
 }
-
-const styles: Record<any, React.CSSProperties> = {
-  streamSection: {
-    marginTop: Spacing.s32,
-  },
-  heading: {
-    marginBottom: Spacing.s16,
-    fontFamily: 'CentraNo2-Medium',
-    ...FontSizes.Medium,
-  },
-};
