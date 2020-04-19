@@ -2,12 +2,14 @@ import React, { Fragment } from 'react';
 
 import './track.css';
 import './track.scss';
+
+import { Track as TrackType } from '../../services';
 import { Spacing, FontSizes } from '../../styles';
 
 interface TrackProps {
-  item: any;
-  is_playing: any;
-  progress_ms: any;
+  track: TrackType;
+  is_playing?: any;
+  progress_ms?: any;
 }
 
 interface TrackState {}
@@ -19,44 +21,57 @@ export class Track extends React.Component<TrackProps, TrackState> {
 
   componentDidMount() {}
 
-  backgroundStyles() {
-    return {
-      backgroundImage: `url(${this.props.item.album.images[0].url})`,
-      width: 500,
-      height: 500,
-    };
-  }
+  // backgroundStyles() {
+  //   const { track } = this.props;
+  //   console.log(track);
 
-  progressBarStyles() {
-    return {
-      width: (this.props.progress_ms * 100) / this.props.item.duration_ms + '%',
-    };
-  }
+  //   return {
+  //     backgroundImage: `url(${track.album!.images![0].url})`,
+  //     width: 500,
+  //     height: 500,
+  //   };
+  // }
+
+  // progressBarStyles() {
+  //   const { track } = this.props;
+
+  //   return {
+  //     width: (this.props.progress_ms * 100) / track.duration_ms + '%',
+  //   };
+  // }
 
   coverArtStyle() {
+    const { track } = this.props;
+
     return {
-      backgroundImage: `url(${this.props.item.album.images[0].url})`,
+      backgroundImage: `url(${track.album!.images![0].url})`,
     };
   }
 
   renderArtists() {
-    return <div style={styles.artistName}>{this.props.item.artists.map((artist: any) => artist.name).join(', ')}</div>;
+    const { track } = this.props;
+
+    return <div style={styles.artistName}>{track.artists!.map((artist: any) => artist.name).join(', ')}</div>;
   }
 
   renderTrackTitle() {
-    return <div style={styles.trackTitle}>{this.props.item.name}</div>;
+    const { track } = this.props;
+
+    return <div style={styles.trackTitle}>{track.name}</div>;
   }
 
   render() {
+    const { track } = this.props;
+
     return (
       <div className="track" style={styles.track}>
-        {this.props.item ? (
+        {track ? (
           <Fragment>
             <div style={styles.coverArt}>
               <img
                 className="art"
-                src={this.props.item.album.images[0].url}
-                onClick={() => window.open(this.props.item.external_urls.spotify, '_blank')}
+                src={track.album!.images![0].url}
+                onClick={() => window.open(track.external_urls.spotify, '_blank')}
               />
             </div>
             <div className="track__content">

@@ -6,7 +6,7 @@ export interface CurrentPlaybackResponse {
   timestamp: number;
   context: Context;
   progress_ms: number;
-  item: Item;
+  item: Track;
   currently_playing_type: string;
   actions: Actions;
   is_playing: boolean;
@@ -30,25 +30,6 @@ export interface Context {
 export interface ExternalUrls {
   spotify: string;
 }
-export interface Item {
-  album: Album;
-  artists?: ArtistsEntity[] | null;
-  available_markets?: string[] | null;
-  disc_number: number;
-  duration_ms: number;
-  explicit: boolean;
-  external_ids: ExternalIds;
-  external_urls: ExternalUrls;
-  href: string;
-  id: string;
-  is_local: boolean;
-  name: string;
-  popularity: number;
-  preview_url: string;
-  track_number: number;
-  type: string;
-  uri: string;
-}
 
 export interface Album {
   album_type: string;
@@ -65,14 +46,20 @@ export interface Album {
   type: string;
   uri: string;
 }
+
 export interface ArtistsEntity {
   external_urls: ExternalUrls;
+  followers?: Followers;
+  genres?: string[] | null;
   href: string;
   id: string;
+  images?: ImagesEntity[] | null;
   name: string;
+  popularity?: number;
   type: string;
   uri: string;
 }
+
 export interface ImagesEntity {
   height: number;
   url: string;
@@ -91,7 +78,7 @@ export interface Disallows {
 // Likes
 export interface LikesResponse {
   href: string;
-  items?: ItemsEntity[] | null;
+  items?: TracksEntity[] | null;
   limit: number;
   next: string;
   offset: number;
@@ -99,7 +86,7 @@ export interface LikesResponse {
   total: number;
   error?: SpotifyError;
 }
-export interface ItemsEntity {
+export interface TracksEntity {
   added_at: string;
   track: Track;
 }
@@ -121,6 +108,28 @@ export interface Track {
   track_number: number;
   type: string;
   uri: string;
+}
+
+// Top
+export enum SpotifyTimeRange {
+  LongTerm = 'long_term', // Several years of data
+  MediumTerm = 'medium_term', // 6 months
+  ShortTerm = 'short_term', // 4 weeks
+}
+
+export interface TopResponse {
+  items?: ArtistsEntity[] | Track[] | null;
+  total: number;
+  limit: number;
+  offset: number;
+  href: string;
+  previous?: null;
+  next: string;
+}
+
+export interface Followers {
+  href?: null;
+  total: number;
 }
 
 // Errors

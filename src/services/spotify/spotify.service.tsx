@@ -1,8 +1,14 @@
 import { hash, parseJson } from '../../utils';
 import { StorageService, StorageKeys } from '../storage';
 
-import { PLAYER_API, SAVED_TRACKS_API, USER_PROFILE_API } from './spotify.constants';
-import { CurrentPlaybackResponse, LikesResponse, SpotifyErrorMessages, SpotifyUserProfile } from './spotify.types';
+import { PLAYER_API, SAVED_TRACKS_API, USER_PROFILE_API, USER_TOP_API } from './spotify.constants';
+import {
+  CurrentPlaybackResponse,
+  LikesResponse,
+  SpotifyErrorMessages,
+  SpotifyUserProfile,
+  SpotifyTimeRange,
+} from './spotify.types';
 
 export const SpotifyService = new (class {
   private token: string = '';
@@ -70,7 +76,7 @@ export const SpotifyService = new (class {
   }
 
   getUserProfile(): Promise<any> {
-    return this.request(USER_PROFILE_API, 'GET').then((userProfile) => userProfile);
+    return this.request(USER_PROFILE_API, 'GET');
   }
 
   getCurrentlyPlaying(): Promise<CurrentPlaybackResponse> {
@@ -87,8 +93,20 @@ export const SpotifyService = new (class {
     });
   }
 
-  getLikes(): Promise<LikesResponse> {
-    return this.request(`${SAVED_TRACKS_API}/?limit=10`, 'GET').then((likes: LikesResponse) => likes);
+  getLikes(limit: number = 10, offset: number = 0): Promise<LikesResponse> {
+    return this.request(`${SAVED_TRACKS_API}?limit=${limit}&offset=${offset}`, 'GET');
+  }
+
+  getTop(
+    type: any,
+    limit: number = 10,
+    offset: number = 0,
+    timeRange: SpotifyTimeRange = SpotifyTimeRange.ShortTerm
+  ): Promise<any> {
+    return this.request(
+      `${USER_TOP_API}/${type}?limit=${limit}&offset=${offset}&time_range=${timeRange}`,
+      'GET'
+    ).then();
   }
 
   request(url: string, method: string): Promise<any> {
