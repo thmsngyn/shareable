@@ -1,7 +1,10 @@
 import React from 'react';
+
 import { SharedLayout, SharedLayoutState } from '../shared-layout';
 import { Section } from '../../components';
 import { SpotifyService, SpotifyUserProfile } from '../../services';
+import { Button } from '../../components/shared/button.component';
+import { StorageService, StorageKeys } from '../../services/storage';
 
 interface AccountProps {}
 interface AccountState extends SharedLayoutState {
@@ -26,8 +29,13 @@ export class Account extends React.Component<AccountProps, AccountState> {
     }
   }
 
+  logout() {
+    Object.keys(StorageKeys).forEach((key) => StorageService.remove((StorageKeys as any)[key]));
+  }
+
   render() {
     const { hasError, userProfile } = this.state;
+
     return (
       <SharedLayout hasError={hasError}>
         <Section headerText={`Account information`}>
@@ -54,6 +62,14 @@ export class Account extends React.Component<AccountProps, AccountState> {
                 })}
             </div>
           </div>
+        </Section>
+        <Section>
+          <Button
+            text={'Logout'}
+            onClick={() => {
+              this.logout();
+            }}
+          />
         </Section>
       </SharedLayout>
     );

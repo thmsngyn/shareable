@@ -23,32 +23,12 @@ export const SpotifyService = new (class {
     }
   }
 
-  private async setUserProfile() {
-    const profileFromStorage = StorageService.get(StorageKeys.UserProfile);
-
-    if (!profileFromStorage) {
-      const response = await this.getUserProfile();
-      const { display_name: displayName, external_urls, images, email, country } = response;
-      const imageUrl = images && images[0].url;
-      const externalUrl = external_urls && external_urls.spotify;
-
-      const userProfile = {
-        displayName,
-        externalUrl,
-        email,
-        country,
-        imageUrl,
-      };
-      StorageService.set(StorageKeys.UserProfile, JSON.stringify(userProfile));
-    }
-  }
-
   async userProfile(): Promise<SpotifyUserProfile> {
     const profileFromStorage = StorageService.get(StorageKeys.UserProfile);
 
     if (!profileFromStorage) {
       const response = await this.getUserProfile();
-      const { display_name: name, external_urls, images, email, country } = response;
+      const { display_name: name, external_urls, images, email, country, followers } = response;
       const imageUrl = images && images[0].url;
       const externalUrl = external_urls && external_urls.spotify;
 
@@ -58,6 +38,7 @@ export const SpotifyService = new (class {
         email,
         country,
         imageUrl,
+        followers: followers.total,
       };
       StorageService.set(StorageKeys.UserProfile, JSON.stringify(userProfile));
       return userProfile;
@@ -77,7 +58,6 @@ export const SpotifyService = new (class {
 
     if (!!tokenFromStorage || !!this.token) {
       this.token = tokenFromStorage || this.token;
-      this.setUserProfile();
       this.resolveTokenInStorage(!!tokenFromStorage, this.token);
       return this.token;
     }

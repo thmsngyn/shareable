@@ -2,7 +2,7 @@ import React from 'react';
 import { Spacing, FontSizes } from '../../styles';
 
 interface SectionProps {
-  headerText: string;
+  headerText?: string;
   subText?: string;
 }
 
@@ -17,8 +17,7 @@ export class Section extends React.Component<SectionProps> {
     const { headerText, subText, children } = this.props;
     return (
       <div style={styles.streamSection}>
-        {}
-        <div style={styles.headerText}>{headerText}</div>
+        {headerText && <div style={styles.headerText}>{headerText}</div>}
         {subText && <div style={styles.subText}>{subText}</div>}
         {children}
       </div>
