@@ -1,16 +1,23 @@
 import React from 'react';
 
 import { Track, Section } from '../../components';
-import { ItemsEntity, SpotifyService, SpotifyError, CurrentPlaybackResponse, LikesResponse } from '../../services';
+import {
+  TracksEntity,
+  SpotifyService,
+  SpotifyError,
+  CurrentPlaybackResponse,
+  LikesResponse,
+  Track as TrackType,
+} from '../../services';
 import { SharedLayout } from '../shared-layout';
 
 interface StreamProps {}
 interface StreamState {
   hasError: boolean;
-  item: any;
+  currentTrack: TrackType;
   is_playing: boolean;
   progress_ms: number;
-  likes: ItemsEntity[];
+  likes: TracksEntity[];
 }
 
 export class Stream extends React.Component<StreamProps, StreamState> {
@@ -18,14 +25,14 @@ export class Stream extends React.Component<StreamProps, StreamState> {
     super(props);
 
     this.state = {
-      item: {
+      currentTrack: {
         album: {
           images: [{ url: '', height: 0, width: 0 }],
         },
         name: '',
         artists: [{ name: '' }],
         duration_ms: 0,
-      },
+      } as TrackType,
       is_playing: true,
       progress_ms: 0,
       likes: [],
@@ -53,9 +60,7 @@ export class Stream extends React.Component<StreamProps, StreamState> {
     }
 
     this.setState({
-      item: currentlyPlaying.item,
-      is_playing: currentlyPlaying.is_playing,
-      progress_ms: currentlyPlaying.progress_ms,
+      currentTrack: currentlyPlaying.item,
     });
   }
 
@@ -71,23 +76,16 @@ export class Stream extends React.Component<StreamProps, StreamState> {
   }
 
   render() {
-    const { hasError } = this.state;
+    const { hasError, currentTrack, likes } = this.state;
 
     return (
       <SharedLayout hasError={hasError}>
         <Section headerText={'Currently playing'}>
-          <Track item={this.state.item} is_playing={this.state.is_playing} progress_ms={this.state.progress_ms} />
+          <Track track={currentTrack} />
         </Section>
         <Section headerText={'Likes'}>
-          {this.state.likes.map((like, index) => {
-            return (
-              <Track
-                key={index}
-                item={like.track}
-                is_playing={this.state.is_playing}
-                progress_ms={this.state.progress_ms}
-              />
-            );
+          {likes.map((like, index) => {
+            return <Track key={index} track={like.track} />;
           })}
         </Section>
       </SharedLayout>
