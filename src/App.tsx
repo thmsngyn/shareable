@@ -26,34 +26,43 @@ class App extends React.Component<AppProps, AppState> {
     };
   }
 
-  componentDidMount() {
-    const loggedIn = SpotifyService.userIsLoggedIn();
-    this.setState({ loggedIn });
+  async componentDidMount() {
+    const token = SpotifyService.resolveUserToken();
+    this.setState({ loggedIn: !!token });
   }
 
   renderRoutes() {
     const { loggedIn } = this.state;
+
+    // Always render the homepage if a user is not authenticated
+    if (!loggedIn) {
+      return (
+        <div style={styles.routeContainer}>
+          <Home />
+        </div>
+      );
+    }
+
     return (
       <div style={styles.routeContainer}>
-        {!loggedIn && <Home></Home>}
-        {loggedIn && (
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/stream" component={Stream} />
-            <Route path="/account" component={Account} />
-          </Switch>
-        )}
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/stream" component={Stream} />
+          <Route path="/account" component={Account} />
+        </Switch>
       </div>
     );
   }
 
   render() {
+    const { loggedIn } = this.state;
+
     return (
       <Router>
         <div style={styles.app}>
           <Header />
           {this.renderRoutes()}
-          <Footer />
+          {loggedIn && <Footer />}
         </div>
       </Router>
     );
@@ -71,7 +80,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: Colors.c100,
     alignItems: 'flex-start',
     fontFamily: 'CentraNo2-Book ',
-    boxShadow: `inset ${Spacing.s224}px 0 ${Spacing.s128}px -${Spacing.s128}px ${Colors.ShareableLavender}, inset -${Spacing.s224}px 0 ${Spacing.s128}px -${Spacing.s128}px ${Colors.ShareableLavender}`,
+    boxShadow: `inset ${Spacing.s224}px 0 ${Spacing.s224}px -${Spacing.s224}px ${Colors.ShareableLavender}, inset -${Spacing.s224}px 0 ${Spacing.s224}px -${Spacing.s224}px ${Colors.ShareableLavender}`,
   },
   routeContainer: {
     paddingLeft: APP_MARGIN,

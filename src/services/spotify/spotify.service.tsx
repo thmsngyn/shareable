@@ -5,7 +5,7 @@ import { PLAYER_API, SAVED_TRACKS_API, USER_PROFILE_API } from './spotify.consta
 import { CurrentPlaybackResponse, LikesResponse, SpotifyErrorMessages, SpotifyUserProfile } from './spotify.types';
 
 export const SpotifyService = new (class {
-  token: string = '';
+  private token: string = '';
   constructor() {}
 
   private get headers() {
@@ -23,12 +23,16 @@ export const SpotifyService = new (class {
     }
   }
 
+  logout() {
+    this.token = '';
+  }
+
   async userProfile(): Promise<SpotifyUserProfile> {
     const profileFromStorage = StorageService.get(StorageKeys.UserProfile);
 
     if (!profileFromStorage) {
       const response = await this.getUserProfile();
-      const { display_name: name, external_urls, images, email, country, followers } = response;
+      const { display_name: name, external_urls, images, email, country, followers, error } = response;
       const imageUrl = images && images[0].url;
       const externalUrl = external_urls && external_urls.spotify;
 
@@ -38,7 +42,8 @@ export const SpotifyService = new (class {
         email,
         country,
         imageUrl,
-        followers: followers.total,
+        followers: followers && followers.total,
+        error,
       };
       StorageService.set(StorageKeys.UserProfile, JSON.stringify(userProfile));
       return userProfile;
@@ -48,7 +53,7 @@ export const SpotifyService = new (class {
   }
 
   userIsLoggedIn(): boolean {
-    return !!this.resolveUserToken();
+    return !!this.token;
   }
 
   resolveUserToken(): string {

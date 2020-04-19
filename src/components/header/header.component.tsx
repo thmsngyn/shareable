@@ -16,7 +16,7 @@ export class Header extends React.Component<HeaderProps, HeaderState> {
 
   renderHeaderItem(text: string, route: string) {
     return (
-      <NavLink to={route} style={styles.headerItem} activeStyle={styles.headerItem}>
+      <NavLink exact to={route} style={styles.headerItem} activeStyle={styles.headerItemActive}>
         {text}
       </NavLink>
     );
@@ -74,5 +74,8 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     textDecoration: 'none',
     color: Colors.ScreenBackground,
+  },
+  headerItemActive: {
+    fontFamily: 'CentraNo2-Medium',
   },
 };
