@@ -1,13 +1,15 @@
 import React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 
 import { SharedLayout, SharedLayoutState } from '../shared-layout';
 import { Section } from '../../components';
-import { SpotifyService, SpotifyUserProfile } from '../../services';
+import { SpotifyService, SpotifyUserProfile, SpotifyError } from '../../services';
 import { Button } from '../../components/shared/button.component';
 import { StorageService, StorageKeys } from '../../services/storage';
 
-interface AccountProps {}
-interface AccountState extends SharedLayoutState {
+interface AccountProps extends RouteComponentProps<any> {}
+interface AccountState {
+  hasError: boolean;
   userProfile: any;
 }
 
@@ -21,16 +23,28 @@ export class Account extends React.Component<AccountProps, AccountState> {
     };
   }
 
-  async componentDidMount() {
-    const loggedIn = SpotifyService.userIsLoggedIn();
-    if (loggedIn) {
-      const userProfile = await SpotifyService.userProfile();
-      this.setState({ userProfile });
+  componentDidMount() {
+    this.setUserProfile(() => {
+      this.setState({ hasError: true });
+    });
+  }
+
+  async setUserProfile(onError: Function) {
+    const userProfile = await SpotifyService.userProfile();
+    const { error } = userProfile;
+
+    if (error) {
+      return onError(error);
     }
+
+    this.setState({ userProfile });
   }
 
   logout() {
     Object.keys(StorageKeys).forEach((key) => StorageService.remove((StorageKeys as any)[key]));
+    SpotifyService.logout();
+    this.props.history.push('/');
+    window.location.reload();
   }
 
   render() {
@@ -51,14 +65,14 @@ export class Account extends React.Component<AccountProps, AccountState> {
               {Object.keys(userProfile)
                 .filter((key) => key !== 'imageUrl' && key !== 'externalUrl')
                 .map((key) => {
-                  return <div>{key}</div>;
+                  return <div key={key}>{key}</div>;
                 })}
             </div>
             <div>
               {Object.keys(userProfile)
                 .filter((key) => key !== 'imageUrl' && key !== 'externalUrl')
                 .map((key) => {
-                  return <div>{userProfile[key]}</div>;
+                  return <div key={key}>{userProfile[key]}</div>;
                 })}
             </div>
           </div>

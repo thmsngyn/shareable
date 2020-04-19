@@ -2,10 +2,11 @@ import React from 'react';
 
 import { Track, Section } from '../../components';
 import { ItemsEntity, SpotifyService, SpotifyError, CurrentPlaybackResponse, LikesResponse } from '../../services';
-import { SharedLayout, SharedLayoutState } from '../shared-layout';
+import { SharedLayout } from '../shared-layout';
 
 interface StreamProps {}
-interface StreamState extends SharedLayoutState {
+interface StreamState {
+  hasError: boolean;
   item: any;
   is_playing: boolean;
   progress_ms: number;

@@ -5,10 +5,11 @@ import { Section } from '../../components';
 export interface SharedLayoutProps {
   hasError: boolean;
 }
-export interface SharedLayoutState {
-  hasError: boolean;
-}
+export interface SharedLayoutState {}
 
+/**
+ * Responsible for shared page layout and states
+ */
 export class SharedLayout extends React.Component<SharedLayoutProps, SharedLayoutState> {
   constructor(props: any) {
     super(props);

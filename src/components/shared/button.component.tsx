@@ -26,7 +26,7 @@ export class Button extends React.Component<ButtonProps> {
         <a
           style={styles.button}
           className="btn btn--loginApp-link"
-          onClick={onClick && onClick()}
+          onClick={() => onClick && onClick()}
           href={openLink ? openLink : undefined}
         >
           {text}

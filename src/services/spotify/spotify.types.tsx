@@ -139,4 +139,5 @@ export interface SpotifyUserProfile {
   imageUrl: string;
   email: string;
   country: string;
+  error: string;
 }
