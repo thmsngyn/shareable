@@ -10,6 +10,7 @@ import { Stream, Home, Account } from './pages';
 import { SpotifyService } from './services';
 
 import './App.css';
+import { Routes } from './utils/route';
 
 interface AppProps {}
 
@@ -46,9 +47,10 @@ class App extends React.Component<AppProps, AppState> {
     return (
       <div style={styles.routeContainer}>
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/stream" component={Stream} />
-          <Route path="/account" component={Account} />
+          {Routes.map((route) => {
+            const { path, page } = route;
+            return <Route exact path={path} component={page} />;
+          })}
         </Switch>
       </div>
     );
