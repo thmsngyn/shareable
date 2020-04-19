@@ -44,7 +44,7 @@ export class Track extends React.Component<TrackProps, TrackState> {
   }
 
   renderTrackTitle() {
-    return <div>{this.props.item.name}</div>;
+    return <div style={styles.trackTitle}>{this.props.item.name}</div>;
   }
 
   render() {
@@ -84,5 +84,8 @@ const styles: Record<any, React.CSSProperties> = {
   },
   coverArt: {
     marginRight: Spacing.s16,
+  },
+  trackTitle: {
+    ...FontSizes.Large,
   },
 };
