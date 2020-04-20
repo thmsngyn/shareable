@@ -99,6 +99,7 @@ export class Stats extends React.Component<StatsProps, StatsState> {
                       imageStyle={styles.image}
                       imageUrl={artist.images![0].url}
                       externalUrl={artist.external_urls.spotify}
+                      displayKeys={false}
                       info={{
                         rank: `${index + 1}`,
                         name: artist.name,
@@ -123,6 +124,7 @@ export class Stats extends React.Component<StatsProps, StatsState> {
                       imageStyle={styles.image}
                       imageUrl={track.album!.images![0].url}
                       externalUrl={track.external_urls.spotify}
+                      displayKeys={false}
                       info={{
                         rank: `${index + 1}`,
                         title: track.name,
@@ -150,8 +152,8 @@ const styles: Record<any, React.CSSProperties> = {
     marginRight: Spacing.s48,
   },
   image: {
-    width: 90,
-    height: 'auto',
+    width: 100,
+    height: 100,
   },
   toggle: {
     marginBottom: Spacing.s16,
