@@ -1,9 +1,9 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
-import { SharedLayout, SharedLayoutState } from '../shared-layout';
-import { Section } from '../../components';
-import { SpotifyService, SpotifyUserProfile, SpotifyError } from '../../services';
+import { SharedLayout } from '../shared-layout';
+import { Section, Profile } from '../../components';
+import { SpotifyService, SpotifyUserProfile } from '../../services';
 import { Button } from '../../components/shared/button.component';
 import { StorageService, StorageKeys } from '../../services/storage';
 
@@ -51,31 +51,20 @@ export class Account extends React.Component<AccountProps, AccountState> {
     const { hasError, userProfile } = this.state;
 
     return (
-      <SharedLayout hasError={hasError}>
+      <SharedLayout hasError={hasError} isLoading={false}>
         <Section headerText={`Account information`}>
-          <div style={styles.row}>
-            <div>
-              <img
-                className="art"
-                src={userProfile.imageUrl}
-                onClick={() => window.open(userProfile.externalUrl, '_blank')}
-              />
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              {Object.keys(userProfile)
-                .filter((key) => key !== 'imageUrl' && key !== 'externalUrl')
-                .map((key) => {
-                  return <div key={key}>{key}</div>;
-                })}
-            </div>
-            <div>
-              {Object.keys(userProfile)
-                .filter((key) => key !== 'imageUrl' && key !== 'externalUrl')
-                .map((key) => {
-                  return <div key={key}>{userProfile[key]}</div>;
-                })}
-            </div>
-          </div>
+          <Profile
+            style={styles.profile}
+            imageStyle={styles.image}
+            imageUrl={userProfile.imageUrl}
+            externalUrl={userProfile.externalUrl}
+            info={{
+              name: userProfile.name,
+              email: userProfile.email,
+              country: userProfile.country,
+              followers: userProfile.followers,
+            }}
+          ></Profile>
         </Section>
         <Section>
           <Button
@@ -91,9 +80,11 @@ export class Account extends React.Component<AccountProps, AccountState> {
 }
 
 const styles: Record<any, React.CSSProperties> = {
-  row: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: 400,
+  profile: {
+    width: 500,
+  },
+  image: {
+    width: 200,
+    height: 'auto',
   },
 };
