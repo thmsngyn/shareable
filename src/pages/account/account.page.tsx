@@ -1,6 +1,8 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
+import defaultProfileImage from '../../assets/badminton.png';
+
 import { SharedLayout } from '../shared-layout';
 import { Section, Profile } from '../../components';
 import { SpotifyService, SpotifyUserProfile } from '../../services';
@@ -56,7 +58,7 @@ export class Account extends React.Component<AccountProps, AccountState> {
           <Profile
             style={styles.profile}
             imageStyle={styles.image}
-            imageUrl={userProfile.imageUrl}
+            imageUrl={userProfile.imageUrl || defaultProfileImage}
             externalUrl={userProfile.externalUrl}
             info={{
               name: userProfile.name,
