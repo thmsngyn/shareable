@@ -7,6 +7,7 @@ interface ProfileProps {
   info: Record<string, string>;
   style?: CSSProperties;
   imageStyle?: CSSProperties;
+  displayKeys?: boolean;
 }
 
 export class Profile extends React.Component<ProfileProps> {
@@ -17,7 +18,7 @@ export class Profile extends React.Component<ProfileProps> {
   componentDidMount() {}
 
   render() {
-    const { imageUrl, externalUrl, info, style, imageStyle } = this.props;
+    const { imageUrl, externalUrl, info, style, imageStyle, displayKeys = true } = this.props;
     const styleOverride = {
       ...styles.profileContainer,
       ...style,
@@ -37,11 +38,13 @@ export class Profile extends React.Component<ProfileProps> {
             onClick={() => window.open(externalUrl, '_blank')}
           />
         </div>
-        <div style={styles.infoKeys}>
-          {Object.keys(info).map((key) => {
-            return <div key={key}>{key}</div>;
-          })}
-        </div>
+        {displayKeys && (
+          <div style={styles.infoKeys}>
+            {Object.keys(info).map((key) => {
+              return <div key={key}>{key}</div>;
+            })}
+          </div>
+        )}
         <div style={styles.infoValues}>
           {Object.keys(info).map((key) => {
             return <div key={key}>{info[key]}</div>;
