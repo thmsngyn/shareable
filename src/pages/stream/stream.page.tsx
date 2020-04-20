@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import { Track, Section } from '../../components';
 import {
@@ -14,7 +14,7 @@ import { SharedLayout } from '../shared-layout';
 interface StreamProps {}
 interface StreamState {
   hasError: boolean;
-  currentTrack: TrackType;
+  currentTrack: TrackType | undefined;
   is_playing: boolean;
   progress_ms: number;
   likes: TracksEntity[];
@@ -25,14 +25,7 @@ export class Stream extends React.Component<StreamProps, StreamState> {
     super(props);
 
     this.state = {
-      currentTrack: {
-        album: {
-          images: [{ url: '', height: 0, width: 0 }],
-        },
-        name: '',
-        artists: [{ name: '' }],
-        duration_ms: 0,
-      } as TrackType,
+      currentTrack: undefined,
       is_playing: true,
       progress_ms: 0,
       likes: [],
@@ -77,17 +70,20 @@ export class Stream extends React.Component<StreamProps, StreamState> {
 
   render() {
     const { hasError, currentTrack, likes } = this.state;
+    const isLoading = !currentTrack && !likes.length;
 
     return (
-      <SharedLayout hasError={hasError}>
-        <Section headerText={'Currently playing'}>
-          <Track track={currentTrack} />
-        </Section>
-        <Section headerText={'Likes'}>
-          {likes.map((like, index) => {
-            return <Track key={index} track={like.track} />;
-          })}
-        </Section>
+      <SharedLayout hasError={hasError} isLoading={isLoading}>
+        <Fragment>
+          <Section headerText={'Currently playing'}>
+            <Track track={currentTrack!} />
+          </Section>
+          <Section headerText={'Likes'}>
+            {likes.map((like, index) => {
+              return <Track key={index} track={like.track} />;
+            })}
+          </Section>
+        </Fragment>
       </SharedLayout>
     );
   }
