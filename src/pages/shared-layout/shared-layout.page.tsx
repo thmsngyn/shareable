@@ -4,6 +4,7 @@ import { Section } from '../../components';
 
 export interface SharedLayoutProps {
   hasError: boolean;
+  isLoading: boolean;
 }
 export interface SharedLayoutState {}
 
@@ -18,12 +19,15 @@ export class SharedLayout extends React.Component<SharedLayoutProps, SharedLayou
   componentDidMount() {}
 
   render() {
-    const { children, hasError } = this.props;
+    const { children, hasError, isLoading } = this.props;
 
     if (hasError) {
       return (
         <Section headerText={'Something bad happened...'} subText={'Please refresh the page and try again.'}></Section>
       );
+    }
+    if (isLoading) {
+      return <Section>Loading...</Section>;
     }
 
     return children;

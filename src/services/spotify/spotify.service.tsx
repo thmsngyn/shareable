@@ -8,6 +8,7 @@ import {
   SpotifyErrorMessages,
   SpotifyUserProfile,
   SpotifyTimeRange,
+  SpotifyTopType,
 } from './spotify.types';
 
 export const SpotifyService = new (class {
@@ -81,16 +82,7 @@ export const SpotifyService = new (class {
 
   getCurrentlyPlaying(): Promise<CurrentPlaybackResponse> {
     // Make a call using the token
-    return this.request(PLAYER_API, 'GET').then((currentPlaying: CurrentPlaybackResponse) => {
-      if (!currentPlaying) {
-        return {
-          item: undefined,
-          is_playing: undefined,
-          progress_ms: undefined,
-        } as any;
-      }
-      return currentPlaying;
-    });
+    return this.request(PLAYER_API, 'GET');
   }
 
   getLikes(limit: number = 10, offset: number = 0): Promise<LikesResponse> {
@@ -98,15 +90,12 @@ export const SpotifyService = new (class {
   }
 
   getTop(
-    type: any,
+    type: SpotifyTopType,
     limit: number = 10,
     offset: number = 0,
     timeRange: SpotifyTimeRange = SpotifyTimeRange.ShortTerm
   ): Promise<any> {
-    return this.request(
-      `${USER_TOP_API}/${type}?limit=${limit}&offset=${offset}&time_range=${timeRange}`,
-      'GET'
-    ).then();
+    return this.request(`${USER_TOP_API}/${type}?limit=${limit}&offset=${offset}&time_range=${timeRange}`, 'GET');
   }
 
   request(url: string, method: string): Promise<any> {

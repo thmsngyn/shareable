@@ -42,7 +42,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
     }
 
     return (
-      <SharedLayout hasError={hasError}>
+      <SharedLayout hasError={hasError} isLoading={false}>
         <Section
           headerText={`Welcome ${name}!`}
           subText={'You can now listen to music and view your personalized stream.'}

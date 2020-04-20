@@ -117,14 +117,20 @@ export enum SpotifyTimeRange {
   ShortTerm = 'short_term', // 4 weeks
 }
 
+export enum SpotifyTopType {
+  Artists = 'artists',
+  Tracks = 'tracks',
+}
+
 export interface TopResponse {
-  items?: ArtistsEntity[] | Track[] | null;
+  items?: ArtistsEntity[] | Track[];
   total: number;
   limit: number;
   offset: number;
   href: string;
   previous?: null;
   next: string;
+  error?: SpotifyError;
 }
 
 export interface Followers {
