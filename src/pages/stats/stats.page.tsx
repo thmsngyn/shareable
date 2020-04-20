@@ -125,7 +125,7 @@ export class Stats extends React.Component<StatsProps, StatsState> {
                       externalUrl={track.external_urls.spotify}
                       info={{
                         rank: `${index + 1}`,
-                        name: track.name,
+                        title: track.name,
                         artist: track.artists![0].name,
                       }}
                     ></Profile>
