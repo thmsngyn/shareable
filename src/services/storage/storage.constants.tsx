@@ -1,4 +1,5 @@
 export enum StorageKeys {
-  SpotifyToken = 'SpotifyToken',
-  UserProfile = 'UserProfile',
+  SpotifyToken = 'shrbl_spotify_token',
+  UserProfile = 'shrbl_user',
+  KeyDecay = 'shrbl_key_decay',
 }

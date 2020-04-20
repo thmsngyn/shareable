@@ -1,11 +1,12 @@
+import { StorageKeys } from './storage.constants';
+
 /**
  * This is a wrapper around localStorage with:
  * 1. fallback to in memory storage in case local storage is not available
- * 2. optin to add experition time to  values
+ * 2. option to add expiration time to  values
  */
 export const StorageService = new (class {
   storage = localStorage;
-  expirationsKey = 'exp_key_decay';
 
   /** Gets a stored value if exists
    * returns null if not exist or in case of error .
@@ -48,10 +49,10 @@ export const StorageService = new (class {
    * @return {void}
    */
   setExpiration(key: string, duration: number): void {
-    const expirationsValue: any = this.get(this.expirationsKey);
+    const expirationsValue: any = this.get(StorageKeys.KeyDecay);
     const expirations: any = (expirationsValue && JSON.parse(expirationsValue)) || {};
     expirations[key] = Date.now() + duration;
-    this.set(this.expirationsKey, JSON.stringify(expirations));
+    this.set(StorageKeys.KeyDecay, JSON.stringify(expirations));
   }
 
   /** Removes expired keys from local store
@@ -61,7 +62,7 @@ export const StorageService = new (class {
    */
   checkExpiration(): void {
     let expirations: any;
-    if (!(expirations = JSON.parse(this.get(this.expirationsKey) || 'null'))) {
+    if (!(expirations = JSON.parse(this.get(StorageKeys.KeyDecay) || 'null'))) {
       return;
     }
     const now = Date.now();
@@ -74,7 +75,7 @@ export const StorageService = new (class {
       delete expirations[key];
     });
 
-    this.set(this.expirationsKey, JSON.stringify(expirations));
+    this.set(StorageKeys.KeyDecay, JSON.stringify(expirations));
   }
 
   /** Removes a key from the store
