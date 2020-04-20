@@ -108,8 +108,6 @@ body {
 
 /* Images */
 .art {
-  width: 100px;
-  height: 100px;
   display: block;
   cursor: pointer;
 }
