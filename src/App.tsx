@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import { hot } from 'react-hot-loader/root';
 
-import { Spacing, Colors, APP_MARGIN, APP_FOOTER_HEIGHT } from './styles';
+import { Spacing, Colors, APP_MARGIN, APP_FOOTER_HEIGHT, APP_HEADER_HEIGHT } from './styles';
 import { Footer, Header } from './components';
 import { Home } from './pages';
 import { SpotifyService } from './services';
@@ -87,7 +87,7 @@ const styles: Record<string, React.CSSProperties> = {
   routeContainer: {
     paddingLeft: APP_MARGIN,
     paddingRight: APP_MARGIN,
-    paddingTop: APP_FOOTER_HEIGHT,
+    paddingTop: APP_HEADER_HEIGHT,
     paddingBottom: APP_FOOTER_HEIGHT,
     width: '100%',
   },

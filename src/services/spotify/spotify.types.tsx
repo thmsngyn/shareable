@@ -112,9 +112,9 @@ export interface Track {
 
 // Top
 export enum SpotifyTimeRange {
-  LongTerm = 'long_term', // Several years of data
-  MediumTerm = 'medium_term', // 6 months
   ShortTerm = 'short_term', // 4 weeks
+  MediumTerm = 'medium_term', // 6 months
+  LongTerm = 'long_term', // Several years of data
 }
 
 export enum SpotifyTopType {

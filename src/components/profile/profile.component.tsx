@@ -1,4 +1,5 @@
 import React, { CSSProperties } from 'react';
+import { Spacing } from '../../styles';
 
 interface ProfileProps {
   imageUrl: string;
@@ -21,18 +22,27 @@ export class Profile extends React.Component<ProfileProps> {
       ...styles.profileContainer,
       ...style,
     };
+    const imageStyleOverride = {
+      ...styles.image,
+      ...imageStyle,
+    };
 
     return (
       <div style={styleOverride}>
         <div>
-          <img style={imageStyle} src={imageUrl} onClick={() => window.open(externalUrl, '_blank')} />
+          <img
+            className="art"
+            style={imageStyleOverride}
+            src={imageUrl}
+            onClick={() => window.open(externalUrl, '_blank')}
+          />
         </div>
-        <div style={{ textAlign: 'right' }}>
+        <div style={styles.infoKeys}>
           {Object.keys(info).map((key) => {
             return <div key={key}>{key}</div>;
           })}
         </div>
-        <div>
+        <div style={styles.infoValues}>
           {Object.keys(info).map((key) => {
             return <div key={key}>{info[key]}</div>;
           })}
@@ -45,6 +55,16 @@ export class Profile extends React.Component<ProfileProps> {
 const styles: Record<any, React.CSSProperties> = {
   profileContainer: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
+  },
+  image: {
+    marginRight: Spacing.s16,
+  },
+  infoKeys: {
+    textAlign: 'right',
+    marginRight: Spacing.s12,
+  },
+  infoValues: {
+    fontFamily: 'CentraNo2-Medium',
   },
 };

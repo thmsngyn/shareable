@@ -91,9 +91,9 @@ export const SpotifyService = new (class {
 
   getTop(
     type: SpotifyTopType,
+    timeRange: SpotifyTimeRange = SpotifyTimeRange.ShortTerm,
     limit: number = 10,
-    offset: number = 0,
-    timeRange: SpotifyTimeRange = SpotifyTimeRange.ShortTerm
+    offset: number = 0
   ): Promise<any> {
     return this.request(`${USER_TOP_API}/${type}?limit=${limit}&offset=${offset}&time_range=${timeRange}`, 'GET');
   }
