@@ -26,7 +26,13 @@ export class Header extends React.Component<HeaderProps, HeaderState> {
     return AppRoutes.filter((route) => (isRightAligned ? keepRightHeaders(route) : keepLeftHeaders(route))).map(
       (route) => {
         return (
-          <NavLink exact to={route.path} style={styles.headerItem} activeStyle={styles.headerItemActive}>
+          <NavLink
+            key={route.path}
+            exact
+            to={route.path}
+            style={styles.headerItem}
+            activeStyle={styles.headerItemActive}
+          >
             {route.header}
           </NavLink>
         );

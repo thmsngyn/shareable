@@ -49,7 +49,7 @@ class App extends React.Component<AppProps, AppState> {
         <Switch>
           {AppRoutes.map((route) => {
             const { path, page } = route;
-            return <Route exact path={path} component={page} />;
+            return <Route key={route.path} exact path={path} component={page} />;
           })}
         </Switch>
       </div>
