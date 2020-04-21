@@ -8,6 +8,7 @@ interface HomeProps {}
 interface HomeState {
   hasError: boolean;
   loggedIn: boolean;
+  isLoading: boolean;
   name: string;
 }
 
@@ -18,6 +19,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
     this.state = {
       hasError: false,
       loggedIn: false,
+      isLoading: true,
       name: '',
     };
   }
@@ -25,16 +27,18 @@ export class Home extends React.Component<HomeProps, HomeState> {
   componentDidMount() {
     const loggedIn = SpotifyService.userIsLoggedIn();
     if (loggedIn) {
-      SpotifyService.userProfile().then((userProfile) => this.setState({ name: userProfile.name.split(' ')[0] }));
+      SpotifyService.userProfile().then((userProfile) =>
+        this.setState({ name: userProfile.name.split(' ')[0], isLoading: false })
+      );
     }
     this.setState({ loggedIn });
   }
 
   render() {
-    const { hasError, loggedIn, name } = this.state;
+    const { hasError, loggedIn, name, isLoading } = this.state;
 
     return (
-      <SharedLayout hasError={hasError} isLoading={false}>
+      <SharedLayout hasError={hasError} isLoading={isLoading}>
         {!loggedIn && (
           <Section headerText={`Welcome!`} subText={'Please login with your spotify credentials to continue.'}>
             <Button text={`Login to Spotify`} openLink={LOGIN_OAUTH} />
