@@ -84,7 +84,7 @@ export class Track extends React.Component<TrackProps, TrackState> {
             </div>
           </Fragment>
         ) : (
-          <div style={FontSizes.Medium}>Nothing found</div>
+          <div>Nothing found</div>
         )}
       </div>
     );

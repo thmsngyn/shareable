@@ -68,6 +68,6 @@ const styles: Record<any, React.CSSProperties> = {
     marginRight: Spacing.s12,
   },
   infoValues: {
-    fontFamily: 'CentraNo2-Medium',
+    fontWeight: 600,
   },
 };

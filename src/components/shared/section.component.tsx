@@ -31,11 +31,11 @@ const styles: Record<any, React.CSSProperties> = {
   },
   headerText: {
     marginBottom: Spacing.s16,
-    fontFamily: 'CentraNo2-Medium',
+    fontFamily: 'Muli',
+    fontWeight: 700,
     ...FontSizes.Medium,
   },
   subText: {
     marginBottom: Spacing.s16,
-    fontFamily: 'CentraNo2-Book',
   },
 };

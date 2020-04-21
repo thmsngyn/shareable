@@ -89,7 +89,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     flexDirection: 'column',
     color: Colors.c100,
-    fontFamily: 'CentraNo2-Book',
+    fontFamily: 'Muli',
     // boxShadow: `inset ${Spacing.s224}px 0 ${Spacing.s224}px -${Spacing.s224}px ${Colors.ShareableLavender}, inset -${Spacing.s224}px 0 ${Spacing.s224}px -${Spacing.s224}px ${Colors.ShareableLavender}`,
   },
   routeContainer: {
