@@ -21,6 +21,11 @@ export const AppRoutes: AppRoute[] = [
     header: 'shareable',
   },
   {
+    path: '/stats',
+    page: Stats,
+    header: 'stats',
+  },
+  {
     path: '/stream',
     page: Stream,
     header: 'stream',
@@ -30,11 +35,6 @@ export const AppRoutes: AppRoute[] = [
     page: Account,
     header: 'account',
     rightAlignedHeader: true,
-  },
-  {
-    path: '/stats',
-    page: Stats,
-    header: 'stats',
   },
   // Other routes
 ];
