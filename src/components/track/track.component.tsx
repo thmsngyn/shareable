@@ -15,10 +15,6 @@ interface TrackProps {
 interface TrackState {}
 
 export class Track extends React.Component<TrackProps, TrackState> {
-  constructor(props: TrackProps) {
-    super(props);
-  }
-
   componentDidMount() {}
 
   // backgroundStyles() {
@@ -69,6 +65,7 @@ export class Track extends React.Component<TrackProps, TrackState> {
           <Fragment>
             <div style={styles.coverArt}>
               <img
+                alt={'trackImage'}
                 className="art"
                 src={track.album!.images![0].url}
                 onClick={() => window.open(track.external_urls.spotify, '_blank')}
