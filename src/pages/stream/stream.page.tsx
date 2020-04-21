@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import { Track, Section } from '../../components';
 import {
@@ -74,16 +74,10 @@ export class Stream extends React.Component<StreamProps, StreamState> {
 
     return (
       <SharedLayout hasError={hasError} isLoading={isLoading}>
-        <Fragment>
-          <Section headerText={'Currently playing'}>
-            <Track track={currentTrack!} />
-          </Section>
-          <Section headerText={'Likes'}>
-            {likes.map((like, index) => {
-              return <Track key={index} track={like.track} />;
-            })}
-          </Section>
-        </Fragment>
+        <Section
+          headerText={'Stream feed'}
+          subText={'Under development. The intent of this page is to be a live stream of music your friends like.'}
+        ></Section>
       </SharedLayout>
     );
   }
