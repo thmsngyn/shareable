@@ -38,7 +38,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
     const { hasError, loggedIn, name, isLoading } = this.state;
 
     return (
-      <SharedLayout hasError={hasError} isLoading={isLoading}>
+      <SharedLayout hasError={hasError} isLoading={isLoading && loggedIn}>
         {!loggedIn && (
           <Section headerText={`Welcome!`} subText={'Please login with your spotify credentials to continue.'}>
             <Button text={`Login to Spotify`} openLink={LOGIN_OAUTH} />
