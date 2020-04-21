@@ -60,7 +60,7 @@ class App extends React.Component<AppProps, AppState> {
     const { loggedIn } = this.state;
 
     return (
-      <Router>
+      <Router basename="/shareable/">
         <div style={styles.app}>
           <Header />
           {this.renderRoutes()}
