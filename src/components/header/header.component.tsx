@@ -118,6 +118,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: Colors.ScreenBackground,
   },
   headerItemActive: {
-    fontWeight: 800,
+    fontWeight: 700,
   },
 };

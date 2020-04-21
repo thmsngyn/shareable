@@ -46,7 +46,7 @@ body {
   padding: 0.7em 1.5em;
   transition: all 0.25s ease;
   text-decoration: none;
-  font-family: 'CentraNo2-Medium';
+  font-weight: 700;
 }
 
 .btn:hover {
