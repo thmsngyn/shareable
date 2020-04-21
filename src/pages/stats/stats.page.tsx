@@ -86,7 +86,7 @@ export class Stats extends React.Component<StatsProps, StatsState> {
 
     return (
       <SharedLayout hasError={hasError} isLoading={isLoading}>
-        <div style={styles.row}>
+        <div>
           <Section headerText={`Top artists (${SpotifyTimeRangeToDisplay[topArtistsTimeRange]})`}>
             {this.renderTimeRangeButtons(SpotifyTopType.Artists)}
             <div style={styles.row}>
@@ -111,7 +111,7 @@ export class Stats extends React.Component<StatsProps, StatsState> {
             </div>
           </Section>
         </div>
-        <div style={styles.row}>
+        <div>
           <Section headerText={`Top tracks (${SpotifyTimeRangeToDisplay[topTracksTimeRange]})`}>
             {this.renderTimeRangeButtons(SpotifyTopType.Tracks)}
             <div style={styles.row}>

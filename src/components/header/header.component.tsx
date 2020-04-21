@@ -3,10 +3,12 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 import logo from '../../assets/gradient-logo.png';
-import { FontSizes, Colors, APP_MARGIN, APP_HEADER_HEIGHT } from '../../styles';
+import { FontSizes, Colors, APP_HEADER_HEIGHT, getAppMargin } from '../../styles';
 import { AppRoutes, AppRoute } from '../../utils';
 
-interface HeaderProps {}
+interface HeaderProps {
+  isMobile: boolean;
+}
 interface HeaderState {}
 export class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: any) {
@@ -40,11 +42,33 @@ export class Header extends React.Component<HeaderProps, HeaderState> {
     );
   }
 
+  get responsiveHeaderStyle() {
+    const { isMobile } = this.props;
+    let responsiveHeaderStyle = {
+      ...styles.headerContents,
+      paddingLeft: getAppMargin(isMobile),
+      paddingRight: getAppMargin(isMobile),
+    };
+    if (isMobile) {
+      responsiveHeaderStyle = {
+        ...responsiveHeaderStyle,
+        fontSize: (responsiveHeaderStyle.fontSize as number) - 6,
+      };
+    }
+
+    return responsiveHeaderStyle;
+  }
+
+  get responsiveLeftHeaderStyle() {
+    const { isMobile } = this.props;
+    return { ...styles.headerLeft, width: isMobile ? 250 : 300 };
+  }
+
   render() {
     return (
       <div style={styles.header}>
-        <div style={styles.headerContents}>
-          <div style={styles.headerLeft}>
+        <div style={this.responsiveHeaderStyle}>
+          <div style={this.responsiveLeftHeaderStyle}>
             <NavLink exact to={'/'} style={styles.headerItem} activeStyle={styles.headerItemActive}>
               <img style={styles.logo} src={logo} alt="logo" />
             </NavLink>
@@ -68,8 +92,6 @@ const styles: Record<string, React.CSSProperties> = {
     height: APP_HEADER_HEIGHT,
   },
   headerContents: {
-    marginLeft: APP_MARGIN,
-    marginRight: APP_MARGIN,
     display: 'flex',
     alignItems: 'center',
     height: '100%',
@@ -83,7 +105,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: 400,
+    width: 300,
   },
   headerRight: {
     display: 'flex',

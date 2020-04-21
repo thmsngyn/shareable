@@ -33,20 +33,19 @@ export class Home extends React.Component<HomeProps, HomeState> {
   render() {
     const { hasError, loggedIn, name } = this.state;
 
-    if (!loggedIn) {
-      return (
-        <Section headerText={`Welcome!`} subText={'Please login with your spotify credentials to continue.'}>
-          <Button text={`Login to Spotify`} openLink={LOGIN_OAUTH} />
-        </Section>
-      );
-    }
-
     return (
       <SharedLayout hasError={hasError} isLoading={false}>
-        <Section
-          headerText={`Welcome ${name}!`}
-          subText={'You can now listen to music and view your personalized stream.'}
-        ></Section>
+        {!loggedIn && (
+          <Section headerText={`Welcome!`} subText={'Please login with your spotify credentials to continue.'}>
+            <Button text={`Login to Spotify`} openLink={LOGIN_OAUTH} />
+          </Section>
+        )}
+        {loggedIn && (
+          <Section
+            headerText={`Welcome ${name}!`}
+            subText={'You can now listen to music and view your personalized stream.'}
+          ></Section>
+        )}
       </SharedLayout>
     );
   }
