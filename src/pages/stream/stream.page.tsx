@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Track, Section } from '../../components';
+import { Section } from '../../components';
 import {
   TracksEntity,
   SpotifyService,

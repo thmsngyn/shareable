@@ -7,10 +7,6 @@ interface SectionProps {
 }
 
 export class Section extends React.Component<SectionProps> {
-  constructor(props: any) {
-    super(props);
-  }
-
   componentDidMount() {}
 
   render() {

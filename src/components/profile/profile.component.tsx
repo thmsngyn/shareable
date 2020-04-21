@@ -11,10 +11,6 @@ interface ProfileProps {
 }
 
 export class Profile extends React.Component<ProfileProps> {
-  constructor(props: any) {
-    super(props);
-  }
-
   componentDidMount() {}
 
   render() {
@@ -32,6 +28,7 @@ export class Profile extends React.Component<ProfileProps> {
       <div style={styleOverride}>
         <div>
           <img
+            alt={'profileImage'}
             className="art"
             style={imageStyleOverride}
             src={imageUrl}

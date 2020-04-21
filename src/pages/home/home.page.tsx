@@ -39,16 +39,18 @@ export class Home extends React.Component<HomeProps, HomeState> {
   componentDidMount() {
     const loggedIn = SpotifyService.userIsLoggedIn();
     if (loggedIn) {
-      SpotifyService.userProfile().then((userProfile) =>
-        this.setState({ name: userProfile.name.split(' ')[0], isLoading: false })
-      );
-      this.setCurrentlyPlayingState((error: SpotifyError) => {
-        // Something bad happened
-        this.setState({ hasError: true });
-      });
-      this.setLikesState((error: SpotifyError) => {
-        // Something bad happened
-        this.setState({ hasError: true });
+      Promise.all([
+        SpotifyService.userProfile().then((userProfile) => this.setState({ name: userProfile.name.split(' ')[0] })),
+        this.setCurrentlyPlayingState((error: SpotifyError) => {
+          // Something bad happened
+          this.setState({ hasError: true });
+        }),
+        this.setLikesState((error: SpotifyError) => {
+          // Something bad happened
+          this.setState({ hasError: true });
+        }),
+      ]).then(([resolved1, resolved2, resolved3]) => {
+        this.setState({ isLoading: false });
       });
     }
     this.setState({ loggedIn });
