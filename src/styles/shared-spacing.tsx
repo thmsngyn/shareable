@@ -13,6 +13,8 @@ export enum Spacing {
   s224 = 224,
 }
 
-export const APP_MARGIN = Spacing.s224;
-export const APP_HEADER_HEIGHT = Spacing.s48;
+export const getAppMargin = (isMobile: boolean = true) => {
+  return isMobile ? Spacing.s24 : Spacing.s224;
+};
+export const APP_HEADER_HEIGHT = Spacing.s64;
 export const APP_FOOTER_HEIGHT = Spacing.s224;

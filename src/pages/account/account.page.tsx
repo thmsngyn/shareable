@@ -86,7 +86,7 @@ const styles: Record<any, React.CSSProperties> = {
     width: 500,
   },
   image: {
-    width: 200,
+    width: 80,
     height: 'auto',
   },
 };

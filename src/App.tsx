@@ -1,10 +1,11 @@
 import React from 'react';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import withSizes from 'react-sizes';
 
 import { hot } from 'react-hot-loader/root';
 
-import { Spacing, Colors, APP_MARGIN, APP_FOOTER_HEIGHT, APP_HEADER_HEIGHT } from './styles';
+import { Colors, APP_FOOTER_HEIGHT, APP_HEADER_HEIGHT, getAppMargin } from './styles';
 import { Footer, Header } from './components';
 import { Home } from './pages';
 import { SpotifyService } from './services';
@@ -12,7 +13,9 @@ import { AppRoutes } from './utils';
 
 import './App.css';
 
-interface AppProps {}
+interface AppProps {
+  isMobile: boolean;
+}
 
 interface AppState {
   loggedIn: boolean;
@@ -34,35 +37,37 @@ class App extends React.Component<AppProps, AppState> {
 
   renderRoutes() {
     const { loggedIn } = this.state;
+    const { isMobile } = this.props;
 
-    // Always render the homepage if a user is not authenticated
-    if (!loggedIn) {
-      return (
-        <div style={styles.routeContainer}>
-          <Home />
-        </div>
-      );
-    }
+    let responsiveStyle = {
+      ...styles.routeContainer,
+      marginLeft: getAppMargin(isMobile),
+      marginRight: getAppMargin(isMobile),
+    };
 
     return (
-      <div style={styles.routeContainer}>
-        <Switch>
-          {AppRoutes.map((route) => {
-            const { path, page } = route;
-            return <Route key={route.path} exact path={path} component={page} />;
-          })}
-        </Switch>
+      <div style={responsiveStyle}>
+        {!loggedIn && <Home />}
+        {loggedIn && (
+          <Switch>
+            {AppRoutes.map((route) => {
+              const { path, page } = route;
+              return <Route key={route.path} exact path={path} component={page} />;
+            })}
+          </Switch>
+        )}
       </div>
     );
   }
 
   render() {
     const { loggedIn } = this.state;
+    const { isMobile } = this.props;
 
     return (
       <Router basename="/shareable/">
         <div style={styles.app}>
-          <Header />
+          <Header isMobile={isMobile} />
           {this.renderRoutes()}
           {loggedIn && <Footer />}
         </div>
@@ -71,7 +76,11 @@ class App extends React.Component<AppProps, AppState> {
   }
 }
 
-export default hot(App);
+const mapSizesToProps = ({ width }: any) => ({
+  isMobile: width < 500,
+});
+
+export default hot(withSizes(mapSizesToProps)(App));
 
 const styles: Record<string, React.CSSProperties> = {
   app: {
@@ -80,15 +89,12 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     flexDirection: 'column',
     color: Colors.c100,
-    alignItems: 'flex-start',
-    fontFamily: 'CentraNo2-Book ',
-    boxShadow: `inset ${Spacing.s224}px 0 ${Spacing.s224}px -${Spacing.s224}px ${Colors.ShareableLavender}, inset -${Spacing.s224}px 0 ${Spacing.s224}px -${Spacing.s224}px ${Colors.ShareableLavender}`,
+    fontFamily: 'CentraNo2-Book',
+    // boxShadow: `inset ${Spacing.s224}px 0 ${Spacing.s224}px -${Spacing.s224}px ${Colors.ShareableLavender}, inset -${Spacing.s224}px 0 ${Spacing.s224}px -${Spacing.s224}px ${Colors.ShareableLavender}`,
   },
   routeContainer: {
-    paddingLeft: APP_MARGIN,
-    paddingRight: APP_MARGIN,
     paddingTop: APP_HEADER_HEIGHT,
     paddingBottom: APP_FOOTER_HEIGHT,
-    width: '100%',
+    overflow: 'scroll',
   },
 };

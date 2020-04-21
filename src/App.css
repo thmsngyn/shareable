@@ -40,7 +40,7 @@ body {
 }
 
 body {
-  background-color: #333;
+  background-color: #282c34;
   color: #eee;
 }
 
@@ -116,10 +116,10 @@ body {
 
 @font-face {
   font-family: 'CentraNo2-Book';
-  src: local('CentraNo2-Book'), url(./assets/fonts/CentraNo2-Book.otf) format('otf');
+  src: local('CentraNo2-Book'), url(assets/fonts/CentraNo2-Book.otf) format('otf');
 }
 
 @font-face {
   font-family: 'CentraNo2-Medium';
-  src: local('CentraNo2-Medium'), url(./assets/fonts/CentraNo2-Medium.otf) format('otf');
+  src: local('CentraNo2-Medium'), url(assets/fonts/CentraNo2-Medium.otf) format('otf');
 }
