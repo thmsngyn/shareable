@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/shareable/static/css/main.de9e5510.chunk.css",
+    "main.css": "/shareable/static/css/main.f22aa4d3.chunk.css",
     "main.js": "/shareable/static/js/main.07d283f5.chunk.js",
     "main.js.map": "/shareable/static/js/main.07d283f5.chunk.js.map",
     "runtime-main.js": "/shareable/static/js/runtime-main.9d18d8f2.js",
@@ -8,9 +8,9 @@
     "static/js/2.8a9e4f80.chunk.js": "/shareable/static/js/2.8a9e4f80.chunk.js",
     "static/js/2.8a9e4f80.chunk.js.map": "/shareable/static/js/2.8a9e4f80.chunk.js.map",
     "index.html": "/shareable/index.html",
-    "precache-manifest.398c357053d18d29b43e2e50e99355f7.js": "/shareable/precache-manifest.398c357053d18d29b43e2e50e99355f7.js",
+    "precache-manifest.f95a8c3c2a0cebdd1472b09334e31d55.js": "/shareable/precache-manifest.f95a8c3c2a0cebdd1472b09334e31d55.js",
     "service-worker.js": "/shareable/service-worker.js",
-    "static/css/main.de9e5510.chunk.css.map": "/shareable/static/css/main.de9e5510.chunk.css.map",
+    "static/css/main.f22aa4d3.chunk.css.map": "/shareable/static/css/main.f22aa4d3.chunk.css.map",
     "static/js/2.8a9e4f80.chunk.js.LICENSE.txt": "/shareable/static/js/2.8a9e4f80.chunk.js.LICENSE.txt",
     "static/media/App.css": "/shareable/static/media/CentraNo2-Medium.b49c1191.otf",
     "static/media/badminton.png": "/shareable/static/media/badminton.c7bae4fd.png",
@@ -19,7 +19,7 @@
   "entrypoints": [
     "static/js/runtime-main.9d18d8f2.js",
     "static/js/2.8a9e4f80.chunk.js",
-    "static/css/main.de9e5510.chunk.css",
+    "static/css/main.f22aa4d3.chunk.css",
     "static/js/main.07d283f5.chunk.js"
   ]
 }
