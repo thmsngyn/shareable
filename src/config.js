@@ -11,10 +11,12 @@ export const scopes = [
 
 const dev = {
   redirectUri: 'http://localhost:3000/',
+  obfuscateDevTools: false,
 };
 
 const prod = {
   redirectUri: 'https://thmsngyn.github.io/shareable/',
+  obfuscateDevTools: true,
 };
 
 const config = process.env.REACT_APP_STAGE === 'prod' ? prod : dev;

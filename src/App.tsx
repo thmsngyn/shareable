@@ -7,11 +7,14 @@ import withSizes from 'react-sizes';
 
 import { hot } from 'react-hot-loader/root';
 
+import { Provider } from 'react-redux';
+
 import { Colors, APP_FOOTER_HEIGHT, APP_HEADER_HEIGHT, getAppMargin } from './styles';
 import { Footer, Header } from './components';
 import { Home } from './pages';
 import { SpotifyService } from './services';
 import { AppRoutes } from './utils';
+import store from './redux/store';
 
 interface AppProps {
   isMobile: boolean;
@@ -65,13 +68,15 @@ class App extends React.Component<AppProps, AppState> {
     const { isMobile } = this.props;
 
     return (
-      <Router basename="/shareable/">
-        <div style={styles.app}>
-          <Header isMobile={isMobile} />
-          {this.renderRoutes()}
-          {loggedIn && <Footer />}
-        </div>
-      </Router>
+      <Provider store={store}>
+        <Router basename="/shareable/">
+          <div style={styles.app}>
+            <Header isMobile={isMobile} />
+            {this.renderRoutes()}
+            {loggedIn && <Footer />}
+          </div>
+        </Router>
+      </Provider>
     );
   }
 }
