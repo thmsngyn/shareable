@@ -1,41 +1,29 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, Dispatch } from 'react';
+
+import { connect } from 'react-redux';
 
 import './track.css';
 import './track.scss';
 
+import * as AppStateTypes from 'AppStateTypes';
+
 import { Track as TrackType } from '../../services';
 import { Spacing, FontSizes } from '../../styles';
+import { ActionTypes } from '../../redux/actions';
 
-interface TrackProps {
+interface OwnProps {
   track: TrackType;
-  is_playing?: any;
-  progress_ms?: any;
 }
+interface DispatchProps {
+  playSong: any;
+}
+interface StateProps {}
+
+type TrackProps = OwnProps & DispatchProps & StateProps;
 
 interface TrackState {}
 
-export class Track extends React.Component<TrackProps, TrackState> {
-  componentDidMount() {}
-
-  // backgroundStyles() {
-  //   const { track } = this.props;
-  //   console.log(track);
-
-  //   return {
-  //     backgroundImage: `url(${track.album!.images![0].url})`,
-  //     width: 500,
-  //     height: 500,
-  //   };
-  // }
-
-  // progressBarStyles() {
-  //   const { track } = this.props;
-
-  //   return {
-  //     width: (this.props.progress_ms * 100) / track.duration_ms + '%',
-  //   };
-  // }
-
+class Track extends React.Component<TrackProps, TrackState> {
   coverArtStyle() {
     const { track } = this.props;
 
@@ -56,6 +44,11 @@ export class Track extends React.Component<TrackProps, TrackState> {
     return <div style={styles.trackTitle}>{track.name}</div>;
   }
 
+  playSong(track: TrackType) {
+    const uri = track.album.uri;
+    this.props.playSong(track);
+  }
+
   render() {
     const { track } = this.props;
 
@@ -68,7 +61,7 @@ export class Track extends React.Component<TrackProps, TrackState> {
                 alt={'trackImage'}
                 className="art"
                 src={track.album!.images![0].url}
-                onClick={() => window.open(track.external_urls.spotify, '_blank')}
+                onClick={() => this.playSong(track)}
               />
             </div>
             <div className="track__content">
@@ -105,3 +98,10 @@ const styles: Record<any, React.CSSProperties> = {
     ...FontSizes.Large,
   },
 };
+
+const MapDispatchToProps = (dispatch: Dispatch<AppStateTypes.RootAction>) => ({
+  playSong: (track: any) => dispatch({ type: ActionTypes.PLAY_SONG, payload: track }),
+  pauseSong: (track: any) => dispatch({ type: ActionTypes.PAUSE_SONG, payload: track }),
+});
+
+export default connect(undefined, MapDispatchToProps)(Track);

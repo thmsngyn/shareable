@@ -1,5 +1,8 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, Dispatch } from 'react';
 
+import { connect } from 'react-redux';
+
+import * as AppStateTypes from 'AppStateTypes';
 import { Section, Button, Track } from '../../components';
 import { SharedLayout } from '../shared-layout';
 import {
@@ -11,8 +14,18 @@ import {
   Track as TrackType,
   TracksEntity,
 } from '../../services';
+import { ActionTypes } from '../../redux/actions';
 
-interface HomeProps {}
+interface OwnProps {}
+interface DispatchProps {
+  setCurrentlyPlaying: any;
+}
+interface StateProps {
+  currentlyPlayingTrack: any;
+}
+
+type HomeProps = OwnProps & DispatchProps & StateProps;
+
 interface HomeState {
   hasError: boolean;
   loggedIn: boolean;
@@ -22,7 +35,7 @@ interface HomeState {
   likes: TracksEntity[];
 }
 
-export class Home extends React.Component<HomeProps, HomeState> {
+class Home extends React.Component<HomeProps, HomeState> {
   constructor(props: any) {
     super(props);
 
@@ -67,6 +80,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
     this.setState({
       currentTrack: currentlyPlaying.item,
     });
+    currentlyPlaying.item && this.props.setCurrentlyPlaying(currentlyPlaying.item);
   }
 
   async setLikesState(onError: Function) {
@@ -82,6 +96,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
 
   render() {
     const { hasError, loggedIn, name, isLoading, likes, currentTrack } = this.state;
+    const { currentlyPlayingTrack } = this.props;
 
     return (
       <SharedLayout hasError={hasError} isLoading={loggedIn && isLoading}>
@@ -97,7 +112,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
               subText={'You can now play music and view your personalized stats.'}
             ></Section>
             <Section headerText={'Currently playing'}>
-              <Track track={currentTrack!} />
+              <Track track={currentlyPlayingTrack || currentTrack} />
             </Section>
             <Section headerText={'Likes'}>
               {likes.map((like, index) => {
@@ -110,3 +125,15 @@ export class Home extends React.Component<HomeProps, HomeState> {
     );
   }
 }
+
+const MapStateToProps = (store: AppStateTypes.ReducerState): StateProps => {
+  return {
+    currentlyPlayingTrack: store.currentlyPlaying.track,
+  };
+};
+
+const MapDispatchToProps = {
+  setCurrentlyPlaying: (track: any) => ({ type: ActionTypes.SET_CURRENTLY_FOCUSED, payload: track }),
+};
+
+export default connect(MapStateToProps, MapDispatchToProps)(Home);
