@@ -1,1 +1,1 @@
-export * from './player.component';
+export { default as Player } from './player.component';

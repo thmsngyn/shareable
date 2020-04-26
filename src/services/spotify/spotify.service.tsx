@@ -1,7 +1,7 @@
 import { hash, parseJson } from '../../utils';
 import { StorageService, StorageKeys } from '../storage';
 
-import { PLAYER_API, SAVED_TRACKS_API, USER_PROFILE_API, USER_TOP_API } from './spotify.constants';
+import { PLAYER_API, SAVED_TRACKS_API, USER_PROFILE_API, USER_TOP_API, PLAYER_PLAY_API } from './spotify.constants';
 import {
   CurrentPlaybackResponse,
   LikesResponse,
@@ -98,10 +98,15 @@ export const SpotifyService = new (class {
     return this.request(`${USER_TOP_API}/${type}?limit=${limit}&offset=${offset}&time_range=${timeRange}`, 'GET');
   }
 
-  request(url: string, method: string): Promise<any> {
+  playSongs(uris: string[]): Promise<any> {
+    return this.request(`${PLAYER_PLAY_API}`, 'PUT', { uris });
+  }
+
+  request(url: string, method: string, body?: any): Promise<any> {
     return fetch(url, {
-      method: method,
+      method,
       headers: this.headers,
+      body: JSON.stringify(body),
     })
       .then(parseJson)
       .then(this.errorHandler.bind(this));

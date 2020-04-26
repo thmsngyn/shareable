@@ -1,1 +1,1 @@
-export * from './track.component';
+export { default as Track } from './track.component';
