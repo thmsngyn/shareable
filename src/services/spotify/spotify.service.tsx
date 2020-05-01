@@ -85,6 +85,15 @@ export const SpotifyService = new (class {
     return this.request(PLAYER_API, 'GET');
   }
 
+  /**
+   * Transfer playback to a new device and determine if it should start playing.
+   * @param deviceIds array of device ids to transfer playback to, only a single device id is currently supported
+   * @param play true: ensure playback happens on new device. false or not provided: keep the current playback state.
+   */
+  transferPlayback(deviceIds: string[], play: boolean = false): Promise<any> {
+    return this.request(PLAYER_API, 'PUT', { device_ids: deviceIds, play });
+  }
+
   getLikes(limit: number = 10, offset: number = 0): Promise<LikesResponse> {
     return this.request(`${SAVED_TRACKS_API}?limit=${limit}&offset=${offset}`, 'GET');
   }
