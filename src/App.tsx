@@ -101,6 +101,6 @@ const styles: Record<string, React.CSSProperties> = {
   routeContainer: {
     paddingTop: APP_HEADER_HEIGHT,
     paddingBottom: APP_FOOTER_HEIGHT,
-    overflow: 'scroll',
+    overflow: 'auto',
   },
 };
