@@ -1,33 +1,32 @@
 import * as AppStateTypes from 'AppStateTypes';
 import { ActionTypes } from '../actions/';
 
-interface CurrentlyPlaying {
+interface FocusedTrack {
   track: any;
   isPlaying: boolean;
 }
 
-export const initialState: CurrentlyPlaying = {
+export const initialState: FocusedTrack = {
   track: undefined,
   isPlaying: false,
 };
 
-export const currentlyPlayingReducer = (state: CurrentlyPlaying = initialState, action: AppStateTypes.RootAction) => {
+export const focusedTrackReducer = (state: FocusedTrack = initialState, action: AppStateTypes.RootAction) => {
   switch (action.type) {
-    case ActionTypes.SET_CURRENTLY_FOCUSED: {
-      return {
-        ...state,
-        track: action.payload,
-        isPlaying: true,
-      };
+    case ActionTypes.SET_FOCUSED: {
+      const { track: { id } = {} } = state;
+      // Only update the store if it is a new track
+      if (action.payload && id !== action.payload.id) {
+        return {
+          ...state,
+          track: action.payload,
+          isPlaying: true,
+        };
+      } else {
+        return state;
+      }
     }
-    case ActionTypes.PLAY_SONG: {
-      return {
-        ...state,
-        track: action.payload,
-        isPlaying: true,
-      };
-    }
-    case ActionTypes.PAUSE_SONG: {
+    case ActionTypes.PAUSE_FOCUSED: {
       return {
         ...state,
         track: action.payload,
