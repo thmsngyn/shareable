@@ -3,7 +3,7 @@ import { Spacing } from '../../styles';
 
 interface ProfileProps {
   imageUrl: string;
-  externalUrl: string;
+  onClickImage: Function;
   info: Record<string, string>;
   style?: CSSProperties;
   imageStyle?: CSSProperties;
@@ -14,7 +14,7 @@ export class Profile extends React.Component<ProfileProps> {
   componentDidMount() {}
 
   render() {
-    const { imageUrl, externalUrl, info, style, imageStyle, displayKeys = true } = this.props;
+    const { imageUrl, info, style, imageStyle, displayKeys = true, onClickImage } = this.props;
     const styleOverride = {
       ...styles.profileContainer,
       ...style,
@@ -32,7 +32,7 @@ export class Profile extends React.Component<ProfileProps> {
             className="art"
             style={imageStyleOverride}
             src={imageUrl}
-            onClick={() => window.open(externalUrl, '_blank')}
+            onClick={() => onClickImage()}
           />
         </div>
         {displayKeys && (

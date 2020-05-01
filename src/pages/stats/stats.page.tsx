@@ -1,11 +1,20 @@
 import React from 'react';
 
+import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+
 import { SharedLayout } from '../shared-layout';
 import { Section, Profile, Button } from '../../components';
 import { TopResponse, SpotifyService, SpotifyTopType, ArtistsEntity, SpotifyTimeRange, Track } from '../../services';
 import { Spacing } from '../../styles';
+import { playSong } from '../../redux/actions';
 
-interface StatsProps {}
+interface DispatchProps {
+  playSong: typeof playSong;
+}
+
+type StatsProps = DispatchProps;
+
 interface StatsState {
   hasError: boolean;
   topArtistsTimeRange: SpotifyTimeRange;
@@ -15,7 +24,7 @@ interface StatsState {
   isLoading: boolean;
 }
 
-export class Stats extends React.Component<StatsProps, StatsState> {
+class Stats extends React.Component<StatsProps, StatsState> {
   constructor(props: any) {
     super(props);
 
@@ -98,7 +107,7 @@ export class Stats extends React.Component<StatsProps, StatsState> {
                       style={styles.profile}
                       imageStyle={styles.image}
                       imageUrl={artist.images![0].url}
-                      externalUrl={artist.external_urls.spotify}
+                      onClickImage={() => window.open(artist.external_urls.spotify, '_blank')}
                       displayKeys={false}
                       info={{
                         rank: `${index + 1}`,
@@ -123,7 +132,7 @@ export class Stats extends React.Component<StatsProps, StatsState> {
                       style={styles.profile}
                       imageStyle={styles.image}
                       imageUrl={track.album!.images![0].url}
-                      externalUrl={track.external_urls.spotify}
+                      onClickImage={() => this.props.playSong(track)}
                       displayKeys={false}
                       info={{
                         rank: `${index + 1}`,
@@ -160,3 +169,9 @@ const styles: Record<any, React.CSSProperties> = {
     marginRight: Spacing.s16,
   },
 };
+
+const MapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => ({
+  playSong: (track: any) => dispatch(playSong(track)),
+});
+
+export default connect(undefined, MapDispatchToProps)(Stats);

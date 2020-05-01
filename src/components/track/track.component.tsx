@@ -1,21 +1,20 @@
-import React, { Fragment, Dispatch } from 'react';
+import React, { Fragment } from 'react';
 
 import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 import './track.css';
 import './track.scss';
 
-import * as AppStateTypes from 'AppStateTypes';
-
 import { Track as TrackType } from '../../services';
 import { Spacing, FontSizes } from '../../styles';
-import { ActionTypes } from '../../redux/actions';
+import { playSong } from '../../redux/actions';
 
 interface OwnProps {
   track: TrackType;
 }
 interface DispatchProps {
-  playSong: any;
+  playSong: typeof playSong;
 }
 interface StateProps {}
 
@@ -24,14 +23,6 @@ type TrackProps = OwnProps & DispatchProps & StateProps;
 interface TrackState {}
 
 class Track extends React.Component<TrackProps, TrackState> {
-  coverArtStyle() {
-    const { track } = this.props;
-
-    return {
-      backgroundImage: `url(${track.album!.images![0].url})`,
-    };
-  }
-
   renderArtists() {
     const { track } = this.props;
 
@@ -44,9 +35,8 @@ class Track extends React.Component<TrackProps, TrackState> {
     return <div style={styles.trackTitle}>{track.name}</div>;
   }
 
-  playSong(track: TrackType) {
-    const uri = track.album.uri;
-    this.props.playSong(track);
+  hasData(track: TrackType) {
+    return track && track.album!.images![0].url && track.artists;
   }
 
   render() {
@@ -54,23 +44,19 @@ class Track extends React.Component<TrackProps, TrackState> {
 
     return (
       <div className="track" style={styles.track}>
-        {track ? (
+        {this.hasData(track) ? (
           <Fragment>
             <div style={styles.coverArt}>
               <img
                 alt={'trackImage'}
                 className="art"
                 src={track.album!.images![0].url}
-                onClick={() => this.playSong(track)}
+                onClick={() => this.props.playSong(track)}
               />
             </div>
             <div className="track__content">
               {this.renderArtists()}
               {this.renderTrackTitle()}
-              {/* <div style={styles.progress} className="progress"> */}
-              {/* <div className="progress__bar" style={this.progressBarStyles()} /> */}
-              {/* <SpotifyPlayer token={this.state.token} uris={[]} /> */}
-              {/* </div> */}
             </div>
           </Fragment>
         ) : (
@@ -99,9 +85,8 @@ const styles: Record<any, React.CSSProperties> = {
   },
 };
 
-const MapDispatchToProps = (dispatch: Dispatch<AppStateTypes.RootAction>) => ({
-  playSong: (track: any) => dispatch({ type: ActionTypes.PLAY_SONG, payload: track }),
-  pauseSong: (track: any) => dispatch({ type: ActionTypes.PAUSE_SONG, payload: track }),
+const MapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => ({
+  playSong: (track: any) => dispatch(playSong(track)),
 });
 
 export default connect(undefined, MapDispatchToProps)(Track);

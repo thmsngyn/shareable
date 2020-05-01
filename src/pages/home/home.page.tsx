@@ -1,4 +1,4 @@
-import React, { Fragment, Dispatch } from 'react';
+import React, { Fragment } from 'react';
 
 import { connect } from 'react-redux';
 
@@ -11,17 +11,16 @@ import {
   SpotifyError,
   CurrentPlaybackResponse,
   LikesResponse,
-  Track as TrackType,
   TracksEntity,
 } from '../../services';
-import { ActionTypes } from '../../redux/actions';
+import { setFocused } from '../../redux/actions';
 
 interface OwnProps {}
 interface DispatchProps {
-  setCurrentlyPlaying: any;
+  setFocusedTrack: typeof setFocused;
 }
 interface StateProps {
-  currentlyPlayingTrack: any;
+  focusedTrack: any;
 }
 
 type HomeProps = OwnProps & DispatchProps & StateProps;
@@ -31,7 +30,6 @@ interface HomeState {
   loggedIn: boolean;
   isLoading: boolean;
   name: string;
-  currentTrack: TrackType | undefined;
   likes: TracksEntity[];
 }
 
@@ -44,7 +42,6 @@ class Home extends React.Component<HomeProps, HomeState> {
       loggedIn: false,
       isLoading: true,
       name: '',
-      currentTrack: undefined,
       likes: [],
     };
   }
@@ -70,17 +67,18 @@ class Home extends React.Component<HomeProps, HomeState> {
   }
 
   async setCurrentlyPlayingState(onError: Function) {
+    const { setFocusedTrack } = this.props;
+
     const currentlyPlaying: CurrentPlaybackResponse = await SpotifyService.getCurrentlyPlaying();
-    const { error } = currentlyPlaying;
+    const { error, item } = currentlyPlaying;
 
     if (error) {
       return onError(error);
     }
 
-    this.setState({
-      currentTrack: currentlyPlaying.item,
-    });
-    currentlyPlaying.item && this.props.setCurrentlyPlaying(currentlyPlaying.item);
+    if (currentlyPlaying.item && setFocusedTrack) {
+      setFocusedTrack(item);
+    }
   }
 
   async setLikesState(onError: Function) {
@@ -95,8 +93,8 @@ class Home extends React.Component<HomeProps, HomeState> {
   }
 
   render() {
-    const { hasError, loggedIn, name, isLoading, likes, currentTrack } = this.state;
-    const { currentlyPlayingTrack } = this.props;
+    const { hasError, loggedIn, name, isLoading, likes } = this.state;
+    const { focusedTrack } = this.props;
 
     return (
       <SharedLayout hasError={hasError} isLoading={loggedIn && isLoading}>
@@ -112,7 +110,7 @@ class Home extends React.Component<HomeProps, HomeState> {
               subText={'You can now play music and view your personalized stats.'}
             ></Section>
             <Section headerText={'Currently playing'}>
-              <Track track={currentlyPlayingTrack} />
+              <Track track={focusedTrack} />
             </Section>
             <Section headerText={'Likes'}>
               {likes.map((like, index) => {
@@ -128,12 +126,12 @@ class Home extends React.Component<HomeProps, HomeState> {
 
 const MapStateToProps = (store: AppStateTypes.ReducerState): StateProps => {
   return {
-    currentlyPlayingTrack: store.currentlyPlaying.track,
+    focusedTrack: store.focusedTrack.track,
   };
 };
 
 const MapDispatchToProps = {
-  setCurrentlyPlaying: (track: any) => ({ type: ActionTypes.SET_CURRENTLY_FOCUSED, payload: track }),
+  setFocusedTrack: setFocused,
 };
 
 export default connect(MapStateToProps, MapDispatchToProps)(Home);
