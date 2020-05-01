@@ -1,14 +1,25 @@
+import { ThunkAction } from 'redux-thunk';
+import { AnyAction } from 'redux';
+
 import { action } from 'typesafe-actions';
+
+import { SpotifyService } from '../../services';
 
 // use typescript enum rather than action constants
 export enum ActionTypes {
-  PLAY_SONG = 'PLAY_SONG',
-  PAUSE_SONG = 'PAUSE_SONG',
-  SET_CURRENTLY_FOCUSED = 'SET_CURRENTLY_FOCUSED',
+  PAUSE_FOCUSED = 'PAUSE_FOCUSED',
+  SET_FOCUSED = 'SET_FOCUSED',
 }
 
-export const currentlyPlayingActions = {
-  addSong: (song: any) => action(ActionTypes.PLAY_SONG, song),
-  pauseSong: (song: any) => action(ActionTypes.PAUSE_SONG, song),
-  setCurrentlyFocused: (song: any) => action(ActionTypes.SET_CURRENTLY_FOCUSED, song),
+// State actions
+export const pauseFocused = (song: any) => action(ActionTypes.PAUSE_FOCUSED, song);
+export const setFocused = (song: any) => action(ActionTypes.SET_FOCUSED, song);
+
+// Thunk actions
+export const playSong = (track: any): ThunkAction<void, {}, {}, AnyAction> => {
+  // Thunk middleware will pass the dispatch method to this function
+  return (dispatch): void => {
+    SpotifyService.playSongs([track.uri]);
+    dispatch(setFocused(track));
+  };
 };

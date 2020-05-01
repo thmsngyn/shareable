@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import { currentlyPlayingReducer } from './currently-playing.reducer';
+import { focusedTrackReducer } from './currently-playing.reducer';
 
 const rootReducer = combineReducers({
-  currentlyPlaying: currentlyPlayingReducer,
+  focusedTrack: focusedTrackReducer,
 });
 
 export default rootReducer;
