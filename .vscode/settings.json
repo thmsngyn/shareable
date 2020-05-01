@@ -9,5 +9,5 @@
   "[typescript]": {
     "editor.formatOnSave": true
   },
-  "cSpell.ignoreWords": ["spotify", "shrbl", "typesafe"]
+  "cSpell.ignoreWords": ["spotify", "shrbl", "typesafe", "devtools"]
 }

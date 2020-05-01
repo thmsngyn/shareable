@@ -112,7 +112,7 @@ class Home extends React.Component<HomeProps, HomeState> {
               subText={'You can now play music and view your personalized stats.'}
             ></Section>
             <Section headerText={'Currently playing'}>
-              <Track track={currentlyPlayingTrack || currentTrack} />
+              <Track track={currentlyPlayingTrack} />
             </Section>
             <Section headerText={'Likes'}>
               {likes.map((like, index) => {
