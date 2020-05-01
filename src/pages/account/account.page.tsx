@@ -59,7 +59,7 @@ export class Account extends React.Component<AccountProps, AccountState> {
             style={styles.profile}
             imageStyle={styles.image}
             imageUrl={userProfile.imageUrl || defaultProfileImage}
-            externalUrl={userProfile.externalUrl}
+            onClickImage={() => window.open(userProfile.externalUrl, '_blank')}
             info={{
               name: userProfile.name,
               email: userProfile.email,

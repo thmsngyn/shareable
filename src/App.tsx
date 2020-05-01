@@ -9,7 +9,7 @@ import { hot } from 'react-hot-loader/root';
 
 import { Provider } from 'react-redux';
 
-import { Colors, APP_FOOTER_HEIGHT, APP_HEADER_HEIGHT, getAppMargin } from './styles';
+import { Colors, APP_FOOTER_HEIGHT, APP_HEADER_HEIGHT, getAppMargin, Spacing } from './styles';
 import { Footer, Header } from './components';
 import { Home } from './pages';
 import { SpotifyService } from './services';
@@ -99,8 +99,9 @@ const styles: Record<string, React.CSSProperties> = {
     // boxShadow: `inset ${Spacing.s224}px 0 ${Spacing.s224}px -${Spacing.s224}px ${Colors.ShareableLavender}, inset -${Spacing.s224}px 0 ${Spacing.s224}px -${Spacing.s224}px ${Colors.ShareableLavender}`,
   },
   routeContainer: {
-    paddingTop: APP_HEADER_HEIGHT,
-    paddingBottom: APP_FOOTER_HEIGHT,
+    marginTop: APP_HEADER_HEIGHT,
+    marginBottom: APP_FOOTER_HEIGHT,
+    paddingTop: Spacing.s24,
     overflow: 'auto',
   },
 };

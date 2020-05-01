@@ -1,1 +1,1 @@
-export * from './stats.page';
+export { default as Stats } from './stats.page';
