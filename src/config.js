@@ -7,6 +7,7 @@ export const scopes = [
   'user-read-email',
   'user-read-private',
   'user-library-modify',
+  'user-follow-read',
 ];
 
 const dev = {
