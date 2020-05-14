@@ -1,12 +1,8 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import { Player } from '../player';
 
 export class Footer extends React.Component {
-  constructor(props: any) {
-    super(props);
-  }
-
   componentDidMount() {}
 
   render() {
