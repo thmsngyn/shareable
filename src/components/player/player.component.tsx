@@ -6,7 +6,7 @@ import SpotifyPlayer from 'react-spotify-web-playback';
 import { IProps, IStylesProps, ICallbackState } from 'react-spotify-web-playback/lib/types/common';
 import { IPlayerTrack } from 'react-spotify-web-playback/lib/types/spotify';
 
-import { SpotifyService, Track } from '../../services';
+import { SpotifyService } from '../../services';
 import { Colors } from '../../styles';
 import { setFocused } from '../../redux/actions';
 
