@@ -39,7 +39,7 @@ export const SpotifyService = new (class {
 
     if (!profileFromStorage) {
       const response = await this.getUserProfile();
-      const { display_name: name, external_urls, images, email, country, followers, error } = response;
+      const { display_name: name, external_urls, images, email, country, followers, error, uri, id } = response;
       const imageUrl = images && images.length && images[0].url;
       const externalUrl = external_urls && external_urls.spotify;
 
@@ -51,6 +51,8 @@ export const SpotifyService = new (class {
         imageUrl,
         followers: followers && followers.total,
         error,
+        uri,
+        id,
       };
       StorageService.set(StorageKeys.UserProfile, JSON.stringify(userProfile));
       return userProfile;
