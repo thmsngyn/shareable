@@ -13,11 +13,13 @@ export const scopes = [
 const dev = {
   redirectUri: 'http://localhost:3000/',
   obfuscateDevTools: false,
+  shareableServiceUri: 'http://localhost:4000',
 };
 
 const prod = {
   redirectUri: 'https://thmsngyn.github.io/shareable/',
   obfuscateDevTools: true,
+  shareableServiceUri: 'http://localhost:4000',
 };
 
 const config = process.env.REACT_APP_STAGE === 'prod' ? prod : dev;

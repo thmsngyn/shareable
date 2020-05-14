@@ -12,8 +12,10 @@ import {
   CurrentPlaybackResponse,
   LikesResponse,
   TracksEntity,
+  SpotifyUserProfile,
 } from '../../services';
 import { setFocused } from '../../redux/actions';
+import { ShareableService, ShareableErrorCodes } from '../../services/shareable';
 
 interface OwnProps {}
 interface DispatchProps {
@@ -46,11 +48,30 @@ class Home extends React.Component<HomeProps, HomeState> {
     };
   }
 
+  resolveUser(userProfile: SpotifyUserProfile) {
+    const { id: spotifyUserId } = userProfile;
+    const account = { spotifyUserId };
+    ShareableService.login(account).then((response) => {
+      const { code } = response;
+
+      if (code) {
+        if (code === ShareableErrorCodes.AccountNotFound) {
+          ShareableService.register(account).then((response) => {
+            // TODO: Handle error cases
+          });
+        }
+      }
+    });
+  }
+
   componentDidMount() {
     const loggedIn = SpotifyService.userIsLoggedIn();
     if (loggedIn) {
       Promise.all([
-        SpotifyService.userProfile().then((userProfile) => this.setState({ name: userProfile.name.split(' ')[0] })),
+        SpotifyService.userProfile().then((userProfile: SpotifyUserProfile) => {
+          this.setState({ name: userProfile.name.split(' ')[0] });
+          return userProfile;
+        }),
         this.setCurrentlyPlayingState((error: SpotifyError) => {
           // Something bad happened
           this.setState({ hasError: true });
@@ -59,7 +80,8 @@ class Home extends React.Component<HomeProps, HomeState> {
           // Something bad happened
           this.setState({ hasError: true });
         }),
-      ]).then(([resolved1, resolved2, resolved3]) => {
+      ]).then(([userProfile, resolved2, resolved3]) => {
+        this.resolveUser(userProfile);
         this.setState({ isLoading: false });
       });
     }
