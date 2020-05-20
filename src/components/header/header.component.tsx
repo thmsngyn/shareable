@@ -2,7 +2,7 @@ import React from 'react';
 
 import { NavLink } from 'react-router-dom';
 
-import logo from '../../assets/gradient-logo.png';
+import logo from '../../assets/logo.png';
 import { FontSizes, Colors, APP_HEADER_HEIGHT, getAppMargin } from '../../styles';
 import { AppRoutes, AppRoute } from '../../utils';
 
@@ -86,6 +86,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: Colors.White,
     color: Colors.ScreenBackground,
     height: APP_HEADER_HEIGHT,
+    zIndex: 1,
   },
   headerContents: {
     display: 'flex',
@@ -94,8 +95,8 @@ const styles: Record<string, React.CSSProperties> = {
     ...FontSizes.Medium,
   },
   logo: {
-    width: 35,
-    height: 35,
+    width: 25,
+    height: 25,
   },
   headerLeft: {
     display: 'flex',

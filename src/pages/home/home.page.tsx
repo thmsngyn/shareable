@@ -3,7 +3,8 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import * as AppStateTypes from 'AppStateTypes';
-import { Section, Button, Track } from '../../components';
+import { Section, Track, Button } from '../../components';
+import { ButtonTypes } from '../../components/shared/button.component';
 import { SharedLayout } from '../shared-layout';
 import {
   SpotifyService,
@@ -65,6 +66,8 @@ class Home extends React.Component<HomeProps, HomeState> {
   }
 
   componentDidMount() {
+    // TODO: https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow
+    // To refresh the access token automatically
     const loggedIn = SpotifyService.userIsLoggedIn();
     if (loggedIn) {
       Promise.all([
@@ -81,7 +84,7 @@ class Home extends React.Component<HomeProps, HomeState> {
           this.setState({ hasError: true });
         }),
       ]).then(([userProfile, resolved2, resolved3]) => {
-        this.resolveUser(userProfile);
+        // this.resolveUser(userProfile);
         this.setState({ isLoading: false });
       });
     }
@@ -121,9 +124,11 @@ class Home extends React.Component<HomeProps, HomeState> {
     return (
       <SharedLayout hasError={hasError} isLoading={loggedIn && isLoading}>
         {!loggedIn && (
-          <Section headerText={`Welcome!`} subText={'Please login with your spotify credentials to continue.'}>
-            <Button text={`Login to Spotify`} openLink={LOGIN_OAUTH} />
-          </Section>
+          <Fragment>
+            <Section headerText={`Welcome!`} subText={'Please login with your spotify credentials to continue.'}>
+              <Button href={LOGIN_OAUTH}>Login to Spotify</Button>
+            </Section>
+          </Fragment>
         )}
         {loggedIn && (
           <Fragment>

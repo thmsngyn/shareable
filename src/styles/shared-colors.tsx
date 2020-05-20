@@ -1,6 +1,7 @@
 export enum Colors {
   // brand colors
-  ShareableLavender = '#90a7ee',
+  ShareableLavender = '#6767d7',
+  ShareableLightLavender = '#7b7bf9',
   // blacks/greys/white
   c600 = '#1C2124', // body text
   c500 = '#66747D', // subdued text
@@ -16,4 +17,6 @@ export enum Colors {
   Black = '#000',
   Transparent = 'rgba(52, 52, 52, 0)',
   TransparentDark = 'rgba(52, 52, 52, 0.9)',
+  DisabledText = '#ababab',
+  DisabledBackground = '#ffffff30',
 }
