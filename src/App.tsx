@@ -9,11 +9,13 @@ import { hot } from 'react-hot-loader/root';
 
 import { Provider } from 'react-redux';
 
+import backgroundImage from './assets/bg.jpg';
+
 import { Colors, APP_FOOTER_HEIGHT, APP_HEADER_HEIGHT, getAppMargin, Spacing } from './styles';
 import { Footer, Header } from './components';
 import { Home } from './pages';
 import { SpotifyService } from './services';
-import { AppRoutes } from './utils';
+import { AppRoutes, mapSizesToProps } from './utils';
 import store from './redux/store';
 
 interface AppProps {
@@ -81,22 +83,18 @@ class App extends React.Component<AppProps, AppState> {
   }
 }
 
-const mapSizesToProps = ({ width }: any) => ({
-  isMobile: width < 500,
-});
-
 export default hot(withSizes(mapSizesToProps)(App));
 
 const styles: Record<string, React.CSSProperties> = {
   app: {
-    backgroundColor: Colors.ScreenBackground,
+    backgroundImage: `linear-gradient(to top, rgba(24, 13, 34, 0.52), rgba(2, 10, 26, 0.78)), url(${backgroundImage})`,
+    backgroundSize: '100% 100%',
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
     color: Colors.c100,
     fontFamily: 'Muli',
     fontWeight: 500,
-    // boxShadow: `inset ${Spacing.s224}px 0 ${Spacing.s224}px -${Spacing.s224}px ${Colors.ShareableLavender}, inset -${Spacing.s224}px 0 ${Spacing.s224}px -${Spacing.s224}px ${Colors.ShareableLavender}`,
   },
   routeContainer: {
     marginTop: APP_HEADER_HEIGHT,

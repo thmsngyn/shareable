@@ -6,8 +6,9 @@ import defaultProfileImage from '../../assets/badminton.png';
 import { SharedLayout } from '../shared-layout';
 import { Section, Profile } from '../../components';
 import { SpotifyService, SpotifyUserProfile } from '../../services';
-import { Button } from '../../components/shared/button.component';
+import { Button } from '../../components/shared';
 import { StorageService, StorageKeys } from '../../services/storage';
+import { ButtonTypes } from '../../components/shared/button.component';
 
 interface AccountProps extends RouteComponentProps<any> {}
 interface AccountState {
@@ -70,11 +71,13 @@ export class Account extends React.Component<AccountProps, AccountState> {
         </Section>
         <Section>
           <Button
-            text={'Logout'}
+            buttonType={ButtonTypes.Secondary}
             onClick={() => {
               this.logout();
             }}
-          />
+          >
+            Logout
+          </Button>
         </Section>
       </SharedLayout>
     );

@@ -1,2 +1,2 @@
 export * from './section.component';
-export * from './button.component';
+export { default as Button } from './button.component';
