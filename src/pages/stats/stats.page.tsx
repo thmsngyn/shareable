@@ -9,12 +9,17 @@ import { TopResponse, SpotifyService, SpotifyTopType, ArtistsEntity, SpotifyTime
 import { Spacing } from '../../styles';
 import { playSong } from '../../redux/actions';
 import { ButtonTypes } from '../../components/shared/button.component';
+import { withWidth, isWidthDown } from '@material-ui/core';
+
+interface OwnProps {
+  width: any;
+}
 
 interface DispatchProps {
   playSong: typeof playSong;
 }
 
-type StatsProps = DispatchProps;
+type StatsProps = OwnProps & DispatchProps;
 
 interface StatsState {
   hasError: boolean;
@@ -104,18 +109,32 @@ class Stats extends React.Component<StatsProps, StatsState> {
     );
   }
 
-  incrementPage(pageState: keyof StatsState, increment: number) {
+  scrollTopTypeStart(topType: SpotifyTopType) {
+    const topElement = document.getElementById(topType);
+
+    if (topElement) {
+      topElement.scrollLeft = 0;
+    }
+  }
+
+  incrementPage(topType: SpotifyTopType, increment: number) {
+    const pageState = topType === SpotifyTopType.Artists ? 'topArtistsPage' : 'topTracksPage';
+
     this.setState<never>(
       (previousState) => {
         let previousPage = previousState[pageState];
         const nextPage = previousPage + increment >= this.maxTopPageOffset ? 0 : previousPage + increment;
         return { [pageState]: nextPage };
       },
-      () => this.setTopsState(() => this.setState({ hasError: true }))
+      () => {
+        this.setTopsState(() => this.setState({ hasError: true }));
+        this.scrollTopTypeStart(topType);
+      }
     );
   }
 
-  renderPageChange(pageState: keyof StatsState) {
+  renderPageChange(topType: SpotifyTopType) {
+    const pageState = topType === SpotifyTopType.Artists ? 'topArtistsPage' : 'topTracksPage';
     const currentPage: number = this.state[pageState];
     return (
       <div style={{ ...styles.row, ...styles.pageToggle }}>
@@ -123,7 +142,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
           style={{ width: 'auto' }}
           disabled={currentPage === 0}
           buttonType={ButtonTypes.Secondary}
-          onClick={() => this.incrementPage(pageState, -1)}
+          onClick={() => this.incrementPage(topType, -1)}
         >
           Back
         </Button>
@@ -131,13 +150,47 @@ class Stats extends React.Component<StatsProps, StatsState> {
           style={{ width: 'auto' }}
           disabled={currentPage + 1 === this.maxTopPageOffset}
           buttonType={ButtonTypes.Secondary}
-          onClick={() => this.incrementPage(pageState, 1)}
+          onClick={() => this.incrementPage(topType, 1)}
         >
           Next
         </Button>
         <div>Page {currentPage + 1}</div>
       </div>
     );
+  }
+
+  get responsiveRowStyle(): React.CSSProperties {
+    const { width } = this.props;
+    const mobileStyles: React.CSSProperties = isWidthDown('sm', width)
+      ? {
+          overflowX: 'auto',
+          flexDirection: 'column',
+          flexWrap: 'wrap',
+          alignItems: 'flex-start',
+          height: '260px',
+          width: 'auto',
+          justifyContent: 'none',
+        }
+      : {};
+    return {
+      ...styles.row,
+      ...mobileStyles,
+    };
+  }
+
+  get responsiveProfileStyles(): React.CSSProperties {
+    const { width } = this.props;
+    const mobileStyles: React.CSSProperties = isWidthDown('sm', width)
+      ? {
+          width: 'fit-content',
+          marginRight: Spacing.s16,
+          marginBottom: Spacing.s16,
+        }
+      : {};
+    return {
+      ...styles.profile,
+      ...mobileStyles,
+    };
   }
 
   render() {
@@ -162,13 +215,13 @@ class Stats extends React.Component<StatsProps, StatsState> {
         <div>
           <Section headerText={`Top artists (${SpotifyTimeRangeToDisplay[topArtistsTimeRange]})`}>
             {this.renderTimeRangeButtons(SpotifyTopType.Artists)}
-            <div style={styles.row}>
+            <div id={SpotifyTopType.Artists} style={this.responsiveRowStyle}>
               {topArtists &&
                 topArtists!.items!.map((artist: ArtistsEntity, index: number) => {
                   return (
                     <Profile
                       key={index}
-                      style={styles.profile}
+                      style={this.responsiveProfileStyles}
                       imageStyle={styles.image}
                       imageUrl={artist.images![0].url}
                       onClickImage={() => window.open(artist.external_urls.spotify, '_blank')}
@@ -182,19 +235,19 @@ class Stats extends React.Component<StatsProps, StatsState> {
                   );
                 })}
             </div>
-            {this.renderPageChange('topArtistsPage')}
+            {this.renderPageChange(SpotifyTopType.Artists)}
           </Section>
         </div>
         <div>
           <Section headerText={`Top tracks (${SpotifyTimeRangeToDisplay[topTracksTimeRange]})`}>
             {this.renderTimeRangeButtons(SpotifyTopType.Tracks)}
-            <div style={styles.row}>
+            <div id={SpotifyTopType.Tracks} style={this.responsiveRowStyle}>
               {topTracks &&
                 topTracks!.items!.map((track: Track, index: number) => {
                   return (
                     <Profile
                       key={index}
-                      style={styles.profile}
+                      style={this.responsiveProfileStyles}
                       imageStyle={styles.image}
                       imageUrl={track.album!.images![0].url}
                       onClickImage={() => this.props.playSong(track)}
@@ -208,7 +261,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
                   );
                 })}
             </div>
-            {this.renderPageChange('topTracksPage')}
+            {this.renderPageChange(SpotifyTopType.Tracks)}
           </Section>
         </div>
       </SharedLayout>
@@ -223,6 +276,7 @@ const styles: Record<any, React.CSSProperties> = {
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: Spacing.s16,
+    scrollBehavior: 'smooth',
   },
   profile: {
     width: 500,
@@ -246,4 +300,4 @@ const MapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => ({
   playSong: (track: any) => dispatch(playSong(track)),
 });
 
-export default connect(undefined, MapDispatchToProps)(Stats);
+export default connect(undefined, MapDispatchToProps)(withWidth()(Stats));

@@ -86,7 +86,7 @@ export class Account extends React.Component<AccountProps, AccountState> {
 
 const styles: Record<any, React.CSSProperties> = {
   profile: {
-    width: 500,
+    width: '100%',
   },
   image: {
     width: 80,
