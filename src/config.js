@@ -17,7 +17,7 @@ const dev = {
 };
 
 const prod = {
-  redirectUri: 'https://thmsngyn.github.io/shareable/',
+  redirectUri: 'https://shrbl.herokuapp.com/',
   obfuscateDevTools: true,
   shareableServiceUri: 'http://localhost:4000',
 };

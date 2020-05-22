@@ -71,7 +71,7 @@ class App extends React.Component<AppProps, AppState> {
 
     return (
       <Provider store={store}>
-        <Router basename="/shareable/">
+        <Router>
           <div style={styles.app}>
             <Header isMobile={isMobile} />
             {this.renderRoutes()}
