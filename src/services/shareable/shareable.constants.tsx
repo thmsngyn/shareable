@@ -1,7 +1,7 @@
 import config from '../../config';
 
 // APIs
-export const SHAREABLE_SERVICE_API_HOSTNAME = config.shareableServiceUri;
+export const SHAREABLE_SERVICE_API_HOSTNAME = config.shareableServiceHostname;
 export const LOGIN_API = `${SHAREABLE_SERVICE_API_HOSTNAME}/accounts/login`;
 export const REGISTER_API = `${SHAREABLE_SERVICE_API_HOSTNAME}/accounts`;
 export const GET_STREAM_API = `${SHAREABLE_SERVICE_API_HOSTNAME}/stream`;
