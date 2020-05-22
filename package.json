@@ -1,7 +1,7 @@
 {
   "name": "shareable",
   "version": "0.1.0",
-  "homepage": "https://thmsngyn.github.io/shareable/",
+  "homepage": ".",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.9.14",
@@ -22,15 +22,18 @@
     "react-spotify-web-playback": "^0.6.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "serve": "^11.3.1",
     "typesafe-actions": "^5.1.0"
   },
   "scripts": {
-    "start": "REACT_APP_STAGE=dev react-scripts start",
+    "start:dev": "REACT_APP_STAGE=dev react-scripts start",
+    "start": "serve -s build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy:prod": "REACT_APP_STAGE=prod react-scripts build && cp build/index.html build/404.html",
-    "deploy:prod": "gh-pages -d build"
+    "deploy:prod": "gh-pages -d build",
+    "heroku-postbuild": "npm run predeploy:prod"
   },
   "eslintConfig": {
     "extends": "react-app"
