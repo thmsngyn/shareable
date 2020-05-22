@@ -19,12 +19,16 @@ npm run start:dev
 
 ## Deploy
 
-### Deploy to Git hub pages
+### Deploy to Heroku app
+
+Simply push changes to master and changes will be automatically deployed
+
+### Deploy to Git hub pages (deprecated)
 
 ```
 npm run deploy:prod
 ```
 
-### Deploy to Heroku app
+### DNS Gotchas
 
-Simply push changes to master and changes will be automatically deployed
+- https://stackoverflow.com/questions/56861540/cannot-connect-heroku-to-custom-google-domain
