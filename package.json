@@ -26,14 +26,11 @@
     "typesafe-actions": "^5.1.0"
   },
   "scripts": {
-    "start:dev": "REACT_APP_STAGE=dev react-scripts start",
-    "start": "serve -s build",
     "build": "react-scripts build",
+    "start": "serve -s build",
+    "start:dev": "react-scripts start",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy:prod": "REACT_APP_STAGE=prod react-scripts build && cp build/index.html build/404.html",
-    "deploy:prod": "gh-pages -d build",
-    "heroku-postbuild": "npm run predeploy:prod"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
