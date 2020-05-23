@@ -17,17 +17,18 @@ npm ci
 npm run start:dev
 ```
 
+For a prod like build and start run:
+
+```
+npm run build
+npm run start
+```
+
 ## Deploy
 
 ### Deploy to Heroku app
 
 Simply push changes to master and changes will be automatically deployed
-
-### Deploy to Git hub pages (deprecated)
-
-```
-npm run deploy:prod
-```
 
 ### DNS Gotchas
 
