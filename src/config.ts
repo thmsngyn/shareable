@@ -24,9 +24,11 @@ const dev: Partial<AppConfig> = {
   obfuscateDevTools: false,
 };
 
+// All env vars need to be prefixed with 'REACT_APP_'
+// https://stackoverflow.com/questions/47561604/heroku-process-env-not-showing-config-vars
 const prod: Partial<AppConfig> = {
-  redirectUri: process.env.SHAREABLE_HOSTNAME,
-  shareableServiceHostname: process.env.SHAREABLE_SERVICE_HOSTNAME,
+  redirectUri: process.env.REACT_APP_SHAREABLE_HOSTNAME,
+  shareableServiceHostname: process.env.REACT_APP_SHAREABLE_SERVICE_HOSTNAME,
   obfuscateDevTools: true,
 };
 
