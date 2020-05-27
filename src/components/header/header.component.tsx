@@ -86,7 +86,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: Colors.White,
     color: Colors.ScreenBackground,
     height: APP_HEADER_HEIGHT,
-    zIndex: 1,
+    zIndex: 2,
   },
   headerContents: {
     display: 'flex',

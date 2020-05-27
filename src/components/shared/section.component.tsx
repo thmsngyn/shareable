@@ -4,15 +4,21 @@ import { Spacing, FontSizes } from '../../styles';
 interface SectionProps {
   headerText?: string;
   subText?: string;
+  style?: React.CSSProperties;
 }
 
 export class Section extends React.Component<SectionProps> {
   componentDidMount() {}
 
   render() {
-    const { headerText, subText, children } = this.props;
+    const { headerText, subText, children, style } = this.props;
+    const styleOverride = {
+      ...styles.streamSection,
+      ...style,
+    };
+
     return (
-      <div style={styles.streamSection}>
+      <div style={styleOverride}>
         {headerText && <div style={styles.headerText}>{headerText}</div>}
         {subText && <div style={styles.subText}>{subText}</div>}
         {children}

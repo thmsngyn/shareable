@@ -2,9 +2,11 @@ import React, { Fragment } from 'react';
 
 import { connect } from 'react-redux';
 
+import desktopHero from '../../assets/people.jpg';
+import mobileHero from '../../assets/person.jpg';
+
 import * as AppStateTypes from 'AppStateTypes';
 import { Section, Track, Button } from '../../components';
-import { ButtonTypes } from '../../components/shared/button.component';
 import { SharedLayout } from '../shared-layout';
 import {
   SpotifyService,
@@ -17,8 +19,12 @@ import {
 } from '../../services';
 import { setFocused } from '../../redux/actions';
 import { ShareableService, ShareableErrorCodes } from '../../services/shareable';
+import { withWidth, isWidthDown } from '@material-ui/core';
+import { getAppMargin, Spacing, FontSizes } from '../../styles';
 
-interface OwnProps {}
+interface OwnProps {
+  width: any;
+}
 interface DispatchProps {
   setFocusedTrack: typeof setFocused;
 }
@@ -117,6 +123,42 @@ class Home extends React.Component<HomeProps, HomeState> {
     this.setState({ likes: likes.items! });
   }
 
+  get responsiveHeroStyle(): React.CSSProperties {
+    const { width } = this.props;
+    const responsiveStyles: React.CSSProperties = isWidthDown('sm', width)
+      ? {
+          backgroundImage: `url(${mobileHero})`,
+          marginTop: `-${Spacing.s64}px`,
+          backgroundSize: 'cover',
+          height: '800px',
+        }
+      : {
+          backgroundImage: `url(${desktopHero})`,
+          marginTop: `-${Spacing.s512}px`,
+          backgroundSize: 'cover',
+          height: '1300px',
+        };
+
+    return {
+      ...styles.homeHero,
+      ...responsiveStyles,
+      marginRight: -getAppMargin(isWidthDown('sm', width)),
+      marginLeft: -getAppMargin(isWidthDown('sm', width)),
+    };
+  }
+
+  get responsiveCtaStyle(): React.CSSProperties {
+    const { width } = this.props;
+    const responsiveStyles: React.CSSProperties = isWidthDown('sm', width)
+      ? { marginTop: '-650px' }
+      : { marginTop: '-700px' };
+
+    return {
+      ...styles.centered,
+      ...responsiveStyles,
+    };
+  }
+
   render() {
     const { hasError, loggedIn, name, isLoading, likes } = this.state;
     const { focusedTrack } = this.props;
@@ -125,9 +167,19 @@ class Home extends React.Component<HomeProps, HomeState> {
       <SharedLayout hasError={hasError} isLoading={loggedIn && isLoading}>
         {!loggedIn && (
           <Fragment>
-            <Section headerText={`Welcome!`} subText={'Please login with your spotify credentials to continue.'}>
-              <Button href={LOGIN_OAUTH}>Login to Spotify</Button>
-            </Section>
+            <div>
+              <div style={this.responsiveHeroStyle}></div>
+              <div style={this.responsiveCtaStyle}>
+                <div style={styles.headline}>Shareable music experience</div>
+                <Section
+                  style={styles.welcome}
+                  headerText={`Welcome`}
+                  subText={'Please login with your spotify credentials to continue.'}
+                >
+                  <Button href={LOGIN_OAUTH}>Login with Spotify</Button>
+                </Section>
+              </div>
+            </div>
           </Fragment>
         )}
         {loggedIn && (
@@ -161,4 +213,34 @@ const MapDispatchToProps = {
   setFocusedTrack: setFocused,
 };
 
-export default connect(MapStateToProps, MapDispatchToProps)(Home);
+const styles: Record<string, React.CSSProperties> = {
+  homeHero: {
+    zIndex: 0,
+    backgroundRepeat: 'no-repeat',
+    width: '100vw',
+    position: 'relative',
+    WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))',
+  },
+  centered: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '-700px',
+  },
+  welcome: {
+    zIndex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  headline: {
+    zIndex: 1,
+    ...FontSizes.ExtraLarge,
+    marginBottom: Spacing.s64,
+  },
+};
+
+export default connect(MapStateToProps, MapDispatchToProps)(withWidth()(Home));
