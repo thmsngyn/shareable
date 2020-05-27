@@ -100,6 +100,5 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: APP_HEADER_HEIGHT,
     marginBottom: APP_FOOTER_HEIGHT,
     paddingTop: Spacing.s24,
-    overflow: 'auto',
   },
 };
