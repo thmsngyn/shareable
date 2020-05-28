@@ -1,13 +1,14 @@
 import * as AppStateTypes from 'AppStateTypes';
 import { ActionTypes } from '../actions/';
+import { Track } from '../../services';
 
-interface FocusedTrack {
-  track: any;
+export interface FocusedTrack {
+  track: Track;
   isPlaying: boolean;
 }
 
 export const initialState: FocusedTrack = {
-  track: undefined,
+  track: {} as Track,
   isPlaying: false,
 };
 

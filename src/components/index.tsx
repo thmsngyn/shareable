@@ -4,3 +4,4 @@ export * from './footer';
 export * from './header';
 export * from './shared';
 export * from './profile';
+export * from './repost';

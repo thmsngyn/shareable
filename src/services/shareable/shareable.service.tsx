@@ -1,8 +1,8 @@
 import { parseJson } from '../../utils';
 
 import { SpotifyService } from '../spotify/spotify.service';
-import { LOGIN_API, REGISTER_API } from './shareable.constants';
-import { ShareableAccount } from './shareable.types';
+import { LOGIN_API, REGISTER_API, ADD_SHARE_API } from './shareable.constants';
+import { ShareableAccount, StreamShare } from './shareable.types';
 
 export const ShareableService = new (class {
   constructor() {}
@@ -17,17 +17,23 @@ export const ShareableService = new (class {
     });
   }
 
-  login(account: ShareableAccount) {
+  login(account: ShareableAccount): Promise<ShareableAccount> {
     return this.request(LOGIN_API, 'POST', {
       ...account,
       token: this.spotifyToken,
     });
   }
 
-  register(account: ShareableAccount) {
+  register(account: ShareableAccount): Promise<ShareableAccount> {
     return this.request(REGISTER_API, 'POST', {
       ...account,
       token: this.spotifyToken,
+    });
+  }
+
+  addShare(share: StreamShare): Promise<StreamShare> {
+    return this.request(ADD_SHARE_API, 'POST', {
+      ...share,
     });
   }
 
