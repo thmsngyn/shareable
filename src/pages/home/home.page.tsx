@@ -174,7 +174,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                 <Section
                   style={styles.welcome}
                   headerText={`Welcome`}
-                  subText={'Please login with your spotify credentials to continue.'}
+                  subText={'Please login with your Spotify credentials to continue.'}
                 >
                   <Button href={LOGIN_OAUTH}>Login with Spotify</Button>
                 </Section>

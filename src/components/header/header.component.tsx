@@ -95,8 +95,8 @@ const styles: Record<string, React.CSSProperties> = {
     ...FontSizes.Medium,
   },
   logo: {
-    width: 25,
-    height: 25,
+    width: 20,
+    height: 20,
   },
   headerLeft: {
     display: 'flex',
