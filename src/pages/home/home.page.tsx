@@ -1,10 +1,14 @@
 import React, { Fragment } from 'react';
 
 import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+
+import { withWidth, isWidthDown } from '@material-ui/core';
 
 import desktopHero from '../../assets/people.jpg';
 import mobileHero from '../../assets/person.jpg';
 
+import { setUser } from '../../redux/actions';
 import * as AppStateTypes from 'AppStateTypes';
 import { Section, Track, Button } from '../../components';
 import { SharedLayout } from '../shared-layout';
@@ -17,16 +21,14 @@ import {
   TracksEntity,
   SpotifyUserProfile,
 } from '../../services';
-import { setFocused } from '../../redux/actions';
-import { ShareableService, ShareableErrorCodes } from '../../services/shareable';
-import { withWidth, isWidthDown } from '@material-ui/core';
+import { ShareableService, ShareableErrorCodes, ShareableAccount } from '../../services/shareable';
 import { getAppMargin, Spacing, FontSizes } from '../../styles';
 
 interface OwnProps {
   width: any;
 }
 interface DispatchProps {
-  setFocusedTrack: typeof setFocused;
+  setUser: typeof setUser;
 }
 interface StateProps {
   focusedTrack: any;
@@ -55,22 +57,6 @@ class Home extends React.Component<HomeProps, HomeState> {
     };
   }
 
-  resolveUser(userProfile: SpotifyUserProfile) {
-    const { id: spotifyUserId } = userProfile;
-    const account = { spotifyUserId };
-    ShareableService.login(account).then((response) => {
-      const { code } = response;
-
-      if (code) {
-        if (code === ShareableErrorCodes.AccountNotFound) {
-          ShareableService.register(account).then((response) => {
-            // TODO: Handle error cases
-          });
-        }
-      }
-    });
-  }
-
   componentDidMount() {
     // TODO: https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow
     // To refresh the access token automatically
@@ -90,7 +76,7 @@ class Home extends React.Component<HomeProps, HomeState> {
           this.setState({ hasError: true });
         }),
       ]).then(([userProfile, resolved2, resolved3]) => {
-        // this.resolveUser(userProfile);
+        this.resolveUser(userProfile);
         this.setState({ isLoading: false });
       });
     }
@@ -98,17 +84,11 @@ class Home extends React.Component<HomeProps, HomeState> {
   }
 
   async setCurrentlyPlayingState(onError: Function) {
-    const { setFocusedTrack } = this.props;
-
     const currentlyPlaying: CurrentPlaybackResponse = await SpotifyService.getCurrentlyPlaying();
-    const { error, item } = currentlyPlaying;
+    const { error } = currentlyPlaying;
 
     if (error) {
       return onError(error);
-    }
-
-    if (currentlyPlaying.item && setFocusedTrack) {
-      setFocusedTrack(item);
     }
   }
 
@@ -121,6 +101,32 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 
     this.setState({ likes: likes.items! });
+  }
+
+  async resolveUser(userProfile: SpotifyUserProfile) {
+    const { setUser } = this.props;
+    const { id: spotifyUserId } = userProfile;
+
+    const account = { spotifyUserId };
+    const loginResponse = await ShareableService.login(account);
+    const { code: errorCode } = loginResponse;
+
+    if (!errorCode) {
+      // done
+      setUser(loginResponse);
+    } else {
+      if (errorCode === ShareableErrorCodes.AccountNotFound) {
+        const registerResponse = await ShareableService.register(account);
+        const { code: errorCode } = registerResponse;
+        if (!errorCode) {
+          // done
+          setUser(registerResponse);
+        } else {
+          // TODO: Handle error cases
+          this.setState({ hasError: true });
+        }
+      }
+    }
   }
 
   get responsiveHeroStyle(): React.CSSProperties {
@@ -209,9 +215,9 @@ const MapStateToProps = (store: AppStateTypes.ReducerState): StateProps => {
   };
 };
 
-const MapDispatchToProps = {
-  setFocusedTrack: setFocused,
-};
+const MapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => ({
+  setUser: (user: ShareableAccount) => dispatch(setUser(user)),
+});
 
 const styles: Record<string, React.CSSProperties> = {
   homeHero: {

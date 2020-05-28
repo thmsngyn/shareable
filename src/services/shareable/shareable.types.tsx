@@ -4,4 +4,10 @@ export interface ShareableAccount {
   email?: string;
   loggedIn?: boolean;
   followers?: ShareableAccount[];
+  code?: any;
+}
+
+export interface StreamShare {
+  accountId: string;
+  trackId: string;
 }
