@@ -3,9 +3,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import pineapple from '../../assets/pineapple.svg';
+import dinosaur from '../../assets/dinosaur.svg';
+
 import { SharedLayout } from '../shared-layout';
 import { Section, Profile, Button } from '../../components';
-import { TopResponse, SpotifyService, SpotifyTopType, ArtistsEntity, SpotifyTimeRange, Track } from '../../services';
+import {
+  TopResponse,
+  SpotifyService,
+  SpotifyTopType,
+  ArtistsEntity,
+  SpotifyTimeRange,
+  Track,
+  Album,
+} from '../../services';
 import { Spacing } from '../../styles';
 import { playSong } from '../../redux/actions';
 import { ButtonTypes } from '../../components/shared/button.component';
@@ -87,6 +98,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
     const SpotifyTimeRangeList = [SpotifyTimeRange.ShortTerm, SpotifyTimeRange.MediumTerm, SpotifyTimeRange.LongTerm];
     const timeRangeForType: keyof StatsState =
       type === SpotifyTopType.Artists ? 'topArtistsTimeRange' : 'topTracksTimeRange';
+    const pageForType: keyof StatsState = type === SpotifyTopType.Artists ? 'topArtistsPage' : 'topTracksPage';
 
     return (
       <div style={{ ...styles.row, ...styles.timeToggle }}>
@@ -96,7 +108,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
               key={index}
               onClick={() => {
                 // Using never as a workaround when calling setState with dynamic keys
-                this.setState<never>({ [timeRangeForType]: range }, () =>
+                this.setState<never>({ [timeRangeForType]: range, [pageForType]: 0 }, () =>
                   this.setTopsState(() => this.setState({ hasError: true }))
                 );
               }}
@@ -193,6 +205,15 @@ class Stats extends React.Component<StatsProps, StatsState> {
     };
   }
 
+  getImageUrl(entity: ArtistsEntity | Album, defaultImage: string) {
+    const { images = [] } = entity;
+
+    if (images.length) {
+      return (images[0] && images[0].url) || defaultImage;
+    }
+    return defaultImage;
+  }
+
   render() {
     const {
       hasError,
@@ -223,7 +244,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
                       key={index}
                       style={this.responsiveProfileStyles}
                       imageStyle={styles.image}
-                      imageUrl={artist.images![0].url}
+                      imageUrl={this.getImageUrl(artist, dinosaur)}
                       onClickImage={() => window.open(artist.external_urls.spotify, '_blank')}
                       displayKeys={false}
                       info={{
@@ -249,7 +270,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
                       key={index}
                       style={this.responsiveProfileStyles}
                       imageStyle={styles.image}
-                      imageUrl={track.album!.images![0].url}
+                      imageUrl={this.getImageUrl(track.album, pineapple)}
                       onClickImage={() => this.props.playSong(track)}
                       displayKeys={false}
                       info={{
