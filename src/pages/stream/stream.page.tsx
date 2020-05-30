@@ -76,7 +76,7 @@ export class Stream extends React.Component<StreamProps, StreamState> {
       <SharedLayout hasError={hasError} isLoading={isLoading}>
         <Section
           headerText={'Stream feed'}
-          subText={'Under development. The intent of this page is to be a live stream of music your friends like.'}
+          subText={'Under development. This will be a live stream of music that your friends like.'}
         ></Section>
       </SharedLayout>
     );
