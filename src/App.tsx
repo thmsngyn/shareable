@@ -73,7 +73,7 @@ class App extends React.Component<AppProps, AppState> {
       <Provider store={store}>
         <Router>
           <div style={styles.app}>
-            <Header isMobile={isMobile} />
+            <Header loggedIn={loggedIn} isMobile={isMobile} />
             {this.renderRoutes()}
             {loggedIn && <Footer />}
           </div>

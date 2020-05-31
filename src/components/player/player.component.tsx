@@ -10,7 +10,7 @@ import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core';
 import { StyleRules } from '@material-ui/styles';
 
 import { SpotifyService } from '../../services';
-import { Colors } from '../../styles';
+import { Colors, Spacing } from '../../styles';
 import { setFocused } from '../../redux/actions';
 import { Repost } from '../repost';
 
@@ -82,10 +82,10 @@ class Player extends React.Component<PlayerProps, PlayerState> {
     const { playerIsActive } = this.state;
     return (
       <div className={classes.container}>
-        {playerIsActive && <Repost></Repost>}
+        {playerIsActive && <Repost className={classes.repost}></Repost>}
         <SpotifyPlayer
           name={'Shareable Web Player'}
-          styles={styleRules.custom as IStylesProps}
+          styles={playerStyles}
           token={this.state.token}
           autoPlay={true}
           showSaveIcon={true}
@@ -97,22 +97,41 @@ class Player extends React.Component<PlayerProps, PlayerState> {
   }
 }
 
-const styleRules: StyleRules = {
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  custom: {
-    sliderColor: Colors.ShareableLavender,
-    savedColor: Colors.ShareableLavender,
-  },
-  repost: {
-    height: '100%',
-    width: '100%',
-  },
+const playerStyles = {
+  sliderColor: Colors.ShareableLavender,
+  savedColor: Colors.ShareableLavender,
+  bgColor: Colors.Header,
+  color: Colors.White,
+  trackNameColor: Colors.White,
+  trackArtistColor: Colors.White,
+  sliderTrackColor: Colors.c500,
 };
 
-const styles = (theme: Theme) => createStyles(styleRules);
+const styles = (theme: Theme) =>
+  createStyles({
+    container: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    playerStyles,
+    repost: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'fixed',
+      backgroundColor: 'transparent',
+      marginLeft: Spacing.s64,
+      width: 50,
+      height: 50,
+      left: '50%',
+      bottom: 0,
+      zIndex: 1,
+      [theme.breakpoints.down('xs')]: {
+        marginLeft: 0,
+        left: 0,
+      },
+    },
+  });
 
 const MapDispatchToProps = {
   setFocusedTrack: setFocused,

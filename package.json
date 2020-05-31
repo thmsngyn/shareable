@@ -28,8 +28,8 @@
   "scripts": {
     "build": "react-scripts build",
     "start": "serve -s build",
-    "start:dev": "REACT_APP_SHAREABLE_HOSTNAME=http://localhost:3000 react-scripts start",
-    "start:network": "REACT_APP_SHAREABLE_HOSTNAME=http://192.168.128.107:3000 react-scripts start",
+    "start:dev": "REACT_APP_SHAREABLE_HOSTNAME=http://localhost react-scripts start",
+    "start:network": "REACT_APP_SHAREABLE_HOSTNAME=http://10.0.0.245 react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
