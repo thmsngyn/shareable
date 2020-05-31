@@ -1,8 +1,8 @@
 import { parseJson } from '../../utils';
 
 import { SpotifyService } from '../spotify/spotify.service';
-import { LOGIN_API, REGISTER_API, ADD_SHARE_API } from './shareable.constants';
-import { ShareableAccount, StreamShare } from './shareable.types';
+import { LOGIN_API, REGISTER_API, ADD_SHARE_API, GET_STREAM_API } from './shareable.constants';
+import { ShareableAccount, StreamShare, StreamTypes } from './shareable.types';
 
 export const ShareableService = new (class {
   constructor() {}
@@ -35,6 +35,10 @@ export const ShareableService = new (class {
     return this.request(ADD_SHARE_API, 'POST', {
       ...share,
     });
+  }
+
+  getShares(accountId, type: StreamTypes = StreamTypes.Followers) {
+    return this.request(`${GET_STREAM_API}/${accountId}/${type}/${this.spotifyToken}`, 'GET');
   }
 
   request(url: string, method: string, body?: any): Promise<any> {

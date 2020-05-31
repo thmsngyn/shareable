@@ -2,12 +2,13 @@ import React from 'react';
 
 import { NavLink } from 'react-router-dom';
 
-import logo from '../../assets/logo.png';
+import logo from '../../assets/logo-white.svg';
 import { FontSizes, Colors, APP_HEADER_HEIGHT, getAppMargin } from '../../styles';
 import { AppRoutes, AppRoute } from '../../utils';
 
 interface HeaderProps {
   isMobile: boolean;
+  loggedIn: boolean;
 }
 interface HeaderState {}
 export class Header extends React.Component<HeaderProps, HeaderState> {
@@ -38,12 +39,25 @@ export class Header extends React.Component<HeaderProps, HeaderState> {
     );
   }
 
+  get splashBgColor() {
+    const { loggedIn, isMobile } = this.props;
+
+    return (
+      (!loggedIn &&
+        (isMobile
+          ? { backgroundColor: Colors.HeaderSplashMobile }
+          : { backgroundColor: Colors.HeaderSplashDesktop })) ||
+      {}
+    );
+  }
+
   get responsiveHeaderStyle() {
     const { isMobile } = this.props;
     let responsiveHeaderStyle = {
       ...styles.headerContents,
       paddingLeft: getAppMargin(isMobile),
       paddingRight: getAppMargin(isMobile),
+      ...this.splashBgColor,
     };
     if (isMobile) {
       responsiveHeaderStyle = {
@@ -83,8 +97,7 @@ const styles: Record<string, React.CSSProperties> = {
     position: 'fixed',
     left: 0,
     top: 0,
-    backgroundColor: Colors.White,
-    color: Colors.ScreenBackground,
+    backgroundColor: Colors.Header,
     height: APP_HEADER_HEIGHT,
     zIndex: 2,
   },
@@ -112,7 +125,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     cursor: 'pointer',
     textDecoration: 'none',
-    color: Colors.ScreenBackground,
+    color: Colors.White,
   },
   headerItemActive: {
     fontWeight: 700,

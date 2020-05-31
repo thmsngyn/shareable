@@ -20,9 +20,19 @@ import {
   LikesResponse,
   TracksEntity,
   SpotifyUserProfile,
+  Track as TrackType,
 } from '../../services';
-import { ShareableService, ShareableErrorCodes, ShareableAccount } from '../../services/shareable';
+import {
+  ShareableService,
+  ShareableErrorCodes,
+  ShareableAccount,
+  StreamShare,
+  StreamTypes,
+  StreamShareResponse,
+} from '../../services/shareable';
 import { getAppMargin, Spacing, FontSizes } from '../../styles';
+import { Account } from '../../redux/reducers/account.reducer';
+import { HasError } from '../shared-layout/share-layout.constants';
 
 interface OwnProps {
   width: any;
@@ -32,6 +42,7 @@ interface DispatchProps {
 }
 interface StateProps {
   focusedTrack: any;
+  account: Account;
 }
 
 type HomeProps = OwnProps & DispatchProps & StateProps;
@@ -42,6 +53,7 @@ interface HomeState {
   isLoading: boolean;
   name: string;
   likes: TracksEntity[];
+  shares: StreamShareResponse[];
 }
 
 class Home extends React.Component<HomeProps, HomeState> {
@@ -54,6 +66,7 @@ class Home extends React.Component<HomeProps, HomeState> {
       isLoading: true,
       name: '',
       likes: [],
+      shares: [],
     };
   }
 
@@ -69,16 +82,25 @@ class Home extends React.Component<HomeProps, HomeState> {
         }),
         this.setCurrentlyPlayingState((error: SpotifyError) => {
           // Something bad happened
-          this.setState({ hasError: true });
+          this.setState(HasError);
         }),
         this.setLikesState((error: SpotifyError) => {
           // Something bad happened
-          this.setState({ hasError: true });
+          this.setState(HasError);
         }),
-      ]).then(([userProfile, resolved2, resolved3]) => {
-        this.resolveUser(userProfile);
-        this.setState({ isLoading: false });
-      });
+      ])
+        .then(async ([userProfile, currentlyPlaying, likes]) => {
+          await this.resolveUser(userProfile);
+        })
+        .then(() =>
+          this.setSharesState((error: SpotifyError) => {
+            // Something bad happened
+            this.setState(HasError);
+          })
+        )
+        .finally(() => {
+          this.setState({ isLoading: false });
+        });
     }
     this.setState({ loggedIn });
   }
@@ -123,10 +145,23 @@ class Home extends React.Component<HomeProps, HomeState> {
           setUser(registerResponse);
         } else {
           // TODO: Handle error cases
-          this.setState({ hasError: true });
+          this.setState(HasError);
         }
       }
     }
+  }
+
+  async setSharesState(onError: Function) {
+    const { account } = this.props;
+    console.log(account);
+    const sharesResponse = await ShareableService.getShares(account.accountId, StreamTypes.Self);
+    const { error } = sharesResponse;
+
+    if (error) {
+      return onError(error);
+    }
+
+    this.setState({ shares: sharesResponse });
   }
 
   get responsiveHeroStyle(): React.CSSProperties {
@@ -166,7 +201,7 @@ class Home extends React.Component<HomeProps, HomeState> {
   }
 
   render() {
-    const { hasError, loggedIn, name, isLoading, likes } = this.state;
+    const { hasError, loggedIn, name, isLoading, likes, shares } = this.state;
     const { focusedTrack } = this.props;
 
     return (
@@ -197,6 +232,13 @@ class Home extends React.Component<HomeProps, HomeState> {
             <Section headerText={'Currently playing'}>
               <Track track={focusedTrack} />
             </Section>
+            <Section headerText={'Shares'}>
+              {shares &&
+                shares.map((share, index) => {
+                  const { track, metadata } = share;
+                  return <Track key={index} track={track} metadata={metadata} />;
+                })}
+            </Section>
             <Section headerText={'Likes'}>
               {likes.map((like, index) => {
                 return <Track key={index} track={like.track} />;
@@ -212,6 +254,7 @@ class Home extends React.Component<HomeProps, HomeState> {
 const MapStateToProps = (store: AppStateTypes.ReducerState): StateProps => {
   return {
     focusedTrack: store.focusedTrack.track,
+    account: store.account,
   };
 };
 
