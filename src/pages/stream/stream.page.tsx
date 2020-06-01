@@ -23,10 +23,8 @@ interface StreamProps {
 }
 interface StreamState {
   hasError: boolean;
-  currentTrack: TrackType | undefined;
   is_playing: boolean;
   progress_ms: number;
-  likes: TracksEntity[];
   shares: SharedTrack[];
   isLoading: boolean;
 }
@@ -36,10 +34,8 @@ class Stream extends React.Component<StreamProps, StreamState> {
     super(props);
 
     this.state = {
-      currentTrack: undefined,
       is_playing: true,
       progress_ms: 0,
-      likes: [],
       hasError: false,
       shares: [],
       isLoading: false,
@@ -56,19 +52,6 @@ class Stream extends React.Component<StreamProps, StreamState> {
     });
   }
 
-  async setCurrentlyPlayingState(onError: Function) {
-    const currentlyPlaying: CurrentPlaybackResponse = await SpotifyService.getCurrentlyPlaying();
-    const { error } = currentlyPlaying;
-
-    if (error) {
-      return onError(error);
-    }
-
-    this.setState({
-      currentTrack: currentlyPlaying.item,
-    });
-  }
-
   async setSharesState(onError: Function) {
     const { account } = this.props;
     const sharesResponse = await ShareableService.getShares(account.accountId, StreamTypes.Followers);
@@ -81,20 +64,24 @@ class Stream extends React.Component<StreamProps, StreamState> {
     this.setState({ shares: sharesResponse.shares });
   }
 
+  get streamSubtext() {
+    const { shares } = this.state;
+
+    return shares.length
+      ? 'Listen to the latest shares from your friends.'
+      : 'Your stream is empty, invite your friends to join and share music!';
+  }
+
   render() {
-    const { hasError, currentTrack, likes, shares, isLoading } = this.state;
+    const { hasError, shares, isLoading } = this.state;
 
     return (
       <SharedLayout hasError={hasError} isLoading={isLoading}>
-        <Section headerText={'Stream'}>
-          {shares &&
+        <Section headerText={'Stream'} subText={this.streamSubtext}>
+          {shares.length &&
             shares.map((share) => {
               const { account, metadata } = share;
-              return (
-                <Fragment>
-                  <Track track={share.track} account={account} metadata={metadata} />
-                </Fragment>
-              );
+              return <Track track={share.track} account={account} metadata={metadata} />;
             })}
         </Section>
       </SharedLayout>
