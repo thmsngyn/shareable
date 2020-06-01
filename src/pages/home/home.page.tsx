@@ -26,9 +26,8 @@ import {
   ShareableService,
   ShareableErrorCodes,
   ShareableAccount,
-  StreamShare,
   StreamTypes,
-  StreamShareResponse,
+  SharedTrack,
 } from '../../services/shareable';
 import { getAppMargin, Spacing, FontSizes } from '../../styles';
 import { Account } from '../../redux/reducers/account.reducer';
@@ -53,7 +52,7 @@ interface HomeState {
   isLoading: boolean;
   name: string;
   likes: TracksEntity[];
-  shares: StreamShareResponse[];
+  shares: SharedTrack[];
 }
 
 class Home extends React.Component<HomeProps, HomeState> {
@@ -155,13 +154,13 @@ class Home extends React.Component<HomeProps, HomeState> {
     const { account } = this.props;
     console.log(account);
     const sharesResponse = await ShareableService.getShares(account.accountId, StreamTypes.Self);
-    const { error } = sharesResponse;
+    const { code } = sharesResponse;
 
-    if (error) {
-      return onError(error);
+    if (code) {
+      return onError(code);
     }
 
-    this.setState({ shares: sharesResponse });
+    this.setState({ shares: sharesResponse.shares });
   }
 
   get responsiveHeroStyle(): React.CSSProperties {

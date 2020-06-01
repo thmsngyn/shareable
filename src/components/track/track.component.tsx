@@ -9,13 +9,13 @@ import './track.scss';
 import { Track as TrackType } from '../../services';
 import { Spacing, FontSizes, Colors } from '../../styles';
 import { playSong } from '../../redux/actions';
-import { ShareableAccount, StreamShareMetadata } from '../../services/shareable';
+import { ShareableAccount, SharedTrackMetadata } from '../../services/shareable';
 import { timeSince } from '../../utils';
 
 interface OwnProps {
   track: TrackType;
   account?: ShareableAccount;
-  metadata?: StreamShareMetadata;
+  metadata?: SharedTrackMetadata;
 }
 interface DispatchProps {
   playSong: typeof playSong;

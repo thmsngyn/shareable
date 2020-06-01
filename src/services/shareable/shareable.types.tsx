@@ -1,4 +1,7 @@
 import { Track } from '../spotify';
+export interface ErrorResponse {
+  code: any;
+}
 
 export interface ShareableAccount {
   spotifyUserId: string;
@@ -12,17 +15,25 @@ export interface ShareableAccount {
 export interface StreamShare {
   accountId: string;
   trackId: string;
+  code?: any;
 }
 
-export interface StreamShareMetadata extends StreamShare {
+export interface SharedTrackMetadata extends StreamShare {
   createdAt: string;
   updatedAt: string;
+  code?: any;
 }
 
-export interface StreamShareResponse extends Track {
+export interface SharedTrack {
   track: Track;
   account?: ShareableAccount;
-  metadata?: StreamShareMetadata;
+  metadata?: SharedTrackMetadata;
+  code?: any;
+}
+
+export interface StreamShares {
+  shares: SharedTrack[];
+  code?: any;
 }
 
 export enum StreamTypes {

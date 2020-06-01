@@ -12,7 +12,7 @@ import { Provider } from 'react-redux';
 import backgroundImage from './assets/bg.jpg';
 
 import { Colors, APP_FOOTER_HEIGHT, APP_HEADER_HEIGHT, getAppMargin, Spacing } from './styles';
-import { Footer, Header } from './components';
+import { Footer, Header, ScrollToTop } from './components';
 import { Home } from './pages';
 import { SpotifyService } from './services';
 import { AppRoutes, mapSizesToProps } from './utils';
@@ -72,6 +72,7 @@ class App extends React.Component<AppProps, AppState> {
     return (
       <Provider store={store}>
         <Router>
+          <ScrollToTop />
           <div style={styles.app}>
             <Header loggedIn={loggedIn} isMobile={isMobile} />
             {this.renderRoutes()}

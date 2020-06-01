@@ -31,6 +31,7 @@ export const playSong = (track: Track): ThunkAction<void, {}, {}, AnyAction> => 
   };
 };
 
+// TODO: Support optional params to share a non-focused track
 export const shareSong = (): ThunkAction<void, any, {}, AnyAction> => {
   return (dispatch, getState): void => {
     const {

@@ -13,7 +13,7 @@ import {
 import { SharedLayout } from '../shared-layout';
 import { connect } from 'react-redux';
 import { Account } from '../../redux/reducers/account.reducer';
-import { ShareableService, StreamTypes, StreamShareResponse } from '../../services/shareable';
+import { ShareableService, StreamTypes, SharedTrack } from '../../services/shareable';
 import { HasError } from '../shared-layout/share-layout.constants';
 
 interface StateProps {}
@@ -27,7 +27,7 @@ interface StreamState {
   is_playing: boolean;
   progress_ms: number;
   likes: TracksEntity[];
-  shares: StreamShareResponse[];
+  shares: SharedTrack[];
   isLoading: boolean;
 }
 
@@ -72,13 +72,13 @@ class Stream extends React.Component<StreamProps, StreamState> {
   async setSharesState(onError: Function) {
     const { account } = this.props;
     const sharesResponse = await ShareableService.getShares(account.accountId, StreamTypes.Followers);
-    const { error } = sharesResponse;
+    const { code } = sharesResponse;
 
-    if (error) {
-      return onError(error);
+    if (code) {
+      return onError(code);
     }
 
-    this.setState({ shares: sharesResponse });
+    this.setState({ shares: sharesResponse.shares });
   }
 
   render() {
