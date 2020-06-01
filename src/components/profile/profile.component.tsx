@@ -3,8 +3,8 @@ import { Spacing, Colors } from '../../styles';
 
 interface ProfileProps {
   imageUrl: string;
-  onClickImage: Function;
-  info: Record<string, string>;
+  onClickImage?: Function;
+  info?: Record<string, string>;
   style?: CSSProperties;
   imageStyle?: CSSProperties;
   displayKeys?: boolean;
@@ -97,12 +97,12 @@ export class Profile extends React.Component<ProfileProps, ProfileState> {
               alt={'profileImage'}
               style={imageStyleOverride}
               src={imageUrl}
-              onClick={() => onClickImage()}
+              onClick={() => onClickImage && onClickImage()}
             />
           </div>
         </div>
         <div style={styles.infoContainer}>
-          {displayKeys && (
+          {displayKeys && info && (
             <div style={styles.infoKeys}>
               {Object.keys(info).map((key) => {
                 return <div key={key}>{key}</div>;
@@ -110,9 +110,10 @@ export class Profile extends React.Component<ProfileProps, ProfileState> {
             </div>
           )}
           <div style={styles.infoValues}>
-            {Object.keys(info).map((key) => {
-              return <div key={key}>{info[key]}</div>;
-            })}
+            {info &&
+              Object.keys(info).map((key) => {
+                return <div key={key}>{info[key]}</div>;
+              })}
           </div>
         </div>
       </div>

@@ -40,7 +40,7 @@ export const SpotifyService = new (class {
     if (!profileFromStorage) {
       const response = await this.getUserProfile();
       const { display_name: displayName, external_urls, images, email, country, followers, error, uri, id } = response;
-      const imageUrl = images && images.length && images[0].url;
+      const imageUrl = (images && images.length && images[0].url) || '';
       const externalUrl = external_urls && external_urls.spotify;
 
       const userProfile = {

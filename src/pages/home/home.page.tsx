@@ -127,10 +127,10 @@ class Home extends React.Component<HomeProps, HomeState> {
 
   async resolveUser(userProfile: SpotifyUserProfile) {
     const { setUser } = this.props;
-    const { id: spotifyUserId, displayName } = userProfile;
+    const { id: spotifyUserId, displayName, imageUrl, externalUrl } = userProfile;
 
-    const account = { spotifyUserId, displayName };
-    const loginResponse = await ShareableService.login(account);
+    const shareableAccount = { spotifyUserId, displayName, imageUrl, externalUrl };
+    const loginResponse = await ShareableService.login(shareableAccount);
     const { code: errorCode } = loginResponse;
 
     if (!errorCode) {
@@ -138,7 +138,7 @@ class Home extends React.Component<HomeProps, HomeState> {
       setUser(loginResponse);
     } else {
       if (errorCode === ShareableErrorCodes.AccountNotFound) {
-        const registerResponse = await ShareableService.register(account);
+        const registerResponse = await ShareableService.register(shareableAccount);
         const { code: errorCode } = registerResponse;
         if (!errorCode) {
           // done

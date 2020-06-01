@@ -11,6 +11,8 @@ export interface ShareableAccount {
   loggedIn?: boolean;
   followers?: ShareableAccount[];
   code?: any;
+  imageUrl?: string;
+  externalUrl?: string;
 }
 
 export interface StreamShare {
