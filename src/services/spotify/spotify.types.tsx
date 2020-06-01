@@ -157,4 +157,5 @@ export interface SpotifyUserProfile {
   error: string;
   id: string;
   uri: string;
+  followers: number;
 }

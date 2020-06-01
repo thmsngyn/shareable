@@ -1,6 +1,10 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
+import { createStyles, WithStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core';
+
 import defaultProfileImage from '../../assets/badminton.png';
 
 import { SharedLayout } from '../shared-layout';
@@ -10,13 +14,16 @@ import { Button } from '../../components/shared';
 import { StorageService, StorageKeys } from '../../services/storage';
 import { ButtonTypes } from '../../components/shared/button.component';
 
+interface StyleProps extends WithStyles<typeof styles> {}
 interface AccountProps extends RouteComponentProps<any> {}
+
+type AllProps = StyleProps & AccountProps;
 interface AccountState {
   hasError: boolean;
-  userProfile: any;
+  userProfile: SpotifyUserProfile;
 }
 
-export class Account extends React.Component<AccountProps, AccountState> {
+class Account extends React.Component<AllProps, AccountState> {
   constructor(props: any) {
     super(props);
 
@@ -51,22 +58,21 @@ export class Account extends React.Component<AccountProps, AccountState> {
   }
 
   render() {
+    const { classes } = this.props;
     const { hasError, userProfile } = this.state;
 
     return (
       <SharedLayout hasError={hasError} isLoading={false}>
         <Section headerText={`Account information`}>
           <Profile
-            style={styles.profile}
-            imageStyle={styles.image}
+            imageClassName={classes.image}
             imageUrl={userProfile.imageUrl || defaultProfileImage}
             onClickImage={() => window.open(userProfile.externalUrl, '_blank')}
             info={{
-              name: userProfile.name,
-              email: userProfile.email,
-              country: userProfile.country,
-              followers: userProfile.followers,
+              name: userProfile.displayName,
+              followers: `${userProfile.followers}`,
             }}
+            displayKeys={true}
           ></Profile>
         </Section>
         <Section>
@@ -84,12 +90,16 @@ export class Account extends React.Component<AccountProps, AccountState> {
   }
 }
 
-const styles: Record<any, React.CSSProperties> = {
-  profile: {
-    width: '100%',
-  },
-  image: {
-    width: 80,
-    height: 'auto',
-  },
-};
+const styles = (theme: Theme) =>
+  createStyles({
+    image: {
+      width: '150px !important', // TODO: Figure out specificity the right way
+      height: '150px !important',
+      [theme.breakpoints.down('sm')]: {
+        width: '100px !important', // TODO: Figure out specificity the right way
+        height: '100px !important',
+      },
+    },
+  });
+
+export default withStyles(styles)(Account);

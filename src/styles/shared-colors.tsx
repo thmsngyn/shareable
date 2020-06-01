@@ -21,5 +21,5 @@ export enum Colors {
   DisabledBackground = '#ffffff30',
   Header = '#273344',
   HeaderSplashMobile = '#1d1f1e',
-  HeaderSplashDesktop = '#2b3b4b',
+  HeaderSplashDesktop = '#2F3B4B',
 }

@@ -120,7 +120,7 @@ const styles: Record<any, React.CSSProperties> = {
     marginRight: Spacing.s16,
   },
   trackTitle: {
-    ...FontSizes.Large,
+    ...FontSizes.MediumLarge,
   },
   metadata: {
     color: Colors.c400,
