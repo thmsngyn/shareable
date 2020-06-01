@@ -1,14 +1,17 @@
 import * as AppStateTypes from 'AppStateTypes';
-import { ActionTypes } from '../actions/';
+import { ActionTypes } from '../actions';
+import { Track } from '../../services';
 
-interface FocusedTrack {
-  track: any;
+export interface FocusedTrack {
+  track: Track;
   isPlaying: boolean;
+  isShared: boolean;
 }
 
 export const initialState: FocusedTrack = {
-  track: undefined,
+  track: {} as Track,
   isPlaying: false,
+  isShared: false,
 };
 
 export const focusedTrackReducer = (state: FocusedTrack = initialState, action: AppStateTypes.RootAction) => {
@@ -31,6 +34,12 @@ export const focusedTrackReducer = (state: FocusedTrack = initialState, action: 
         ...state,
         track: action.payload,
         isPlaying: false,
+      };
+    }
+    case ActionTypes.SET_SHARED: {
+      return {
+        ...state,
+        isShared: true,
       };
     }
     default:

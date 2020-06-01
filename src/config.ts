@@ -19,12 +19,14 @@ const scopes = [
 ];
 
 const dev: Partial<AppConfig> = {
-  shareableServiceHostname: 'http://localhost:4000',
+  redirectUri: `${process.env.REACT_APP_SHAREABLE_HOSTNAME}:3000`,
+  shareableServiceHostname: `${process.env.REACT_APP_SHAREABLE_HOSTNAME}:4000`,
   obfuscateDevTools: false,
 };
 
 // All env vars need to be prefixed with 'REACT_APP_'
 const prod: Partial<AppConfig> = {
+  redirectUri: process.env.REACT_APP_SHAREABLE_HOSTNAME,
   shareableServiceHostname: process.env.REACT_APP_SHAREABLE_SERVICE_HOSTNAME,
   obfuscateDevTools: true,
 };
@@ -33,7 +35,6 @@ const envConfig: Partial<AppConfig> = process.env.NODE_ENV === 'production' ? pr
 
 export default {
   // Common configs
-  redirectUri: process.env.REACT_APP_SHAREABLE_HOSTNAME,
   clientId: '05b0a9e4fb784b1c866f6235ae139c3a',
   scopes,
 

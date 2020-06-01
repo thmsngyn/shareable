@@ -1,10 +1,14 @@
 import React, { Fragment } from 'react';
 
 import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+
+import { withWidth, isWidthDown } from '@material-ui/core';
 
 import desktopHero from '../../assets/people.jpg';
 import mobileHero from '../../assets/person.jpg';
 
+import { setUser } from '../../redux/actions';
 import * as AppStateTypes from 'AppStateTypes';
 import { Section, Track, Button } from '../../components';
 import { SharedLayout } from '../shared-layout';
@@ -16,20 +20,28 @@ import {
   LikesResponse,
   TracksEntity,
   SpotifyUserProfile,
+  Track as TrackType,
 } from '../../services';
-import { setFocused } from '../../redux/actions';
-import { ShareableService, ShareableErrorCodes } from '../../services/shareable';
-import { withWidth, isWidthDown } from '@material-ui/core';
+import {
+  ShareableService,
+  ShareableErrorCodes,
+  ShareableAccount,
+  StreamTypes,
+  SharedTrack,
+} from '../../services/shareable';
 import { getAppMargin, Spacing, FontSizes } from '../../styles';
+import { Account } from '../../redux/reducers/account.reducer';
+import { HasError } from '../shared-layout/share-layout.constants';
 
 interface OwnProps {
   width: any;
 }
 interface DispatchProps {
-  setFocusedTrack: typeof setFocused;
+  setUser: typeof setUser;
 }
 interface StateProps {
   focusedTrack: any;
+  account: Account;
 }
 
 type HomeProps = OwnProps & DispatchProps & StateProps;
@@ -40,6 +52,7 @@ interface HomeState {
   isLoading: boolean;
   name: string;
   likes: TracksEntity[];
+  shares: SharedTrack[];
 }
 
 class Home extends React.Component<HomeProps, HomeState> {
@@ -52,23 +65,8 @@ class Home extends React.Component<HomeProps, HomeState> {
       isLoading: true,
       name: '',
       likes: [],
+      shares: [],
     };
-  }
-
-  resolveUser(userProfile: SpotifyUserProfile) {
-    const { id: spotifyUserId } = userProfile;
-    const account = { spotifyUserId };
-    ShareableService.login(account).then((response) => {
-      const { code } = response;
-
-      if (code) {
-        if (code === ShareableErrorCodes.AccountNotFound) {
-          ShareableService.register(account).then((response) => {
-            // TODO: Handle error cases
-          });
-        }
-      }
-    });
   }
 
   componentDidMount() {
@@ -83,32 +81,35 @@ class Home extends React.Component<HomeProps, HomeState> {
         }),
         this.setCurrentlyPlayingState((error: SpotifyError) => {
           // Something bad happened
-          this.setState({ hasError: true });
+          this.setState(HasError);
         }),
         this.setLikesState((error: SpotifyError) => {
           // Something bad happened
-          this.setState({ hasError: true });
+          this.setState(HasError);
         }),
-      ]).then(([userProfile, resolved2, resolved3]) => {
-        // this.resolveUser(userProfile);
-        this.setState({ isLoading: false });
-      });
+      ])
+        .then(async ([userProfile, currentlyPlaying, likes]) => {
+          await this.resolveUser(userProfile);
+        })
+        .then(() =>
+          this.setSharesState((error: SpotifyError) => {
+            // Something bad happened
+            this.setState(HasError);
+          })
+        )
+        .finally(() => {
+          this.setState({ isLoading: false });
+        });
     }
     this.setState({ loggedIn });
   }
 
   async setCurrentlyPlayingState(onError: Function) {
-    const { setFocusedTrack } = this.props;
-
     const currentlyPlaying: CurrentPlaybackResponse = await SpotifyService.getCurrentlyPlaying();
-    const { error, item } = currentlyPlaying;
+    const { error } = currentlyPlaying;
 
     if (error) {
       return onError(error);
-    }
-
-    if (currentlyPlaying.item && setFocusedTrack) {
-      setFocusedTrack(item);
     }
   }
 
@@ -121,6 +122,45 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 
     this.setState({ likes: likes.items! });
+  }
+
+  async resolveUser(userProfile: SpotifyUserProfile) {
+    const { setUser } = this.props;
+    const { id: spotifyUserId } = userProfile;
+
+    const account = { spotifyUserId };
+    const loginResponse = await ShareableService.login(account);
+    const { code: errorCode } = loginResponse;
+
+    if (!errorCode) {
+      // done
+      setUser(loginResponse);
+    } else {
+      if (errorCode === ShareableErrorCodes.AccountNotFound) {
+        const registerResponse = await ShareableService.register(account);
+        const { code: errorCode } = registerResponse;
+        if (!errorCode) {
+          // done
+          setUser(registerResponse);
+        } else {
+          // TODO: Handle error cases
+          this.setState(HasError);
+        }
+      }
+    }
+  }
+
+  async setSharesState(onError: Function) {
+    const { account } = this.props;
+    console.log(account);
+    const sharesResponse = await ShareableService.getShares(account.accountId, StreamTypes.Self);
+    const { code } = sharesResponse;
+
+    if (code) {
+      return onError(code);
+    }
+
+    this.setState({ shares: sharesResponse.shares });
   }
 
   get responsiveHeroStyle(): React.CSSProperties {
@@ -160,7 +200,7 @@ class Home extends React.Component<HomeProps, HomeState> {
   }
 
   render() {
-    const { hasError, loggedIn, name, isLoading, likes } = this.state;
+    const { hasError, loggedIn, name, isLoading, likes, shares } = this.state;
     const { focusedTrack } = this.props;
 
     return (
@@ -191,6 +231,13 @@ class Home extends React.Component<HomeProps, HomeState> {
             <Section headerText={'Currently playing'}>
               <Track track={focusedTrack} />
             </Section>
+            <Section headerText={'Shares'}>
+              {shares &&
+                shares.map((share, index) => {
+                  const { track, metadata } = share;
+                  return <Track key={index} track={track} metadata={metadata} />;
+                })}
+            </Section>
             <Section headerText={'Likes'}>
               {likes.map((like, index) => {
                 return <Track key={index} track={like.track} />;
@@ -206,12 +253,13 @@ class Home extends React.Component<HomeProps, HomeState> {
 const MapStateToProps = (store: AppStateTypes.ReducerState): StateProps => {
   return {
     focusedTrack: store.focusedTrack.track,
+    account: store.account,
   };
 };
 
-const MapDispatchToProps = {
-  setFocusedTrack: setFocused,
-};
+const MapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => ({
+  setUser: (user: ShareableAccount) => dispatch(setUser(user)),
+});
 
 const styles: Record<string, React.CSSProperties> = {
   homeHero: {

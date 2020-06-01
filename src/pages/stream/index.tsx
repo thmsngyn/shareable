@@ -1,1 +1,1 @@
-export * from './stream.page';
+export { default as Stream } from './stream.page';
