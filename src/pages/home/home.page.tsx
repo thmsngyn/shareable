@@ -7,6 +7,7 @@ import { withWidth, isWidthDown } from '@material-ui/core';
 
 import desktopHero from '../../assets/people.jpg';
 import mobileHero from '../../assets/person.jpg';
+import shareButton from '../../assets/share-filled-white.svg';
 
 import { setUser } from '../../redux/actions';
 import * as AppStateTypes from 'AppStateTypes';
@@ -76,7 +77,7 @@ class Home extends React.Component<HomeProps, HomeState> {
     if (loggedIn) {
       Promise.all([
         SpotifyService.userProfile().then((userProfile: SpotifyUserProfile) => {
-          this.setState({ name: userProfile.name.split(' ')[0] });
+          this.setState({ name: userProfile.displayName.split(' ')[0] });
           return userProfile;
         }),
         this.setCurrentlyPlayingState((error: SpotifyError) => {
@@ -126,9 +127,9 @@ class Home extends React.Component<HomeProps, HomeState> {
 
   async resolveUser(userProfile: SpotifyUserProfile) {
     const { setUser } = this.props;
-    const { id: spotifyUserId } = userProfile;
+    const { id: spotifyUserId, displayName } = userProfile;
 
-    const account = { spotifyUserId };
+    const account = { spotifyUserId, displayName };
     const loginResponse = await ShareableService.login(account);
     const { code: errorCode } = loginResponse;
 
@@ -152,7 +153,6 @@ class Home extends React.Component<HomeProps, HomeState> {
 
   async setSharesState(onError: Function) {
     const { account } = this.props;
-    console.log(account);
     const sharesResponse = await ShareableService.getShares(account.accountId, StreamTypes.Self);
     const { code } = sharesResponse;
 
@@ -200,7 +200,7 @@ class Home extends React.Component<HomeProps, HomeState> {
   }
 
   render() {
-    const { hasError, loggedIn, name, isLoading, likes, shares } = this.state;
+    const { hasError, loggedIn, name, isLoading, likes, shares = [] } = this.state;
     const { focusedTrack } = this.props;
 
     return (
@@ -232,11 +232,19 @@ class Home extends React.Component<HomeProps, HomeState> {
               <Track track={focusedTrack} />
             </Section>
             <Section headerText={'Shares'}>
-              {shares &&
+              {(shares.length &&
                 shares.map((share, index) => {
                   const { track, metadata } = share;
                   return <Track key={index} track={track} metadata={metadata} />;
-                })}
+                })) || (
+                <div>
+                  Use the Share{' '}
+                  <span style={styles.shareButton}>
+                    <img style={styles.shareButton} src={shareButton}></img>
+                  </span>{' '}
+                  button on the player below to post a song.
+                </div>
+              )}
             </Section>
             <Section headerText={'Likes'}>
               {likes.map((like, index) => {
@@ -288,6 +296,10 @@ const styles: Record<string, React.CSSProperties> = {
     zIndex: 1,
     ...FontSizes.ExtraLarge,
     marginBottom: Spacing.s64,
+  },
+  shareButton: {
+    width: 15,
+    margin: `-${Spacing.s2}px 1px`,
   },
 };
 

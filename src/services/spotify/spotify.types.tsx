@@ -149,7 +149,7 @@ export enum SpotifyErrorMessages {
 }
 
 export interface SpotifyUserProfile {
-  name: string;
+  displayName: string;
   externalUrl: string;
   imageUrl: string;
   email: string;
