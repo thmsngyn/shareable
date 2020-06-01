@@ -2,19 +2,14 @@ import React, { Fragment } from 'react';
 
 import * as AppStateTypes from 'AppStateTypes';
 
-import { Section, Track } from '../../components';
-import {
-  TracksEntity,
-  SpotifyService,
-  SpotifyError,
-  CurrentPlaybackResponse,
-  Track as TrackType,
-} from '../../services';
+import { Section, Track, Button } from '../../components';
+import { SpotifyError, Track as TrackType } from '../../services';
 import { SharedLayout } from '../shared-layout';
 import { connect } from 'react-redux';
 import { Account } from '../../redux/reducers/account.reducer';
 import { ShareableService, StreamTypes, SharedTrack } from '../../services/shareable';
 import { HasError } from '../shared-layout/share-layout.constants';
+import { ButtonTypes } from '../../components/shared/button.component';
 
 interface StateProps {}
 
@@ -27,6 +22,7 @@ interface StreamState {
   progress_ms: number;
   shares: SharedTrack[];
   isLoading: boolean;
+  copyButtonText: string;
 }
 
 class Stream extends React.Component<StreamProps, StreamState> {
@@ -39,6 +35,7 @@ class Stream extends React.Component<StreamProps, StreamState> {
       hasError: false,
       shares: [],
       isLoading: false,
+      copyButtonText: 'Copy invite link',
     };
   }
 
@@ -65,7 +62,7 @@ class Stream extends React.Component<StreamProps, StreamState> {
   }
 
   get streamSubtext() {
-    const { shares } = this.state;
+    const { shares = [] } = this.state;
 
     return shares.length
       ? 'Listen to the latest shares from your friends.'
@@ -73,16 +70,32 @@ class Stream extends React.Component<StreamProps, StreamState> {
   }
 
   render() {
-    const { hasError, shares, isLoading } = this.state;
+    const { hasError, shares = [], isLoading, copyButtonText } = this.state;
+    const { account } = this.props;
 
     return (
       <SharedLayout hasError={hasError} isLoading={isLoading}>
         <Section headerText={'Stream'} subText={this.streamSubtext}>
-          {shares.length &&
-            shares.map((share) => {
+          {(shares.length &&
+            shares.map((share, index) => {
               const { account, metadata } = share;
-              return <Track track={share.track} account={account} metadata={metadata} />;
-            })}
+              return <Track key={index} track={share.track} account={account} metadata={metadata} />;
+            })) || (
+            <Button
+              buttonType={ButtonTypes.Secondary}
+              onClick={() =>
+                navigator.clipboard
+                  .writeText(`${account.displayName} would like to invite you to Shareable! https://shareable.dev`)
+                  .then(() => {
+                    this.setState({ copyButtonText: 'Copied!' }, () => {
+                      setTimeout(() => this.setState({ copyButtonText: 'Copy invite link' }), 1000);
+                    });
+                  })
+              }
+            >
+              {copyButtonText}
+            </Button>
+          )}
         </Section>
       </SharedLayout>
     );

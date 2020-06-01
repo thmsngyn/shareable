@@ -5,6 +5,7 @@ export interface ErrorResponse {
 
 export interface ShareableAccount {
   spotifyUserId: string;
+  displayName?: string;
   _id?: string;
   email?: string;
   loggedIn?: boolean;
