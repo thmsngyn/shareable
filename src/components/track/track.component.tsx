@@ -6,11 +6,14 @@ import { ThunkDispatch } from 'redux-thunk';
 import './track.css';
 import './track.scss';
 
+import defaultProfileImage from '../../assets/default-profile.svg';
+
 import { Track as TrackType } from '../../services';
 import { Spacing, FontSizes, Colors } from '../../styles';
 import { playSong } from '../../redux/actions';
 import { ShareableAccount, SharedTrackMetadata } from '../../services/shareable';
 import { timeSince } from '../../utils';
+import { Profile } from '../profile';
 
 interface OwnProps {
   track: TrackType;
@@ -43,6 +46,22 @@ class Track extends React.Component<TrackProps, TrackState> {
     return track && track.album!.images![0].url && track.artists;
   }
 
+  renderTimestamp() {
+    const { metadata } = this.props;
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+    return (
+      <span style={styles.metadata}>
+        {metadata &&
+          'shared' +
+            ' ' +
+            timeSince(new Date(metadata.createdAt).getTime()) +
+            ' on ' +
+            new Date(metadata.createdAt).toLocaleString('en-US', dateOptions)}
+      </span>
+    );
+  }
+
   renderMetadata() {
     const { account, metadata } = this.props;
 
@@ -50,19 +69,27 @@ class Track extends React.Component<TrackProps, TrackState> {
       return;
     }
 
-    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
+    let { imageUrl, externalUrl } = account || {};
+    if (!imageUrl || imageUrl === '') {
+      imageUrl = defaultProfileImage;
+    }
     return (
       <div style={styles.metadataContainer}>
-        {account && (account.displayName || account.spotifyUserId)}{' '}
-        <span style={styles.metadata}>
-          {metadata &&
-            'shared' +
-              ' ' +
-              timeSince(new Date(metadata.createdAt).getTime()) +
-              ' on ' +
-              new Date(metadata.createdAt).toLocaleString('en-US', dateOptions)}
-        </span>
+        {account && (
+          <div style={{ ...styles.row }}>
+            <Profile
+              style={{ width: 25, height: 25, alignItems: 'center', marginRight: Spacing.s8 }}
+              imageStyle={{ width: 25, height: 25 }}
+              imageUrl={imageUrl}
+              onClickImage={() => externalUrl && window.open(externalUrl, '_blank')}
+            ></Profile>
+            <div>
+              {(account.displayName || account.spotifyUserId) + ' '}
+              {this.renderTimestamp()}
+            </div>
+          </div>
+        )}
+        {!account && this.renderTimestamp()}
       </div>
     );
   }
