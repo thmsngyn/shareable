@@ -108,9 +108,10 @@ class Stats extends React.Component<StatsProps, StatsState> {
               key={index}
               onClick={() => {
                 // Using never as a workaround when calling setState with dynamic keys
-                this.setState<never>({ [timeRangeForType]: range, [pageForType]: 0 }, () =>
-                  this.setTopsState(() => this.setState(HasError))
-                );
+                this.setState<never>({ [timeRangeForType]: range, [pageForType]: 0 }, () => {
+                  this.setTopsState(() => this.setState(HasError));
+                  this.scrollTopTypeStart(type);
+                });
               }}
             >
               {SpotifyTimeRangeToDisplay[range]}
@@ -176,25 +177,27 @@ class Stats extends React.Component<StatsProps, StatsState> {
     const mobileStyles: React.CSSProperties = isWidthDown('sm', width)
       ? {
           overflowX: 'auto',
-          flexDirection: 'column',
-          flexWrap: 'wrap',
-          alignItems: 'flex-start',
-          height: '260px',
-          width: 'auto',
+          height: '250px',
+          width: '100%',
           justifyContent: 'none',
         }
-      : {};
+      : {
+          height: '600px',
+        };
     return {
       ...styles.row,
+      flexDirection: 'column',
+      flexWrap: 'wrap',
+      alignItems: 'flex-start',
       ...mobileStyles,
     };
   }
 
-  get responsiveProfileStyles(): React.CSSProperties {
+  responsiveProfileStyles(type: SpotifyTopType): React.CSSProperties {
     const { width } = this.props;
     const mobileStyles: React.CSSProperties = isWidthDown('sm', width)
       ? {
-          width: 'fit-content',
+          width: type === SpotifyTopType.Artists ? '90%' : '80%',
           marginRight: Spacing.s16,
           marginBottom: Spacing.s16,
         }
@@ -242,7 +245,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
                   return (
                     <Profile
                       key={index}
-                      style={this.responsiveProfileStyles}
+                      style={this.responsiveProfileStyles(SpotifyTopType.Artists)}
                       imageStyle={styles.image}
                       imageUrl={this.getImageUrl(artist, dinosaur)}
                       onClickImage={() => window.open(artist.external_urls.spotify, '_blank')}
@@ -268,7 +271,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
                   return (
                     <Profile
                       key={index}
-                      style={this.responsiveProfileStyles}
+                      style={this.responsiveProfileStyles(SpotifyTopType.Tracks)}
                       imageStyle={styles.image}
                       imageUrl={this.getImageUrl(track.album, pineapple)}
                       onClickImage={() => this.props.playSong(track)}
@@ -278,6 +281,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
                         title: track.name,
                         artist: track.artists![0].name,
                       }}
+                      circular={false}
                     ></Profile>
                   );
                 })}
