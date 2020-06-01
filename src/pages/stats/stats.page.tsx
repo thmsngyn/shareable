@@ -177,7 +177,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
     const mobileStyles: React.CSSProperties = isWidthDown('sm', width)
       ? {
           overflowX: 'auto',
-          height: '250px',
+          height: '260px',
           width: '100%',
           justifyContent: 'none',
         }
@@ -253,7 +253,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
                       info={{
                         rank: `${index + topArtistsPage * 10 + 1}`,
                         name: artist.name,
-                        genres: artist.genres!.join(', '),
+                        genres: artist.genres!.slice(0, 4).join(', '),
                       }}
                     ></Profile>
                   );

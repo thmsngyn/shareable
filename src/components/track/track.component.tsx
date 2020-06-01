@@ -54,7 +54,7 @@ class Track extends React.Component<TrackProps, TrackState> {
 
     return (
       <div style={styles.metadataContainer}>
-        {account && account.spotifyUserId}{' '}
+        {account && (account.displayName || account.spotifyUserId)}{' '}
         <span style={styles.metadata}>
           {metadata &&
             'shared' +
