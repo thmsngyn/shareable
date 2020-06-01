@@ -6,7 +6,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import pineapple from '../../assets/pineapple.svg';
 import dinosaur from '../../assets/dinosaur.svg';
 
-import { SharedLayout } from '../shared-layout';
+import { SharedLayout, HasError } from '../shared-layout';
 import { Section, Profile, Button } from '../../components';
 import {
   TopResponse,
@@ -61,7 +61,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
   }
 
   componentDidMount() {
-    this.setTopsState(() => this.setState({ hasError: true }));
+    this.setTopsState(() => this.setState(HasError));
   }
 
   async setTopsState(onError: Function) {
@@ -109,7 +109,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
               onClick={() => {
                 // Using never as a workaround when calling setState with dynamic keys
                 this.setState<never>({ [timeRangeForType]: range, [pageForType]: 0 }, () =>
-                  this.setTopsState(() => this.setState({ hasError: true }))
+                  this.setTopsState(() => this.setState(HasError))
                 );
               }}
             >
@@ -139,7 +139,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
         return { [pageState]: nextPage };
       },
       () => {
-        this.setTopsState(() => this.setState({ hasError: true }));
+        this.setTopsState(() => this.setState(HasError));
         this.scrollTopTypeStart(topType);
       }
     );

@@ -19,4 +19,7 @@ export enum Colors {
   TransparentDark = 'rgba(52, 52, 52, 0.9)',
   DisabledText = '#ababab',
   DisabledBackground = '#ffffff30',
+  Header = '#273344',
+  HeaderSplashMobile = '#1d1f1e',
+  HeaderSplashDesktop = '#2b3b4b',
 }

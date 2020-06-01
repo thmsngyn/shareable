@@ -1,26 +1,37 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
-import { Section } from '../../components';
+import * as AppStateTypes from 'AppStateTypes';
+
+import { Section, Track } from '../../components';
 import {
   TracksEntity,
   SpotifyService,
   SpotifyError,
   CurrentPlaybackResponse,
-  LikesResponse,
   Track as TrackType,
 } from '../../services';
 import { SharedLayout } from '../shared-layout';
+import { connect } from 'react-redux';
+import { Account } from '../../redux/reducers/account.reducer';
+import { ShareableService, StreamTypes, SharedTrack } from '../../services/shareable';
+import { HasError } from '../shared-layout/share-layout.constants';
 
-interface StreamProps {}
+interface StateProps {}
+
+interface StreamProps {
+  account: Account;
+}
 interface StreamState {
   hasError: boolean;
   currentTrack: TrackType | undefined;
   is_playing: boolean;
   progress_ms: number;
   likes: TracksEntity[];
+  shares: SharedTrack[];
+  isLoading: boolean;
 }
 
-export class Stream extends React.Component<StreamProps, StreamState> {
+class Stream extends React.Component<StreamProps, StreamState> {
   constructor(props: StreamProps) {
     super(props);
 
@@ -30,17 +41,18 @@ export class Stream extends React.Component<StreamProps, StreamState> {
       progress_ms: 0,
       likes: [],
       hasError: false,
+      shares: [],
+      isLoading: false,
     };
   }
 
   componentDidMount() {
-    this.setCurrentlyPlayingState((error: SpotifyError) => {
+    this.setState({ isLoading: true });
+    this.setSharesState((error: SpotifyError) => {
       // Something bad happened
-      this.setState({ hasError: true });
-    });
-    this.setLikesState((error: SpotifyError) => {
-      // Something bad happened
-      this.setState({ hasError: true });
+      this.setState(HasError);
+    }).then(() => {
+      this.setState({ isLoading: false });
     });
   }
 
@@ -57,28 +69,43 @@ export class Stream extends React.Component<StreamProps, StreamState> {
     });
   }
 
-  async setLikesState(onError: Function) {
-    const likes: LikesResponse = await SpotifyService.getLikes();
-    const { error } = likes;
+  async setSharesState(onError: Function) {
+    const { account } = this.props;
+    const sharesResponse = await ShareableService.getShares(account.accountId, StreamTypes.Followers);
+    const { code } = sharesResponse;
 
-    if (error) {
-      return onError(error);
+    if (code) {
+      return onError(code);
     }
 
-    this.setState({ likes: likes.items! });
+    this.setState({ shares: sharesResponse.shares });
   }
 
   render() {
-    const { hasError, currentTrack, likes } = this.state;
-    const isLoading = !currentTrack && !likes.length;
+    const { hasError, currentTrack, likes, shares, isLoading } = this.state;
 
     return (
       <SharedLayout hasError={hasError} isLoading={isLoading}>
-        <Section
-          headerText={'Stream feed'}
-          subText={'Under development. This will be a live stream of music that your friends like.'}
-        ></Section>
+        <Section headerText={'Stream'}>
+          {shares &&
+            shares.map((share) => {
+              const { account, metadata } = share;
+              return (
+                <Fragment>
+                  <Track track={share.track} account={account} metadata={metadata} />
+                </Fragment>
+              );
+            })}
+        </Section>
       </SharedLayout>
     );
   }
 }
+
+const MapStateToProps = (store: AppStateTypes.ReducerState): StateProps => {
+  return {
+    account: store.account,
+  };
+};
+
+export default connect(MapStateToProps, undefined)(Stream);
