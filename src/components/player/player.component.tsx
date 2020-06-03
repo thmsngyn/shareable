@@ -138,3 +138,16 @@ const MapDispatchToProps = {
 };
 
 export default connect(undefined, MapDispatchToProps)(withStyles(styles)(Player));
+
+/**
+ * TODO: Fix
+ * https://api.spotify.com/v1/me/player/play
+ * error: {status: 404, message: "Player command failed: No active device found", reason: "NO_ACTIVE_DEVICE"}
+    message: "Player command failed: No active device found"
+    reason: "NO_ACTIVE_DEVICE"
+    status: 404
+
+ * https://api.spotify.com/v1/me/player
+ *{error: {status: 404, message: "Device not found"}}
+error: {status: 404, message: "Device not found"}
+ */
