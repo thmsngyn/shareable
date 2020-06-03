@@ -320,7 +320,6 @@ const styles: Record<any, React.CSSProperties> = {
     height: 100,
   },
   timeToggle: {
-    width: '250px',
     marginBottom: Spacing.s24,
   },
   pageToggle: {

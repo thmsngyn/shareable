@@ -14,7 +14,9 @@ import { setFocused } from '../../redux/actions';
 import { Repost } from '../repost';
 
 type ReducedSpotifyPlayerProps = Pick<IProps, Exclude<keyof IProps, 'token'>>;
-interface OwnProps extends ReducedSpotifyPlayerProps {}
+interface OwnProps extends ReducedSpotifyPlayerProps {
+  isMobile?: boolean;
+}
 interface StyleProps extends WithStyles<typeof styles> {}
 interface DispatchProps {
   setFocusedTrack: typeof setFocused;
@@ -77,13 +79,13 @@ class Player extends React.Component<PlayerProps, PlayerState> {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, isMobile } = this.props;
     const { playerIsActive } = this.state;
     return (
       <div className={classes.container}>
         {playerIsActive && <Repost className={classes.repost}></Repost>}
         <SpotifyPlayer
-          name={'Shareable Web Player'}
+          name={`Shareable Web Player (${isMobile ? 'Mobile' : 'Desktop'})`}
           styles={playerStyles}
           token={this.state.token}
           autoPlay={true}

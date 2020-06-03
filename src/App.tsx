@@ -56,9 +56,12 @@ class App extends React.Component<AppProps, AppState> {
         {loggedIn && (
           <Switch>
             {AppRoutes.map((route) => {
-              const { path, page } = route;
-              return <Route key={route.path} exact path={path} component={page} />;
+              const { path, page: Page } = route;
+              return (
+                <Route key={route.path} exact path={path} render={(props) => <Page {...props} isMobile={isMobile} />} />
+              );
             })}
+            ;
           </Switch>
         )}
       </div>
@@ -76,7 +79,7 @@ class App extends React.Component<AppProps, AppState> {
           <div style={styles.app}>
             <Header loggedIn={loggedIn} isMobile={isMobile} />
             {this.renderRoutes()}
-            {loggedIn && <Footer />}
+            {loggedIn && <Footer isMobile={isMobile} />}
           </div>
         </Router>
       </Provider>
