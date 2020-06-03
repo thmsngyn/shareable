@@ -3,11 +3,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import MenuItem from '@material-ui/core/MenuItem';
+
 import pineapple from '../../assets/pineapple.svg';
 import dinosaur from '../../assets/dinosaur.svg';
 
 import { SharedLayout, HasError } from '../shared-layout';
-import { Section, Profile, Button } from '../../components';
+import { Section, Profile, Button, Dropdown } from '../../components';
 import {
   TopResponse,
   SpotifyService,
@@ -17,10 +19,11 @@ import {
   Track,
   Album,
 } from '../../services';
-import { Spacing } from '../../styles';
+import { Spacing, Colors } from '../../styles';
 import { playSong } from '../../redux/actions';
 import { ButtonTypes } from '../../components/shared/button.component';
 import { withWidth, isWidthDown } from '@material-ui/core';
+import { SpotifyTimeRangeToDisplay, SpotifyTimeRangeList } from './stats.page.constants';
 
 interface OwnProps {
   width: any;
@@ -36,11 +39,13 @@ interface StatsState {
   hasError: boolean;
   topArtistsTimeRange: SpotifyTimeRange;
   topTracksTimeRange: SpotifyTimeRange;
-  topArtists?: any;
-  topTracks?: any;
+  topArtists: ArtistsEntity[];
+  topTracks: Track[];
   isLoading: boolean;
   topArtistsPage: number;
   topTracksPage: number;
+  topArtistsTotal: number;
+  topTracksTotal: number;
 }
 
 class Stats extends React.Component<StatsProps, StatsState> {
@@ -53,10 +58,14 @@ class Stats extends React.Component<StatsProps, StatsState> {
     this.state = {
       topArtistsTimeRange: SpotifyTimeRange.ShortTerm,
       topTracksTimeRange: SpotifyTimeRange.ShortTerm,
+      topArtists: [],
+      topTracks: [],
       hasError: false,
       isLoading: true,
       topArtistsPage: 0,
       topTracksPage: 0,
+      topArtistsTotal: 0,
+      topTracksTotal: 0,
     };
   }
 
@@ -66,58 +75,59 @@ class Stats extends React.Component<StatsProps, StatsState> {
 
   async setTopsState(onError: Function) {
     const { topArtistsTimeRange, topTracksTimeRange, topArtistsPage, topTracksPage } = this.state;
-    const topArtists: TopResponse = await SpotifyService.getTop(
+    const topArtistsResponse: TopResponse = await SpotifyService.getTop(
       SpotifyTopType.Artists,
       topArtistsTimeRange,
       this.topLimit,
       topArtistsPage * this.topLimit
     );
-    const topTracks: TopResponse = await SpotifyService.getTop(
+    const topTracksResponse: TopResponse = await SpotifyService.getTop(
       SpotifyTopType.Tracks,
       topTracksTimeRange,
       this.topLimit,
       topTracksPage * this.topLimit
     );
 
-    const { error: topArtistsError } = topArtists;
-    const { error: topTracksError } = topTracks;
+    const { error: topArtistsError, items: topArtists = [], total: topArtistsTotal } = topArtistsResponse;
+    const { error: topTracksError, items: topTracks = [], total: topTracksTotal } = topTracksResponse;
 
     if (topArtistsError || topTracksError) {
       return onError(topArtistsError, topTracksError);
     }
 
-    this.setState({ topArtists, topTracks, isLoading: false });
+    this.setState({ topArtists, topTracks, topArtistsTotal, topTracksTotal, isLoading: false });
   }
 
-  renderTimeRangeButtons(type: SpotifyTopType) {
-    const SpotifyTimeRangeToDisplay = {
-      [SpotifyTimeRange.ShortTerm]: 'Last 4 weeks',
-      [SpotifyTimeRange.MediumTerm]: 'Last 6 months',
-      [SpotifyTimeRange.LongTerm]: 'Last several years',
-    };
-    const SpotifyTimeRangeList = [SpotifyTimeRange.ShortTerm, SpotifyTimeRange.MediumTerm, SpotifyTimeRange.LongTerm];
+  private handleSelect(event, type: SpotifyTopType) {
+    const {
+      target: { value: range },
+    } = event;
     const timeRangeForType: keyof StatsState =
       type === SpotifyTopType.Artists ? 'topArtistsTimeRange' : 'topTracksTimeRange';
     const pageForType: keyof StatsState = type === SpotifyTopType.Artists ? 'topArtistsPage' : 'topTracksPage';
 
+    // Using never as a workaround when calling setState with dynamic keys
+    this.setState<never>({ [timeRangeForType]: range, [pageForType]: 0 }, () => {
+      this.setTopsState(() => this.setState(HasError));
+      this.scrollTopTypeStart(type);
+    });
+  }
+
+  renderTimeRangeButtons(type: SpotifyTopType) {
+    const timeRangeForType: keyof StatsState =
+      type === SpotifyTopType.Artists ? 'topArtistsTimeRange' : 'topTracksTimeRange';
+
     return (
       <div style={{ ...styles.row, ...styles.timeToggle }}>
-        {SpotifyTimeRangeList.map((range, index) => {
-          return (
-            <Button
-              key={index}
-              onClick={() => {
-                // Using never as a workaround when calling setState with dynamic keys
-                this.setState<never>({ [timeRangeForType]: range, [pageForType]: 0 }, () => {
-                  this.setTopsState(() => this.setState(HasError));
-                  this.scrollTopTypeStart(type);
-                });
-              }}
-            >
-              {SpotifyTimeRangeToDisplay[range]}
-            </Button>
-          );
-        })}
+        <Dropdown value={this.state[timeRangeForType]} onChange={(event) => this.handleSelect(event, type)}>
+          {SpotifyTimeRangeList.map((range, index) => {
+            return (
+              <MenuItem key={index} value={range}>
+                {SpotifyTimeRangeToDisplay[range]}
+              </MenuItem>
+            );
+          })}
+        </Dropdown>
       </div>
     );
   }
@@ -146,9 +156,18 @@ class Stats extends React.Component<StatsProps, StatsState> {
     );
   }
 
+  private hasNextPage(topType: SpotifyTopType) {
+    const type = topType === SpotifyTopType.Artists ? 'topArtists' : 'topTracks';
+    const currentPage: number = this.state[`${type}Page`];
+    const topTotal: number = this.state[`${type}Total`];
+    return currentPage + 1 < this.maxTopPageOffset && (currentPage + 1) * this.topLimit < topTotal;
+  }
+
   renderPageChange(topType: SpotifyTopType) {
-    const pageState = topType === SpotifyTopType.Artists ? 'topArtistsPage' : 'topTracksPage';
-    const currentPage: number = this.state[pageState];
+    const type = topType === SpotifyTopType.Artists ? 'topArtists' : 'topTracks';
+    const currentPage: number = this.state[`${type}Page`];
+    const topTotal: number = this.state[`${type}Total`];
+
     return (
       <div style={{ ...styles.row, ...styles.pageToggle }}>
         <Button
@@ -161,13 +180,15 @@ class Stats extends React.Component<StatsProps, StatsState> {
         </Button>
         <Button
           style={{ width: 'auto' }}
-          disabled={currentPage + 1 === this.maxTopPageOffset}
+          disabled={!this.hasNextPage(topType)}
           buttonType={ButtonTypes.Secondary}
           onClick={() => this.incrementPage(topType, 1)}
         >
           Next
         </Button>
-        <div>Page {currentPage + 1}</div>
+        <div style={{ color: Colors.c300 }}>
+          Page {currentPage + 1} of {Math.floor(topTotal / this.topLimit)}
+        </div>
       </div>
     );
   }
@@ -179,7 +200,6 @@ class Stats extends React.Component<StatsProps, StatsState> {
           overflowX: 'auto',
           height: '260px',
           width: '100%',
-          justifyContent: 'none',
         }
       : {
           height: '600px',
@@ -189,6 +209,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
       flexDirection: 'column',
       flexWrap: 'wrap',
       alignItems: 'flex-start',
+      justifyContent: 'none',
       ...mobileStyles,
     };
   }
@@ -218,30 +239,16 @@ class Stats extends React.Component<StatsProps, StatsState> {
   }
 
   render() {
-    const {
-      hasError,
-      topArtists,
-      topTracks,
-      isLoading,
-      topArtistsTimeRange,
-      topTracksTimeRange,
-      topArtistsPage,
-      topTracksPage,
-    } = this.state;
-    const SpotifyTimeRangeToDisplay = {
-      [SpotifyTimeRange.ShortTerm]: 'Last 4 weeks',
-      [SpotifyTimeRange.MediumTerm]: 'Last 6 months',
-      [SpotifyTimeRange.LongTerm]: 'Last several years',
-    };
+    const { hasError, topArtists, topTracks, isLoading, topArtistsPage, topTracksPage } = this.state;
 
     return (
       <SharedLayout hasError={hasError} isLoading={isLoading}>
         <div>
-          <Section headerText={`Top artists (${SpotifyTimeRangeToDisplay[topArtistsTimeRange]})`}>
+          <Section headerText={`Top artists`}>
             {this.renderTimeRangeButtons(SpotifyTopType.Artists)}
             <div id={SpotifyTopType.Artists} style={this.responsiveRowStyle}>
               {topArtists &&
-                topArtists!.items!.map((artist: ArtistsEntity, index: number) => {
+                topArtists.map((artist: ArtistsEntity, index: number) => {
                   return (
                     <Profile
                       key={index}
@@ -263,11 +270,11 @@ class Stats extends React.Component<StatsProps, StatsState> {
           </Section>
         </div>
         <div>
-          <Section headerText={`Top tracks (${SpotifyTimeRangeToDisplay[topTracksTimeRange]})`}>
+          <Section headerText={`Top tracks`}>
             {this.renderTimeRangeButtons(SpotifyTopType.Tracks)}
             <div id={SpotifyTopType.Tracks} style={this.responsiveRowStyle}>
               {topTracks &&
-                topTracks!.items!.map((track: Track, index: number) => {
+                topTracks.map((track: Track, index: number) => {
                   return (
                     <Profile
                       key={index}
@@ -313,10 +320,11 @@ const styles: Record<any, React.CSSProperties> = {
     height: 100,
   },
   timeToggle: {
-    maxWidth: '525px',
+    width: '250px',
+    marginBottom: Spacing.s24,
   },
   pageToggle: {
-    maxWidth: '275px',
+    maxWidth: '300px',
     flexWrap: 'nowrap',
   },
 };

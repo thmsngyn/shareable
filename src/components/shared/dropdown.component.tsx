@@ -7,16 +7,18 @@ import {
   Theme,
   createStyles,
   WithStyles,
+  createMuiTheme,
+  MuiThemeProvider,
 } from '@material-ui/core';
 
-import { Colors } from '../../styles';
+import { Colors, Spacing } from '../../styles';
 
 interface OwnProps extends WithStyles<typeof styles> {}
-type ButtonProps = MaterialSelectProps & OwnProps;
+type DropdownProps = MaterialSelectProps & OwnProps;
 
 // TODO: Need to revisit this
-class Dropdown extends React.Component<ButtonProps> {
-  constructor(props: ButtonProps) {
+class Dropdown extends React.Component<DropdownProps> {
+  constructor(props: DropdownProps) {
     super(props);
   }
 
@@ -26,9 +28,11 @@ class Dropdown extends React.Component<ButtonProps> {
     const { children, classes, ...materialProps } = this.props;
 
     return (
-      <MaterialSelect {...materialProps} className={`${classes.root} ${classes.label}`}>
-        {children}
-      </MaterialSelect>
+      <MuiThemeProvider theme={theme}>
+        <MaterialSelect {...materialProps} className={`${classes.root} ${classes.label}`}>
+          {children}
+        </MaterialSelect>
+      </MuiThemeProvider>
     );
   }
 }
@@ -39,10 +43,10 @@ const styles = (theme: Theme) =>
       color: Colors.White,
       background: Colors.ShareableLavender,
       height: 48,
-      padding: '0 25px',
       fontWeight: 'bold',
       borderRadius: 4,
       letterSpacing: 0.6,
+      fontFamily: 'Muli',
       [theme.breakpoints.down('sm')]: {
         width: '100%',
       },
@@ -71,4 +75,42 @@ const styles = (theme: Theme) =>
     },
   });
 
+const theme = createMuiTheme({
+  overrides: {
+    MuiInput: {},
+    MuiSelect: {
+      root: {
+        paddingLeft: `${Spacing.s24}px !important`,
+        paddingRight: `${Spacing.s48}px !important`,
+      },
+      icon: {
+        marginRight: Spacing.s16,
+      },
+      select: {
+        '&:focus': {
+          backgroundColor: 'transparent',
+        },
+      },
+    },
+    MuiList: {
+      root: {
+        backgroundColor: Colors.ScreenBackground,
+      },
+    },
+    MuiMenuItem: {
+      root: {
+        fontFamily: 'Muli',
+        backgroundColor: 'transparent',
+        color: Colors.White,
+        '&$selected': {
+          // <-- mixing the two classes
+          backgroundColor: Colors.c600,
+        },
+        '&:hover': {
+          backgroundColor: Colors.c500,
+        },
+      },
+    },
+  },
+});
 export default withStyles(styles)(Dropdown);

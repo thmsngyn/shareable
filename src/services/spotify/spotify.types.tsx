@@ -123,7 +123,7 @@ export enum SpotifyTopType {
 }
 
 export interface TopResponse {
-  items?: ArtistsEntity[] | Track[];
+  items: ArtistsEntity[] & Track[];
   total: number;
   limit: number;
   offset: number;
