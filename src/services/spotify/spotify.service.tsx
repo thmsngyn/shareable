@@ -1,7 +1,14 @@
 import { hash, parseJson } from '../../utils';
 import { StorageService, StorageKeys } from '../storage';
 
-import { PLAYER_API, SAVED_TRACKS_API, USER_PROFILE_API, USER_TOP_API, PLAYER_PLAY_API } from './spotify.constants';
+import {
+  PLAYER_API,
+  SAVED_TRACKS_API,
+  USER_PROFILE_API,
+  USER_TOP_API,
+  PLAYER_PLAY_API,
+  GET_TRACKS_API,
+} from './spotify.constants';
 import {
   CurrentPlaybackResponse,
   LikesResponse,
@@ -111,6 +118,16 @@ export const SpotifyService = new (class {
 
   playSongs(uris: string[]): Promise<any> {
     return this.request(`${PLAYER_PLAY_API}`, 'PUT', { uris });
+  }
+
+  getTracks(ids: string[]): Promise<any> {
+    const idsParam = ids.length ? `&ids=${encodeURIComponent(ids.join(','))}` : '';
+
+    if (!idsParam) {
+      // We can't check if the ids list is empty, return []
+      return new Promise((resolve) => resolve([]));
+    }
+    return this.request(`${GET_TRACKS_API}?${idsParam}`, 'GET');
   }
 
   request(url: string, method: string, body?: any): Promise<any> {

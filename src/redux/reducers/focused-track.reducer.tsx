@@ -6,12 +6,14 @@ export interface FocusedTrack {
   track: Track;
   isPlaying: boolean;
   isShared: boolean;
+  latestShares: Track[];
 }
 
 export const initialState: FocusedTrack = {
   track: {} as Track,
   isPlaying: false,
   isShared: false,
+  latestShares: [],
 };
 
 export const focusedTrackReducer = (state: FocusedTrack = initialState, action: AppStateTypes.RootAction) => {
@@ -24,6 +26,7 @@ export const focusedTrackReducer = (state: FocusedTrack = initialState, action: 
           ...state,
           track: action.payload,
           isPlaying: true,
+          isShared: false, // Need to update to check shareable service
         };
       } else {
         return state;
@@ -37,9 +40,22 @@ export const focusedTrackReducer = (state: FocusedTrack = initialState, action: 
       };
     }
     case ActionTypes.SET_SHARED: {
+      if (state.latestShares.find((track) => track.id === action.payload.id)) {
+        return {
+          ...state,
+          isShared: true,
+        };
+      }
       return {
         ...state,
         isShared: true,
+        latestShares: [action.payload, ...state.latestShares],
+      };
+    }
+    case ActionTypes.CLEAR_LATEST_SHARES: {
+      return {
+        ...state,
+        latestShares: [],
       };
     }
     default:

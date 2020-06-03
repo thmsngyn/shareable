@@ -9,7 +9,7 @@ import desktopHero from '../../assets/people.jpg';
 import mobileHero from '../../assets/person.jpg';
 import shareButton from '../../assets/share-filled-white.svg';
 
-import { setUser } from '../../redux/actions';
+import { setUser, clearLatestShares } from '../../redux/actions';
 import * as AppStateTypes from 'AppStateTypes';
 import { Section, Track, Button } from '../../components';
 import { SharedLayout } from '../shared-layout';
@@ -39,10 +39,12 @@ interface OwnProps {
 }
 interface DispatchProps {
   setUser: typeof setUser;
+  clearLatestShares: typeof clearLatestShares;
 }
 interface StateProps {
   focusedTrack: any;
   account: Account;
+  latestShares: TrackType[];
 }
 
 type HomeProps = OwnProps & DispatchProps & StateProps;
@@ -71,6 +73,8 @@ class Home extends React.Component<HomeProps, HomeState> {
   }
 
   componentDidMount() {
+    // Clear out the latest shares from the store
+    this.props.clearLatestShares();
     // TODO: https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow
     // To refresh the access token automatically
     const loggedIn = SpotifyService.userIsLoggedIn();
@@ -201,7 +205,7 @@ class Home extends React.Component<HomeProps, HomeState> {
 
   render() {
     const { hasError, loggedIn, name, isLoading, likes, shares = [] } = this.state;
-    const { focusedTrack } = this.props;
+    const { focusedTrack, latestShares } = this.props;
 
     return (
       <SharedLayout hasError={hasError} isLoading={loggedIn && isLoading}>
@@ -226,25 +230,30 @@ class Home extends React.Component<HomeProps, HomeState> {
           <Fragment>
             <Section
               headerText={`Welcome ${name}!`}
-              subText={'You can now play music and view your personalized stats.'}
+              subText={'Play music, view your personalized stats and share with your friends.'}
             ></Section>
             <Section headerText={'Currently playing'}>
               <Track track={focusedTrack} />
             </Section>
             <Section headerText={'Shares'}>
+              <div style={{ marginBottom: Spacing.s16 }}>
+                Use the Share{' '}
+                <span style={styles.shareButton}>
+                  <img style={styles.shareButton} src={shareButton}></img>
+                </span>{' '}
+                button on the player below to post a song.
+              </div>
+              {(latestShares.length &&
+                latestShares.map((track, index) => {
+                  return <Track key={index} track={track} subduedHeader={'shared a few moments ago'} />;
+                })) ||
+                ''}
               {(shares.length &&
                 shares.map((share, index) => {
                   const { track, metadata } = share;
                   return <Track key={index} track={track} metadata={metadata} />;
-                })) || (
-                <div>
-                  Use the Share{' '}
-                  <span style={styles.shareButton}>
-                    <img style={styles.shareButton} src={shareButton}></img>
-                  </span>{' '}
-                  button on the player below to post a song.
-                </div>
-              )}
+                })) ||
+                ''}
             </Section>
             <Section headerText={'Likes'}>
               {likes.map((like, index) => {
@@ -262,11 +271,13 @@ const MapStateToProps = (store: AppStateTypes.ReducerState): StateProps => {
   return {
     focusedTrack: store.focusedTrack.track,
     account: store.account,
+    latestShares: store.focusedTrack.latestShares,
   };
 };
 
 const MapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>) => ({
   setUser: (user: ShareableAccount) => dispatch(setUser(user)),
+  clearLatestShares: () => dispatch(clearLatestShares()),
 });
 
 const styles: Record<string, React.CSSProperties> = {

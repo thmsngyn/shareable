@@ -3,11 +3,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import SpotifyPlayer from 'react-spotify-web-playback';
-import { IProps, ICallbackState, IStylesProps } from 'react-spotify-web-playback/lib/types/common';
+import { IProps, ICallbackState } from 'react-spotify-web-playback/lib/types/common';
 import { IPlayerTrack } from 'react-spotify-web-playback/lib/types/spotify';
 
 import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core';
-import { StyleRules } from '@material-ui/styles';
 
 import { SpotifyService } from '../../services';
 import { Colors, Spacing } from '../../styles';
@@ -57,17 +56,17 @@ class Player extends React.Component<PlayerProps, PlayerState> {
   }
 
   syncCurrentlyPlaying(track: IPlayerTrack) {
-    // Sync the currently playing data from the library player
-    // This helps with syncing back with other players like the desktop app
-    this.props.setFocusedTrack({
-      ...track,
-      artists: track.artists.split(', ').map((artistName: string) => {
-        return { name: artistName };
-      }),
-      album: {
-        images: [{ url: track.image }],
-      },
-    } as any); // TODO: Build the proper object type. Consider requesting the track from spotify
+    if (!track.artists && !track.id && !track.name) {
+      return;
+    }
+    SpotifyService.getTracks([track.id]).then((tracksObj) => {
+      const { tracks } = tracksObj;
+      if (!tracks || !tracks.length) {
+        return;
+      }
+      const track = tracks[0];
+      this.props.setFocusedTrack(track);
+    });
   }
 
   handlePlayerCallback(playerData: ICallbackState) {

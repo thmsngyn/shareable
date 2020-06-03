@@ -19,6 +19,7 @@ interface OwnProps {
   track: TrackType;
   account?: ShareableAccount;
   metadata?: SharedTrackMetadata;
+  subduedHeader?: string;
 }
 interface DispatchProps {
   playSong: typeof playSong;
@@ -43,13 +44,19 @@ class Track extends React.Component<TrackProps, TrackState> {
   }
 
   hasData(track: TrackType) {
-    return track && track.album!.images![0].url && track.artists;
+    return (
+      track &&
+      track.artists &&
+      track.album &&
+      track.album.images &&
+      track.album.images.length &&
+      track.album.images[0].url
+    );
   }
 
   renderTimestamp() {
     const { metadata } = this.props;
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
     return (
       <span style={styles.metadata}>
         {metadata &&
@@ -94,6 +101,19 @@ class Track extends React.Component<TrackProps, TrackState> {
     );
   }
 
+  renderSubduedHeader() {
+    const { subduedHeader } = this.props;
+    if (!subduedHeader) {
+      return;
+    }
+
+    return (
+      <div style={styles.metadataContainer}>
+        <span style={styles.metadata}>{subduedHeader}</span>
+      </div>
+    );
+  }
+
   render() {
     const { track } = this.props;
 
@@ -101,6 +121,7 @@ class Track extends React.Component<TrackProps, TrackState> {
       <div className="track" style={styles.track}>
         {this.hasData(track) ? (
           <div style={styles.column}>
+            {this.renderSubduedHeader()}
             {this.renderMetadata()}
             <div style={styles.row}>
               <div style={styles.coverArt}>
