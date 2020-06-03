@@ -2,13 +2,16 @@ import React from 'react';
 
 import { Player } from '../player';
 
-export class Footer extends React.Component {
+interface FooterProps {
+  isMobile?: boolean;
+}
+export class Footer extends React.Component<FooterProps> {
   componentDidMount() {}
 
   render() {
     return (
       <div style={styles.footer}>
-        <Player />
+        <Player {...this.props} />
       </div>
     );
   }
