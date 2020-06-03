@@ -34,7 +34,7 @@ const styles: Record<any, React.CSSProperties> = {
   headerText: {
     marginBottom: Spacing.s16,
     fontFamily: 'Muli',
-    fontWeight: 600,
+    fontWeight: 700,
     ...FontSizes.Medium,
   },
   subText: {

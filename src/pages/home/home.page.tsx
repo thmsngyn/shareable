@@ -241,7 +241,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                 <span style={styles.shareButton}>
                   <img style={styles.shareButton} src={shareButton}></img>
                 </span>{' '}
-                button on the player below to post a song.
+                icon on the player below to post a track.
               </div>
               {(latestShares.length &&
                 latestShares.map((track, index) => {

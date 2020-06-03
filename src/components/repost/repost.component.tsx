@@ -12,7 +12,7 @@ import * as AppStateTypes from 'AppStateTypes';
 
 import shareIcon from '../../assets/share-white.svg';
 import shareIconFilled from '../../assets/share-filled-white.svg';
-import { APP_HEADER_HEIGHT } from '../../styles';
+import { APP_HEADER_HEIGHT, Colors } from '../../styles';
 
 interface OwnProps extends WithStyles<typeof styles> {
   className?: string;
@@ -59,10 +59,11 @@ class Repost extends React.Component<RepostProps, RepostState> {
     // TODO: Figure out share state for focused tracks
     return (
       <div className={className}>
-        <Tooltip title="Share" arrow>
+        <Tooltip title={<div className={classes.multiFont}>Share</div>} arrow>
           <div className={classes.img} onClick={this.handleShare.bind(this)}></div>
         </Tooltip>
         <Snackbar
+          ContentProps={{ classes: { root: classes.multiFont } }}
           style={{ marginTop: APP_HEADER_HEIGHT }}
           anchorOrigin={{
             vertical: 'top',
@@ -90,6 +91,9 @@ const styles = (theme: Theme) =>
       '&:hover': {
         backgroundImage: `url(${shareIconFilled})`,
       },
+    },
+    multiFont: {
+      fontFamily: 'Muli',
     },
   });
 
