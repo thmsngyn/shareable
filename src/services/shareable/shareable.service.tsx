@@ -23,13 +23,13 @@ export const ShareableService = new (class {
   login(account: ShareableAccount): Promise<ShareableAccount> {
     return this.request(LOGIN_API, 'POST', {
       ...account,
-    });
+    }).then(this.saveAccountId.bind(this));
   }
 
   register(account: ShareableAccount): Promise<ShareableAccount> {
     return this.request(REGISTER_API, 'POST', {
       ...account,
-    });
+    }).then(this.saveAccountId.bind(this));
   }
 
   addShare(share: StreamShare): Promise<StreamShare> {
@@ -39,7 +39,8 @@ export const ShareableService = new (class {
   }
 
   getShares(accountId, type: StreamTypes = StreamTypes.Followers): Promise<StreamShares> {
-    return this.request(`${GET_STREAM_API}/${accountId}?type=${type}`, 'GET');
+    const accountIdFromStorage = StorageService.get(StorageKeys.ShareableAccountId);
+    return this.request(`${GET_STREAM_API}/${accountId || accountIdFromStorage}?type=${type}`, 'GET');
   }
 
   request(url: string, method: string, body?: any): Promise<any> {
@@ -67,6 +68,16 @@ export const ShareableService = new (class {
     const { error } = response;
     if (error) {
     }
+    return response;
+  }
+
+  private saveAccountId(response: ShareableAccount) {
+    const { _id: accountId = '' } = response;
+
+    if (accountId) {
+      StorageService.set(StorageKeys.ShareableAccountId, accountId);
+    }
+
     return response;
   }
 })();

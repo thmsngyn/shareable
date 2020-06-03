@@ -3,4 +3,5 @@ export enum StorageKeys {
   UserProfile = 'shrbl_user',
   KeyDecay = 'shrbl_key_decay',
   ShareableJwt = 'shrbl_jwt',
+  ShareableAccountId = 'shrbl_account_id',
 }
