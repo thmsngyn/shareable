@@ -19,6 +19,51 @@
   color: #61dafb;
 }
 
+@media screen and (max-width: 479px) {
+  .App-margins {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+  .AppHeader-padding {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .AppHero-margins {
+    margin-left: -16px;
+    margin-right: -16px;
+  }
+}
+
+@media screen and (min-width: 480px) and (max-width: 1023px) {
+  .App-margins {
+    margin-left: 64px;
+    margin-right: 64px;
+  }
+  .AppHeader-padding {
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+  .AppHero-margins {
+    margin-left: -64px;
+    margin-right: -64px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .App-margins {
+    margin-left: 224px;
+    margin-right: 224px;
+  }
+  .AppHeader-padding {
+    padding-left: 224px;
+    padding-right: 224px;
+  }
+  .AppHero-margins {
+    margin-left: -224px;
+    margin-right: -224px;
+  }
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

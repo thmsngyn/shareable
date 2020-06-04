@@ -30,7 +30,7 @@ import {
   StreamTypes,
   SharedTrack,
 } from '../../services/shareable';
-import { getAppMargin, Spacing, FontSizes } from '../../styles';
+import { Spacing, FontSizes } from '../../styles';
 import { Account } from '../../redux/reducers/account.reducer';
 import { HasError } from '../shared-layout/share-layout.constants';
 
@@ -169,7 +169,7 @@ class Home extends React.Component<HomeProps, HomeState> {
 
   get responsiveHeroStyle(): React.CSSProperties {
     const { width } = this.props;
-    const responsiveStyles: React.CSSProperties = isWidthDown('sm', width)
+    const responsiveStyles: React.CSSProperties = isWidthDown('xs', width)
       ? {
           backgroundImage: `url(${mobileHero})`,
           marginTop: `-${Spacing.s64}px`,
@@ -186,14 +186,12 @@ class Home extends React.Component<HomeProps, HomeState> {
     return {
       ...styles.homeHero,
       ...responsiveStyles,
-      marginRight: -getAppMargin(isWidthDown('sm', width)),
-      marginLeft: -getAppMargin(isWidthDown('sm', width)),
     };
   }
 
   get responsiveCtaStyle(): React.CSSProperties {
     const { width } = this.props;
-    const responsiveStyles: React.CSSProperties = isWidthDown('sm', width)
+    const responsiveStyles: React.CSSProperties = isWidthDown('xs', width)
       ? { marginTop: '-650px' }
       : { marginTop: '-700px' };
 
@@ -212,7 +210,7 @@ class Home extends React.Component<HomeProps, HomeState> {
         {!loggedIn && (
           <Fragment>
             <div>
-              <div style={this.responsiveHeroStyle}></div>
+              <div style={this.responsiveHeroStyle} className={'AppHero-margins'}></div>
               <div style={this.responsiveCtaStyle}>
                 <div style={styles.headline}>Shareable music experience</div>
                 <Section

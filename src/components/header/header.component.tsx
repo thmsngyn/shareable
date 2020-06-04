@@ -1,17 +1,24 @@
 import React from 'react';
 
 import { NavLink } from 'react-router-dom';
+import { isWidthDown, withWidth } from '@material-ui/core';
 
 import logo from '../../assets/logo-white.svg';
-import { FontSizes, Colors, APP_HEADER_HEIGHT, getAppMargin } from '../../styles';
+import { FontSizes, Colors, APP_HEADER_HEIGHT } from '../../styles';
 import { AppRoutes, AppRoute } from '../../utils';
 
-interface HeaderProps {
+interface SizeProps {
+  width: any;
+}
+interface OwnProps {
   isMobile: boolean;
   loggedIn: boolean;
 }
+
+type HeaderProps = SizeProps & OwnProps;
+
 interface HeaderState {}
-export class Header extends React.Component<HeaderProps, HeaderState> {
+class Header extends React.Component<HeaderProps, HeaderState> {
   componentDidMount() {}
 
   renderHeaderItem(isRightAligned: boolean = false) {
@@ -40,11 +47,11 @@ export class Header extends React.Component<HeaderProps, HeaderState> {
   }
 
   get splashBgColor() {
-    const { loggedIn, isMobile } = this.props;
+    const { loggedIn, width } = this.props;
 
     return (
       (!loggedIn &&
-        (isMobile
+        (isWidthDown('xs', width)
           ? { backgroundColor: Colors.HeaderSplashMobile }
           : { backgroundColor: Colors.HeaderSplashDesktop })) ||
       {}
@@ -52,14 +59,12 @@ export class Header extends React.Component<HeaderProps, HeaderState> {
   }
 
   get responsiveHeaderStyle() {
-    const { isMobile } = this.props;
+    const { width } = this.props;
     let responsiveHeaderStyle = {
       ...styles.headerContents,
-      paddingLeft: getAppMargin(isMobile),
-      paddingRight: getAppMargin(isMobile),
       ...this.splashBgColor,
     };
-    if (isMobile) {
+    if (isWidthDown('xs', width)) {
       responsiveHeaderStyle = {
         ...responsiveHeaderStyle,
         fontSize: (responsiveHeaderStyle.fontSize as number) - 6,
@@ -77,7 +82,7 @@ export class Header extends React.Component<HeaderProps, HeaderState> {
   render() {
     return (
       <div style={styles.header}>
-        <div style={this.responsiveHeaderStyle}>
+        <div style={this.responsiveHeaderStyle} className={'AppHeader-padding'}>
           <div style={this.responsiveLeftHeaderStyle}>
             <NavLink exact to={'/'} style={styles.headerItem} activeStyle={styles.headerItemActive}>
               <img style={styles.logo} src={logo} alt="logo" />
@@ -131,3 +136,5 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 700,
   },
 };
+
+export default withWidth()(Header);
