@@ -11,7 +11,7 @@ import { Provider } from 'react-redux';
 
 import backgroundImage from './assets/bg.jpg';
 
-import { Colors, APP_FOOTER_HEIGHT, APP_HEADER_HEIGHT, getAppMargin, Spacing } from './styles';
+import { Colors, APP_FOOTER_HEIGHT, APP_HEADER_HEIGHT, Spacing } from './styles';
 import { Footer, Header, ScrollToTop } from './components';
 import { Home } from './pages';
 import { SpotifyService } from './services';
@@ -46,12 +46,10 @@ class App extends React.Component<AppProps, AppState> {
 
     let responsiveStyle = {
       ...styles.routeContainer,
-      marginLeft: getAppMargin(isMobile),
-      marginRight: getAppMargin(isMobile),
     };
 
     return (
-      <div style={responsiveStyle}>
+      <div style={responsiveStyle} className={'App-margins'}>
         {!loggedIn && <Home />}
         {loggedIn && (
           <Switch>

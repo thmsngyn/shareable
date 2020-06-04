@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import MenuItem from '@material-ui/core/MenuItem';
+import { withWidth, isWidthDown, isWidthUp } from '@material-ui/core';
 
 import pineapple from '../../assets/pineapple.svg';
 import dinosaur from '../../assets/dinosaur.svg';
@@ -22,7 +23,6 @@ import {
 import { Spacing, Colors } from '../../styles';
 import { playSong } from '../../redux/actions';
 import { ButtonTypes } from '../../components/shared/button.component';
-import { withWidth, isWidthDown } from '@material-ui/core';
 import { SpotifyTimeRangeToDisplay, SpotifyTimeRangeList } from './stats.page.constants';
 
 interface OwnProps {
@@ -195,14 +195,14 @@ class Stats extends React.Component<StatsProps, StatsState> {
 
   get responsiveRowStyle(): React.CSSProperties {
     const { width } = this.props;
-    const mobileStyles: React.CSSProperties = isWidthDown('sm', width)
+    const mobileStyles: React.CSSProperties = isWidthDown('xs', width)
       ? {
           overflowX: 'auto',
           height: '260px',
           width: '100%',
         }
       : {
-          height: '600px',
+          height: isWidthUp('lg', width) ? '600px' : 'auto',
         };
     return {
       ...styles.row,
