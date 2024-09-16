@@ -1,26 +1,33 @@
 {
   "files": {
-    "main.css": "/shareable/static/css/main.4b40bb6b.chunk.css",
-    "main.js": "/shareable/static/js/main.c42c4af2.chunk.js",
-    "main.js.map": "/shareable/static/js/main.c42c4af2.chunk.js.map",
-    "runtime-main.js": "/shareable/static/js/runtime-main.9d18d8f2.js",
-    "runtime-main.js.map": "/shareable/static/js/runtime-main.9d18d8f2.js.map",
-    "static/js/2.f24fb695.chunk.js": "/shareable/static/js/2.f24fb695.chunk.js",
-    "static/js/2.f24fb695.chunk.js.map": "/shareable/static/js/2.f24fb695.chunk.js.map",
-    "index.html": "/shareable/index.html",
-    "precache-manifest.aab60608e926798004092420abb28116.js": "/shareable/precache-manifest.aab60608e926798004092420abb28116.js",
-    "service-worker.js": "/shareable/service-worker.js",
-    "static/css/main.4b40bb6b.chunk.css.map": "/shareable/static/css/main.4b40bb6b.chunk.css.map",
-    "static/js/2.f24fb695.chunk.js.LICENSE.txt": "/shareable/static/js/2.f24fb695.chunk.js.LICENSE.txt",
-    "static/media/App.css": "/shareable/static/media/CentraNo2-Medium.b49c1191.otf",
-    "static/media/badminton.png": "/shareable/static/media/badminton.c7bae4fd.png",
-    "static/media/bg.jpg": "/shareable/static/media/bg.336ebad2.jpg",
-    "static/media/logo.png": "/shareable/static/media/logo.6111c5a7.png"
+    "main.css": "/static/css/main.3a5e29df.chunk.css",
+    "main.js": "/static/js/main.14e2fcdf.chunk.js",
+    "main.js.map": "/static/js/main.14e2fcdf.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.4b5c857e.js",
+    "runtime-main.js.map": "/static/js/runtime-main.4b5c857e.js.map",
+    "static/js/2.481af20e.chunk.js": "/static/js/2.481af20e.chunk.js",
+    "static/js/2.481af20e.chunk.js.map": "/static/js/2.481af20e.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.fadc8f53d0a6e034b91f6edb50d2b7c8.js": "/precache-manifest.fadc8f53d0a6e034b91f6edb50d2b7c8.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.3a5e29df.chunk.css.map": "/static/css/main.3a5e29df.chunk.css.map",
+    "static/js/2.481af20e.chunk.js.LICENSE.txt": "/static/js/2.481af20e.chunk.js.LICENSE.txt",
+    "static/media/App.css": "/static/media/CentraNo2-Medium.b49c1191.otf",
+    "static/media/badminton.png": "/static/media/badminton.c7bae4fd.png",
+    "static/media/bg.jpg": "/static/media/bg.336ebad2.jpg",
+    "static/media/default-profile.svg": "/static/media/default-profile.2f498bc4.svg",
+    "static/media/dinosaur.svg": "/static/media/dinosaur.206b712e.svg",
+    "static/media/logo-white.svg": "/static/media/logo-white.ae32626f.svg",
+    "static/media/people.jpg": "/static/media/people.a16ab3be.jpg",
+    "static/media/person.jpg": "/static/media/person.50578c96.jpg",
+    "static/media/pineapple.svg": "/static/media/pineapple.e4427de6.svg",
+    "static/media/share-filled-white.svg": "/static/media/share-filled-white.44787756.svg",
+    "static/media/share-white.svg": "/static/media/share-white.d41f832a.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.9d18d8f2.js",
-    "static/js/2.f24fb695.chunk.js",
-    "static/css/main.4b40bb6b.chunk.css",
-    "static/js/main.c42c4af2.chunk.js"
+    "static/js/runtime-main.4b5c857e.js",
+    "static/js/2.481af20e.chunk.js",
+    "static/css/main.3a5e29df.chunk.css",
+    "static/js/main.14e2fcdf.chunk.js"
   ]
 }
