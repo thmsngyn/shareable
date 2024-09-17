@@ -27,7 +27,7 @@ const dev: Partial<AppConfig> = {
 // All env vars need to be prefixed with 'REACT_APP_'
 const prod: Partial<AppConfig> = {
   redirectUri: 'https://shareable.dev',
-  shareableServiceHostname: process.env.REACT_APP_SHAREABLE_SERVICE_HOSTNAME,
+  shareableServiceHostname: 'https://shareable-service.onrender.com',
   obfuscateDevTools: true,
 };
 
