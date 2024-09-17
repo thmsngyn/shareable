@@ -37,7 +37,6 @@ export default {
   // Common configs
   clientId: '05b0a9e4fb784b1c866f6235ae139c3a',
   scopes,
-
   // Environment configs
   ...envConfig,
 } as AppConfig;
