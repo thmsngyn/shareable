@@ -37,7 +37,6 @@ export default {
   // Common configs
   clientId: 'REDACTED_SPOTIFY_CLIENT_ID',
   scopes,
-
   // Environment configs
   ...envConfig,
 } as AppConfig;
