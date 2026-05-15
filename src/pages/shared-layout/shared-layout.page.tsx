@@ -21,7 +21,32 @@ export interface SharedLayoutState {}
  * Responsible for shared page layout and states
  */
 export class SharedLayout extends React.Component<SharedLayoutProps, SharedLayoutState> {
-  componentDidMount() {}
+  private contentRef: HTMLDivElement | null = null;
+  private wasLoading: boolean = false;
+
+  private setContentRef = (ref: HTMLDivElement | null) => {
+    this.contentRef = ref;
+  }
+
+  private playAnimation() {
+    if (this.contentRef) {
+      this.contentRef.style.animation = 'none';
+      void this.contentRef.offsetHeight;
+      this.contentRef.style.animation = 'pageSlideIn 300ms ease-out';
+    }
+  }
+
+  componentDidMount() {
+    if (!this.props.isLoading && !this.props.hasError) {
+      this.playAnimation();
+    }
+  }
+
+  componentDidUpdate(prevProps: SharedLayoutProps) {
+    if (prevProps.isLoading && !this.props.isLoading) {
+      this.playAnimation();
+    }
+  }
 
   render() {
     const { children, hasError, isLoading } = this.props;
@@ -43,13 +68,14 @@ export class SharedLayout extends React.Component<SharedLayoutProps, SharedLayou
       );
     }
     if (isLoading) {
+      this.wasLoading = true;
       return (
         <Section>
           <div style={styles.animation}>
             <lottie-player
-              src="https://assets8.lottiefiles.com/packages/lf20_6R2HIH.json"
+              src="https://lottie.host/f3d782fd-2ae2-4622-84ca-37ebfe662ad4/PVyXBvcmUn.json"
               background="transparent"
-              speed="2"
+              speed="1"
               style={{ width: 350, height: 350 }}
               loop
               autoplay
@@ -59,7 +85,12 @@ export class SharedLayout extends React.Component<SharedLayoutProps, SharedLayou
       );
     }
 
-    return children;
+    if (this.wasLoading) {
+      this.wasLoading = false;
+      return <div ref={this.setContentRef}>{children}</div>;
+    }
+
+    return <div ref={this.setContentRef}>{children}</div>;
   }
 }
 

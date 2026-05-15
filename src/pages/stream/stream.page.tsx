@@ -51,6 +51,7 @@ class Stream extends React.Component<StreamProps, StreamState> {
 
   async setSharesState(onError: Function) {
     const { account } = this.props;
+    if (!account.accountId) return;
     const sharesResponse = await ShareableService.getShares(account.accountId, StreamTypes.Followers);
     const { code } = sharesResponse;
 

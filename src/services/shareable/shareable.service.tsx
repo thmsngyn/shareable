@@ -9,7 +9,7 @@ export const ShareableService = new (class {
   constructor() {}
 
   get spotifyToken() {
-    return SpotifyService.resolveUserToken();
+    return SpotifyService.getToken();
   }
 
   private get headers() {

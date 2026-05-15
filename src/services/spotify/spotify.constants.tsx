@@ -11,6 +11,6 @@ export const GET_TRACKS_API = `${SPOTIFY_API_HOSTNAME}/v1/tracks`;
 
 // Auth
 export const AUTH_API = 'https://accounts.spotify.com/authorize';
-export const LOGIN_OAUTH = `${AUTH_API}?client_id=${config.clientId}&redirect_uri=${
-  config.redirectUri
-}&scope=${config.scopes.join('%20')}&response_type=token&show_dialog=true`;
+export const TOKEN_API = 'https://accounts.spotify.com/api/token';
+export const LOGIN_OAUTH = (codeChallenge: string) =>
+  `${AUTH_API}?client_id=${config.clientId}&redirect_uri=${config.redirectUri}&scope=${config.scopes.join('%20')}&response_type=code&code_challenge_method=S256&code_challenge=${codeChallenge}&show_dialog=true`;

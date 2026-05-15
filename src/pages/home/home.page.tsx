@@ -23,6 +23,7 @@ import {
   SpotifyUserProfile,
   Track as TrackType,
 } from '../../services';
+import { generatePKCE } from '../../utils';
 import {
   ShareableService,
   ShareableErrorCodes,
@@ -72,24 +73,22 @@ class Home extends React.Component<HomeProps, HomeState> {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // Clear out the latest shares from the store
     this.props.clearLatestShares();
-    // TODO: https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow
-    // To refresh the access token automatically
-    const loggedIn = SpotifyService.userIsLoggedIn();
-    if (loggedIn) {
+    const token = await SpotifyService.resolveUserTokenAsync();
+    if (token) {
       Promise.all([
         SpotifyService.userProfile().then((userProfile: SpotifyUserProfile) => {
-          this.setState({ name: userProfile.displayName.split(' ')[0] });
+          if (userProfile && userProfile.displayName) {
+            this.setState({ name: userProfile.displayName.split(' ')[0] });
+          }
           return userProfile;
         }),
         this.setCurrentlyPlayingState((error: SpotifyError) => {
-          // Something bad happened
           this.setState(HasError);
         }),
         this.setLikesState((error: SpotifyError) => {
-          // Something bad happened
           this.setState(HasError);
         }),
       ])
@@ -102,12 +101,21 @@ class Home extends React.Component<HomeProps, HomeState> {
             this.setState(HasError);
           })
         )
+        .catch(() => {
+          this.setState(HasError);
+        })
         .finally(() => {
           this.setState({ isLoading: false });
         });
     }
-    this.setState({ loggedIn });
+    this.setState({ loggedIn: !!token });
   }
+
+  handleLogin = async () => {
+    const { verifier, challenge } = await generatePKCE();
+    sessionStorage.setItem('spotify_code_verifier', verifier);
+    window.location.href = LOGIN_OAUTH(challenge);
+  };
 
   async setCurrentlyPlayingState(onError: Function) {
     const currentlyPlaying: CurrentPlaybackResponse = await SpotifyService.getCurrentlyPlaying();
@@ -138,17 +146,14 @@ class Home extends React.Component<HomeProps, HomeState> {
     const { code: errorCode } = loginResponse;
 
     if (!errorCode) {
-      // done
       setUser(loginResponse);
     } else {
       if (errorCode === ShareableErrorCodes.AccountNotFound) {
         const registerResponse = await ShareableService.register(shareableAccount);
         const { code: errorCode } = registerResponse;
         if (!errorCode) {
-          // done
           setUser(registerResponse);
         } else {
-          // TODO: Handle error cases
           this.setState(HasError);
         }
       }
@@ -218,7 +223,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                   headerText={`Welcome`}
                   subText={'Please login with your Spotify credentials to continue.'}
                 >
-                  <Button href={LOGIN_OAUTH}>Login with Spotify</Button>
+                  <Button onClick={this.handleLogin}>Login with Spotify</Button>
                 </Section>
               </div>
             </div>

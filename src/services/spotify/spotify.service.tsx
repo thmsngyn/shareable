@@ -1,4 +1,4 @@
-import { hash, parseJson } from '../../utils';
+import { hash, parseJson, getCodeFromURL } from '../../utils';
 import { StorageService, StorageKeys } from '../storage';
 
 import {
@@ -8,7 +8,9 @@ import {
   USER_TOP_API,
   PLAYER_PLAY_API,
   GET_TRACKS_API,
+  TOKEN_API,
 } from './spotify.constants';
+import config from '../../config';
 import {
   CurrentPlaybackResponse,
   LikesResponse,
@@ -72,6 +74,10 @@ export const SpotifyService = new (class {
     return !!this.token;
   }
 
+  getToken(): string {
+    return this.token;
+  }
+
   resolveUserToken(): string {
     // Set token
     this.token = hash.access_token;
@@ -82,6 +88,50 @@ export const SpotifyService = new (class {
       this.resolveTokenInStorage(!!tokenFromStorage, this.token);
       return this.token;
     }
+    return '';
+  }
+
+  async exchangeCodeForToken(code: string): Promise<string> {
+    const verifier = sessionStorage.getItem('spotify_code_verifier');
+    if (!verifier) {
+      return '';
+    }
+
+    const response = await fetch(TOKEN_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: config.redirectUri,
+        client_id: config.clientId,
+        code_verifier: verifier,
+      }),
+    });
+
+    const data = await response.json();
+    if (data.access_token) {
+      this.token = data.access_token;
+      this.resolveTokenInStorage(false, this.token);
+      sessionStorage.removeItem('spotify_code_verifier');
+      return this.token;
+    }
+    return '';
+  }
+
+  async resolveUserTokenAsync(): Promise<string> {
+    const tokenFromStorage = StorageService.get(StorageKeys.SpotifyToken);
+    if (tokenFromStorage) {
+      this.token = tokenFromStorage;
+      this.resolveTokenInStorage(true, this.token);
+      return this.token;
+    }
+
+    const code = getCodeFromURL();
+    if (code) {
+      return this.exchangeCodeForToken(code);
+    }
+
     return '';
   }
 
