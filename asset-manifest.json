@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/static/css/main.15c27184.css",
-    "main.js": "/static/js/main.642c0d42.js",
+    "main.js": "/static/js/main.f927e7e5.js",
     "static/media/people.jpg": "/static/media/people.4e329d8dbea99b6f5b93.jpg",
     "static/media/person.jpg": "/static/media/person.77279fc3a782ab78bbaf.jpg",
     "static/media/CentraNo2-Medium.otf": "/static/media/CentraNo2-Medium.ea19b72421adf75a8f4c.otf",
     "static/media/CentraNo2-Book.otf": "/static/media/CentraNo2-Book.95d349b6fb29d9a3aeff.otf",
+    "static/media/logo-v2-white.png": "/static/media/logo-v2-white.8d18aeff72a6fb947e42.png",
     "static/media/bg.jpg": "/static/media/bg.9b46dc39933bf17a0161.jpg",
     "static/media/badminton.png": "/static/media/badminton.425f804138c9e72290a9.png",
     "static/media/pineapple.svg": "/static/media/pineapple.a8c1ceb2951ca3899a974a27230db503.svg",
     "static/media/default-profile.svg": "/static/media/default-profile.c9f11c932dbe1497528272f3cd33b7cf.svg",
     "static/media/dinosaur.svg": "/static/media/dinosaur.de07e2a7da17d421d6c3193e5b8c488f.svg",
-    "static/media/logo-white.svg": "/static/media/logo-white.d6cf6af66e0585c223486b12e94f040f.svg",
     "static/media/share-white.svg": "/static/media/share-white.e793e39af6ca2b01518e860bad4434f6.svg",
     "static/media/share-filled-white.svg": "/static/media/share-filled-white.4237cbce961ecf1c3dd6639045683faf.svg",
     "index.html": "/index.html",
     "main.15c27184.css.map": "/static/css/main.15c27184.css.map",
-    "main.642c0d42.js.map": "/static/js/main.642c0d42.js.map"
+    "main.f927e7e5.js.map": "/static/js/main.f927e7e5.js.map"
   },
   "entrypoints": [
     "static/css/main.15c27184.css",
-    "static/js/main.642c0d42.js"
+    "static/js/main.f927e7e5.js"
   ]
 }
