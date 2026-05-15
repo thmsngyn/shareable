@@ -170,7 +170,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: Colors.c600,
     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.15)',
     color: Colors.White,
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: 'Muli',
     outline: 'none',
   },
