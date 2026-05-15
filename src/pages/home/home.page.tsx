@@ -15,7 +15,6 @@ import { Section, Track, Button } from '../../components';
 import { SharedLayout } from '../shared-layout';
 import {
   SpotifyService,
-  LOGIN_OAUTH,
   SpotifyError,
   CurrentPlaybackResponse,
   LikesResponse,
@@ -114,7 +113,8 @@ class Home extends React.Component<HomeProps, HomeState> {
   handleLogin = async () => {
     const { verifier, challenge } = await generatePKCE();
     sessionStorage.setItem('spotify_code_verifier', verifier);
-    window.location.href = LOGIN_OAUTH(challenge);
+    const url = await SpotifyService.getAuthUrl(challenge);
+    window.location.href = url;
   };
 
   async setCurrentlyPlayingState(onError: Function) {

@@ -8,7 +8,7 @@ import {
   USER_TOP_API,
   PLAYER_PLAY_API,
   GET_TRACKS_API,
-  TOKEN_API,
+  SPOTIFY_PROXY_HOSTNAME,
 } from './spotify.constants';
 import config from '../../config';
 import {
@@ -23,12 +23,6 @@ import {
 export const SpotifyService = new (class {
   private token: string = '';
   constructor() {}
-
-  private get headers() {
-    return new Headers({
-      Authorization: 'Bearer ' + this.token,
-    });
-  }
 
   private resolveTokenInStorage(hasTokenInStorage: boolean, token: string) {
     if (!hasTokenInStorage) {
@@ -97,14 +91,12 @@ export const SpotifyService = new (class {
       return '';
     }
 
-    const response = await fetch(TOKEN_API, {
+    const response = await fetch(`${SPOTIFY_PROXY_HOSTNAME}/spotify-proxy/auth/token`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        grant_type: 'authorization_code',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         code,
         redirect_uri: config.redirectUri,
-        client_id: config.clientId,
         code_verifier: verifier,
       }),
     });
@@ -133,6 +125,14 @@ export const SpotifyService = new (class {
     }
 
     return '';
+  }
+
+  async getAuthUrl(codeChallenge: string): Promise<string> {
+    const response = await fetch(
+      `${SPOTIFY_PROXY_HOSTNAME}/spotify-proxy/auth/url?code_challenge=${codeChallenge}&redirect_uri=${encodeURIComponent(config.redirectUri)}`
+    );
+    const data = await response.json();
+    return data.url;
   }
 
   getUserProfile(): Promise<any> {
@@ -183,8 +183,11 @@ export const SpotifyService = new (class {
   request(url: string, method: string, body?: any): Promise<any> {
     return fetch(url, {
       method,
-      headers: this.headers,
-      body: JSON.stringify(body),
+      headers: new Headers({
+        'OAuth-Authorization': 'Bearer ' + this.token,
+        ...(body ? { 'Content-Type': 'application/json' } : {}),
+      }),
+      body: body ? JSON.stringify(body) : undefined,
     })
       .then(parseJson)
       .then(this.errorHandler.bind(this));

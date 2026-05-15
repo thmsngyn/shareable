@@ -3,8 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import SpotifyPlayer from 'react-spotify-web-playback';
-import { IProps, ICallbackState } from 'react-spotify-web-playback/lib/types/common';
-import { IPlayerTrack } from 'react-spotify-web-playback/lib/types/spotify';
+import { Props as SpotifyPlayerProps, CallbackState } from 'react-spotify-web-playback/lib/types/common';
+import { SpotifyPlayerTrack } from 'react-spotify-web-playback/lib/types/spotify';
 
 import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core';
 
@@ -13,7 +13,7 @@ import { Colors, Spacing } from '../../styles';
 import { setFocused } from '../../redux/actions';
 import { Repost } from '../repost';
 
-type ReducedSpotifyPlayerProps = Pick<IProps, Exclude<keyof IProps, 'token'>>;
+type ReducedSpotifyPlayerProps = Pick<SpotifyPlayerProps, Exclude<keyof SpotifyPlayerProps, 'token'>>;
 interface OwnProps extends ReducedSpotifyPlayerProps {
   isMobile?: boolean;
 }
@@ -57,7 +57,7 @@ class Player extends React.Component<PlayerProps, PlayerState> {
     }
   }
 
-  syncCurrentlyPlaying(track: IPlayerTrack) {
+  syncCurrentlyPlaying(track: SpotifyPlayerTrack) {
     if (!track.artists && !track.id && !track.name) {
       return;
     }
@@ -71,7 +71,7 @@ class Player extends React.Component<PlayerProps, PlayerState> {
     });
   }
 
-  handlePlayerCallback(playerData: ICallbackState) {
+  handlePlayerCallback(playerData: CallbackState) {
     const { deviceId, isActive, track } = playerData; // Top level deviceId is always this device
     this.setDevice(deviceId, isActive);
     this.syncCurrentlyPlaying(track);

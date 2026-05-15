@@ -22,7 +22,7 @@ interface OwnProps {
   subduedHeader?: string;
 }
 interface DispatchProps {
-  playSong: typeof playSong;
+  playSong: (track: any) => void;
 }
 interface StateProps {}
 
@@ -56,7 +56,7 @@ class Track extends React.Component<TrackProps, TrackState> {
 
   renderTimestamp() {
     const { metadata } = this.props;
-    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' } as const;
     return (
       <span style={styles.metadata}>
         {metadata &&
