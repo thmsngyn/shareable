@@ -12,7 +12,9 @@ import { Provider } from 'react-redux';
 import backgroundImage from './assets/bg.jpg';
 
 import { Colors, APP_FOOTER_HEIGHT, APP_HEADER_HEIGHT, Spacing } from './styles';
+import { MOBILE_NAV_HEIGHT } from './components/mobile-nav/mobile-nav.component';
 import { Footer, Header, ScrollToTop, Section } from './components';
+import { MobileNav } from './components/mobile-nav/mobile-nav.component';
 import { Home } from './pages';
 import { SpotifyService } from './services';
 import { StorageService, StorageKeys } from './services/storage';
@@ -65,7 +67,10 @@ class App extends React.Component<AppProps, AppState> {
     const { isMobile } = this.props;
 
     return (
-      <div style={styles.routeContainer} className={'App-margins'}>
+      <div
+        style={{ ...styles.routeContainer, ...(isMobile ? styles.routeContainerMobile : {}) }}
+        className={'App-margins'}
+      >
         {isResolving && (
           <Section>
             <div style={styles.loadingContainer}>
@@ -81,9 +86,7 @@ class App extends React.Component<AppProps, AppState> {
           </Section>
         )}
         {!isResolving && !loggedIn && <Home />}
-        {!isResolving && loggedIn && (
-          <PageTransition key={location.pathname} location={location} isMobile={isMobile} />
-        )}
+        {!isResolving && loggedIn && <PageTransition key={location.pathname} location={location} isMobile={isMobile} />}
       </div>
     );
   }
@@ -95,16 +98,19 @@ class App extends React.Component<AppProps, AppState> {
     return (
       <Provider store={store}>
         <Router>
-          <Route render={({ location }) => (
-            <>
-              <ScrollToTop />
-              <div style={styles.app}>
-                <Header loggedIn={loggedIn} isMobile={isMobile} />
-                {this.renderRoutes(location)}
-                {loggedIn && <Footer isMobile={isMobile} />}
-              </div>
-            </>
-          )} />
+          <Route
+            render={({ location }) => (
+              <>
+                <ScrollToTop />
+                <div style={styles.app}>
+                  <Header loggedIn={loggedIn} isMobile={isMobile} />
+                  {this.renderRoutes(location)}
+                  {loggedIn && <Footer isMobile={isMobile} />}
+                  {loggedIn && isMobile && <MobileNav />}
+                </div>
+              </>
+            )}
+          />
         </Router>
       </Provider>
     );
@@ -144,6 +150,9 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: APP_HEADER_HEIGHT,
     marginBottom: APP_FOOTER_HEIGHT,
     paddingTop: Spacing.s24,
+  },
+  routeContainerMobile: {
+    marginBottom: APP_FOOTER_HEIGHT + MOBILE_NAV_HEIGHT,
   },
   pageTransition: {
     animation: 'pageSlideIn 300ms ease-out',

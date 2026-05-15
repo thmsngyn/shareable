@@ -25,8 +25,8 @@
     margin-right: 16px;
   }
   .AppHeader-padding {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
   .AppHero-margins {
     margin-left: -16px;
@@ -170,4 +170,8 @@ body {
     opacity: 1;
     transform: translateX(0);
   }
+}
+
+.search-result-row:hover {
+  background-color: rgba(255, 255, 255, 0.08);
 }

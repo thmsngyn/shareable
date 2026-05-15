@@ -1,11 +1,12 @@
 import React from 'react';
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
 import { isWidthDown, withWidth } from '@material-ui/core';
 
 import logo from '../../assets/logo-white.svg';
 import { FontSizes, Colors, APP_HEADER_HEIGHT } from '../../styles';
 import { AppRoutes, AppRoute } from '../../utils';
+import Search from '../search/search.component';
 
 interface SizeProps {
   width: any;
@@ -15,7 +16,7 @@ interface OwnProps {
   loggedIn: boolean;
 }
 
-type HeaderProps = SizeProps & OwnProps;
+type HeaderProps = SizeProps & OwnProps & RouteComponentProps;
 
 interface HeaderState {}
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -45,6 +46,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
     );
   }
+
+  handleTrackSelect = () => {
+    this.props.history.push('/');
+  };
 
   get splashBgColor() {
     const { loggedIn, width } = this.props;
@@ -79,18 +84,37 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     return { ...styles.headerLeft, width: isMobile ? 250 : 300 };
   }
 
+  renderDesktop() {
+    const { loggedIn } = this.props;
+    return (
+      <div style={this.responsiveHeaderStyle} className={'AppHeader-padding'}>
+        <div style={this.responsiveLeftHeaderStyle}>
+          <NavLink exact to={'/'} style={styles.headerItem} activeStyle={styles.headerItemActive}>
+            <img style={styles.logo} src={logo} alt="logo" />
+          </NavLink>
+          {this.renderHeaderItem()}
+        </div>
+        {loggedIn && <Search isMobile={false} onNavigate={this.handleTrackSelect} />}
+        <div style={styles.headerRight}>{this.renderHeaderItem(true)}</div>
+      </div>
+    );
+  }
+
+  renderMobile() {
+    const { loggedIn } = this.props;
+    return (
+      <div style={this.responsiveHeaderStyle} className={'AppHeader-padding'}>
+        {loggedIn && <Search isMobile={true} onNavigate={this.handleTrackSelect} />}
+      </div>
+    );
+  }
+
   render() {
+    const { isMobile } = this.props;
+
     return (
       <div style={styles.header}>
-        <div style={this.responsiveHeaderStyle} className={'AppHeader-padding'}>
-          <div style={this.responsiveLeftHeaderStyle}>
-            <NavLink exact to={'/'} style={styles.headerItem} activeStyle={styles.headerItemActive}>
-              <img style={styles.logo} src={logo} alt="logo" />
-            </NavLink>
-            {this.renderHeaderItem()}
-          </div>
-          <div style={styles.headerRight}>{this.renderHeaderItem(true)}</div>
-        </div>
+        {isMobile ? this.renderMobile() : this.renderDesktop()}
       </div>
     );
   }
@@ -137,4 +161,4 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
-export default withWidth()(Header);
+export default withRouter(withWidth()(Header));

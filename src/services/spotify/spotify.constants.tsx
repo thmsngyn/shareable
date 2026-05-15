@@ -8,3 +8,4 @@ export const USER_PROFILE_API = `${SPOTIFY_PROXY_HOSTNAME}/spotify-proxy/v1/me`;
 export const USER_TOP_API = `${SPOTIFY_PROXY_HOSTNAME}/spotify-proxy/v1/me/top`;
 export const PLAYER_PLAY_API = `${SPOTIFY_PROXY_HOSTNAME}/spotify-proxy/v1/me/player/play`;
 export const GET_TRACKS_API = `${SPOTIFY_PROXY_HOSTNAME}/spotify-proxy/v1/tracks`;
+export const SEARCH_API = `${SPOTIFY_PROXY_HOSTNAME}/spotify-proxy/v1/search`;

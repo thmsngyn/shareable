@@ -98,7 +98,7 @@ class Home extends React.Component<HomeProps, HomeState> {
           this.setSharesState((error: SpotifyError) => {
             // Something bad happened
             this.setState(HasError);
-          })
+          }),
         )
         .catch(() => {
           this.setState(HasError);
@@ -233,7 +233,7 @@ class Home extends React.Component<HomeProps, HomeState> {
           <Fragment>
             <Section
               headerText={`Welcome ${name}!`}
-              subText={'Play music, view your personalized stats and share with your friends.'}
+              subText={'Play music, view your personalized stats, and share with your friends.'}
             ></Section>
             <Section headerText={'Currently playing'}>
               <Track track={focusedTrack} />

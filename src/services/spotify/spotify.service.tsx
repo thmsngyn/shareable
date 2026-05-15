@@ -8,6 +8,7 @@ import {
   USER_TOP_API,
   PLAYER_PLAY_API,
   GET_TRACKS_API,
+  SEARCH_API,
   SPOTIFY_PROXY_HOSTNAME,
 } from './spotify.constants';
 import config from '../../config';
@@ -178,6 +179,13 @@ export const SpotifyService = new (class {
       return new Promise((resolve) => resolve([]));
     }
     return this.request(`${GET_TRACKS_API}?${idsParam}`, 'GET');
+  }
+
+  search(query: string, limit: number = 10): Promise<any> {
+    return this.request(
+      `${SEARCH_API}?q=${encodeURIComponent(query)}&type=track&limit=${limit}`,
+      'GET'
+    );
   }
 
   request(url: string, method: string, body?: any): Promise<any> {
