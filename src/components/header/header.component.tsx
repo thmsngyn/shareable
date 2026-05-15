@@ -3,7 +3,7 @@ import React from 'react';
 import { NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
 import { isWidthDown, withWidth } from '@material-ui/core';
 
-import logo from '../../assets/logo-white.svg';
+import logo from '../../assets/logo-v2-white.png';
 import { FontSizes, Colors, APP_HEADER_HEIGHT } from '../../styles';
 import { AppRoutes, AppRoute } from '../../utils';
 import Search from '../search/search.component';
@@ -43,7 +43,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             {route.header}
           </NavLink>
         );
-      }
+      },
     );
   }
 
@@ -112,11 +112,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   render() {
     const { isMobile } = this.props;
 
-    return (
-      <div style={styles.header}>
-        {isMobile ? this.renderMobile() : this.renderDesktop()}
-      </div>
-    );
+    return <div style={styles.header}>{isMobile ? this.renderMobile() : this.renderDesktop()}</div>;
   }
 }
 
@@ -137,8 +133,8 @@ const styles: Record<string, React.CSSProperties> = {
     ...FontSizes.Medium,
   },
   logo: {
-    width: 20,
-    height: 20,
+    width: 25,
+    height: 25,
   },
   headerLeft: {
     display: 'flex',
