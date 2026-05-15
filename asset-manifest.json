@@ -1,33 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.15c96aaa.chunk.css",
-    "main.js": "/static/js/main.973b7ead.chunk.js",
-    "main.js.map": "/static/js/main.973b7ead.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.4b5c857e.js",
-    "runtime-main.js.map": "/static/js/runtime-main.4b5c857e.js.map",
-    "static/js/2.8e3606dd.chunk.js": "/static/js/2.8e3606dd.chunk.js",
-    "static/js/2.8e3606dd.chunk.js.map": "/static/js/2.8e3606dd.chunk.js.map",
+    "main.css": "/static/css/main.3e9aa087.css",
+    "main.js": "/static/js/main.4e17c05b.js",
+    "static/media/people.jpg": "/static/media/people.4e329d8dbea99b6f5b93.jpg",
+    "static/media/person.jpg": "/static/media/person.77279fc3a782ab78bbaf.jpg",
+    "static/media/CentraNo2-Medium.otf": "/static/media/CentraNo2-Medium.ea19b72421adf75a8f4c.otf",
+    "static/media/CentraNo2-Book.otf": "/static/media/CentraNo2-Book.95d349b6fb29d9a3aeff.otf",
+    "static/media/bg.jpg": "/static/media/bg.9b46dc39933bf17a0161.jpg",
+    "static/media/badminton.png": "/static/media/badminton.425f804138c9e72290a9.png",
+    "static/media/pineapple.svg": "/static/media/pineapple.a8c1ceb2951ca3899a974a27230db503.svg",
+    "static/media/default-profile.svg": "/static/media/default-profile.c9f11c932dbe1497528272f3cd33b7cf.svg",
+    "static/media/dinosaur.svg": "/static/media/dinosaur.de07e2a7da17d421d6c3193e5b8c488f.svg",
+    "static/media/logo-white.svg": "/static/media/logo-white.d6cf6af66e0585c223486b12e94f040f.svg",
+    "static/media/share-white.svg": "/static/media/share-white.e793e39af6ca2b01518e860bad4434f6.svg",
+    "static/media/share-filled-white.svg": "/static/media/share-filled-white.4237cbce961ecf1c3dd6639045683faf.svg",
     "index.html": "/index.html",
-    "precache-manifest.7bc20a4d90693e7a765534f48d6a5db1.js": "/precache-manifest.7bc20a4d90693e7a765534f48d6a5db1.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/main.15c96aaa.chunk.css.map": "/static/css/main.15c96aaa.chunk.css.map",
-    "static/js/2.8e3606dd.chunk.js.LICENSE.txt": "/static/js/2.8e3606dd.chunk.js.LICENSE.txt",
-    "static/media/App.css": "/static/media/CentraNo2-Medium.b49c1191.otf",
-    "static/media/badminton.png": "/static/media/badminton.c7bae4fd.png",
-    "static/media/bg.jpg": "/static/media/bg.336ebad2.jpg",
-    "static/media/default-profile.svg": "/static/media/default-profile.2f498bc4.svg",
-    "static/media/dinosaur.svg": "/static/media/dinosaur.206b712e.svg",
-    "static/media/logo-white.svg": "/static/media/logo-white.ae32626f.svg",
-    "static/media/people.jpg": "/static/media/people.a16ab3be.jpg",
-    "static/media/person.jpg": "/static/media/person.50578c96.jpg",
-    "static/media/pineapple.svg": "/static/media/pineapple.e4427de6.svg",
-    "static/media/share-filled-white.svg": "/static/media/share-filled-white.44787756.svg",
-    "static/media/share-white.svg": "/static/media/share-white.d41f832a.svg"
+    "main.3e9aa087.css.map": "/static/css/main.3e9aa087.css.map",
+    "main.4e17c05b.js.map": "/static/js/main.4e17c05b.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.4b5c857e.js",
-    "static/js/2.8e3606dd.chunk.js",
-    "static/css/main.15c96aaa.chunk.css",
-    "static/js/main.973b7ead.chunk.js"
+    "static/css/main.3e9aa087.css",
+    "static/js/main.4e17c05b.js"
   ]
 }
