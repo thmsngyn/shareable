@@ -10,6 +10,7 @@ import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core';
 
 import { SpotifyService } from '../../services';
 import { Colors, Spacing } from '../../styles';
+import { MOBILE_NAV_HEIGHT } from '../mobile-nav/mobile-nav.component';
 import { setFocused } from '../../redux/actions';
 import { Repost } from '../repost';
 
@@ -130,6 +131,7 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('xs')]: {
         marginLeft: 0,
         left: 0,
+        bottom: MOBILE_NAV_HEIGHT - 1,
       },
     },
   });
