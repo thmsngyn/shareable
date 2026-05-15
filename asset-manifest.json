@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.15c27184.css",
-    "main.js": "/static/js/main.9cc8d9a5.js",
+    "main.js": "/static/js/main.d34bd041.js",
     "static/media/people.jpg": "/static/media/people.4e329d8dbea99b6f5b93.jpg",
     "static/media/person.jpg": "/static/media/person.77279fc3a782ab78bbaf.jpg",
     "static/media/CentraNo2-Medium.otf": "/static/media/CentraNo2-Medium.ea19b72421adf75a8f4c.otf",
@@ -16,10 +16,10 @@
     "static/media/share-filled-white.svg": "/static/media/share-filled-white.4237cbce961ecf1c3dd6639045683faf.svg",
     "index.html": "/index.html",
     "main.15c27184.css.map": "/static/css/main.15c27184.css.map",
-    "main.9cc8d9a5.js.map": "/static/js/main.9cc8d9a5.js.map"
+    "main.d34bd041.js.map": "/static/js/main.d34bd041.js.map"
   },
   "entrypoints": [
     "static/css/main.15c27184.css",
-    "static/js/main.9cc8d9a5.js"
+    "static/js/main.d34bd041.js"
   ]
 }
