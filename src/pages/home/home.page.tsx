@@ -162,8 +162,21 @@ class Home extends React.Component<HomeProps, HomeState> {
     ]);
 
     clearInterval(timer);
-    this.setState({ loginProgress: 100 });
-    window.location.href = authResult;
+
+    const currentProgress = this.state.loginProgress;
+    const animateStart = Date.now();
+    const animateDuration = 300;
+    const animate = () => {
+      const elapsed = Date.now() - animateStart;
+      const t = Math.min(elapsed / animateDuration, 1);
+      this.setState({ loginProgress: currentProgress + (100 - currentProgress) * t });
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        window.location.href = authResult;
+      }
+    };
+    requestAnimationFrame(animate);
   };
 
   componentWillUnmount() {

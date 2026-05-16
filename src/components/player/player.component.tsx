@@ -81,19 +81,21 @@ class Player extends React.Component<PlayerProps, PlayerState> {
 
   render() {
     const { classes, isMobile } = this.props;
-    const { playerIsActive } = this.state;
+    const { playerIsActive, token } = this.state;
     return (
       <div className={classes.container}>
         {playerIsActive && <Repost className={classes.repost}></Repost>}
-        <SpotifyPlayer
-          name={`Shareable Web Player (${isMobile ? 'Mobile' : 'Desktop'})`}
-          styles={playerStyles}
-          token={this.state.token}
-          autoPlay={true}
-          showSaveIcon={true}
-          persistDeviceSelection={true}
-          callback={this.handlePlayerCallback.bind(this)}
-        />
+        {token && (
+          <SpotifyPlayer
+            name={`Shareable Web Player (${isMobile ? 'Mobile' : 'Desktop'})`}
+            styles={playerStyles}
+            token={token}
+            autoPlay={true}
+            showSaveIcon={true}
+            persistDeviceSelection={true}
+            callback={this.handlePlayerCallback.bind(this)}
+          />
+        )}
       </div>
     );
   }
