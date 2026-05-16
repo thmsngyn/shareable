@@ -49,17 +49,18 @@ const styles: Record<any, React.CSSProperties> = {
     display: 'flex',
   },
   bracket: {
-    width: 10,
-    marginLeft: -8,
+    width: 6,
+    marginLeft: -6,
     flexShrink: 0,
-    borderLeft: `2px solid ${Colors.ShareableLightLavender}`,
-    borderTop: `2px solid ${Colors.ShareableLightLavender}`,
-    borderBottom: `2px solid ${Colors.ShareableLightLavender}`,
+    borderLeft: `2px solid ${Colors.Bracket}`,
+    borderTop: `2px solid ${Colors.Bracket}`,
+    borderBottom: `2px solid ${Colors.Bracket}`,
     boxShadow: '-2px 0 8px rgba(103, 103, 215, 0.25)',
   },
   bracketContent: {
     flex: 1,
     paddingTop: Spacing.s4,
+    paddingLeft: Spacing.s8,
   },
   headerText: {
     marginBottom: Spacing.s16,

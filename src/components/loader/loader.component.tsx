@@ -8,6 +8,7 @@ interface LoaderProps {
   onComplete?: () => void;
   lottieSpeedWave?: boolean;
   fullScreen?: boolean;
+  ready?: boolean;
 }
 
 interface LoaderState {
@@ -19,7 +20,7 @@ interface LoaderState {
 export class Loader extends React.Component<LoaderProps, LoaderState> {
   private lottieRef = React.createRef<HTMLElement>();
   private timer: ReturnType<typeof setInterval> | null = null;
-  private resolveReady: (() => void) | null = null;
+  private minDurationPassed = false;
 
   static defaultProps = {
     minDuration: 2000,
@@ -58,13 +59,27 @@ export class Loader extends React.Component<LoaderProps, LoaderState> {
     }, tickInterval);
 
     setTimeout(() => {
-      if (this.timer) {
-        clearInterval(this.timer);
-        this.timer = null;
-      }
-      this.animateFinish();
+      this.minDurationPassed = true;
+      this.tryFinish();
     }, minDuration);
   }
+
+  componentDidUpdate(prevProps: LoaderProps) {
+    if (!prevProps.ready && this.props.ready) {
+      this.tryFinish();
+    }
+  }
+
+  tryFinish = () => {
+    if (!this.minDurationPassed) return;
+    if (!this.props.ready && this.props.showProgress) return;
+
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+    this.animateFinish();
+  };
 
   animateFinish = () => {
     const { showProgress } = this.props;

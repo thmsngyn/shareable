@@ -54,6 +54,7 @@ interface HomeState {
   loggedIn: boolean;
   isLoading: boolean;
   isLoggingIn: boolean;
+  loginReady: boolean;
   name: string;
   likes: TracksEntity[];
   shares: SharedTrack[];
@@ -77,6 +78,7 @@ class Home extends React.Component<HomeProps, HomeState> {
       loggedIn: false,
       isLoading: true,
       isLoggingIn: false,
+      loginReady: false,
       name: '',
       likes: [],
       shares: [],
@@ -121,15 +123,22 @@ class Home extends React.Component<HomeProps, HomeState> {
     this.setState({ loggedIn: !!token });
   }
 
+  private authUrl: string = '';
+
   handleLogin = () => {
     this.setState({ isLoggingIn: true });
+    this.prepareAuth();
   };
 
-  handleLoginComplete = async () => {
+  prepareAuth = async () => {
     const { verifier, challenge } = await generatePKCE();
     sessionStorage.setItem('spotify_code_verifier', verifier);
-    const authUrl = await SpotifyService.getAuthUrl(challenge);
-    window.location.href = authUrl;
+    this.authUrl = await SpotifyService.getAuthUrl(challenge);
+    this.setState({ loginReady: true });
+  };
+
+  handleLoginComplete = () => {
+    window.location.href = this.authUrl;
   };
 
   async setCurrentlyPlayingState(onError: Function) {
@@ -222,15 +231,7 @@ class Home extends React.Component<HomeProps, HomeState> {
   }
 
   render() {
-    const {
-      hasError,
-      loggedIn,
-      name,
-      isLoading,
-      likes,
-      shares = [],
-      isLoggingIn,
-    } = this.state;
+    const { hasError, loggedIn, name, isLoading, likes, shares = [], isLoggingIn, loginReady } = this.state;
     const { focusedTrack, latestShares } = this.props;
 
     return (
@@ -242,6 +243,7 @@ class Home extends React.Component<HomeProps, HomeState> {
             messages={LOGIN_MESSAGES}
             minDuration={3000}
             lottieSpeedWave
+            ready={loginReady}
             onComplete={this.handleLoginComplete}
           />
         )}

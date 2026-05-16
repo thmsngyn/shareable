@@ -2,6 +2,7 @@ export enum Colors {
   // brand colors
   ShareableLavender = '#6767d7',
   ShareableLightLavender = '#7b7bf9',
+  Bracket = '#647695',
   // blacks/greys/white
   c600 = '#1C2124', // body text
   c500 = '#66747D', // subdued text
