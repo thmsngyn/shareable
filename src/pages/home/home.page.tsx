@@ -317,10 +317,10 @@ class Home extends React.Component<HomeProps, HomeState> {
               headerText={`Welcome ${name}!`}
               subText={'Play music, view your personalized stats, and share with your friends.'}
             ></Section>
-            <Section headerText={'Currently playing'}>
+            <Section bracket headerText={'Currently playing'}>
               <Track track={focusedTrack} />
             </Section>
-            <Section headerText={'Shares'}>
+            <Section bracket headerText={'Shares'}>
               <div style={{ marginBottom: Spacing.s16 }}>
                 Use the Share{' '}
                 <span style={styles.shareButton}>
@@ -340,7 +340,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                 })) ||
                 ''}
             </Section>
-            <Section headerText={'Likes'}>
+            <Section bracket headerText={'Likes'}>
               {likes.map((like, index) => {
                 return <Track key={index} track={like.track} />;
               })}
