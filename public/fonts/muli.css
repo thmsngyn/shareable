@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'Muli';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Muli'), url('./7Aulp_0qiz-aVz7u3PJLcUMYOFnOkHkw.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Muli';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local('Muli'), url('./7Aulp_0qiz-aVz7u3PJLcUMYOFn8kHkw.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Muli';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Muli'), url('./7Aulp_0qiz-aVz7u3PJLcUMYOFkQl3kw.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Muli';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Muli'), url('./7Aulp_0qiz-aVz7u3PJLcUMYOFkpl3kw.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Muli';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: local('Muli'), url('./7Aulp_0qiz-aVz7u3PJLcUMYOFlOl3kw.ttf') format('truetype');
+}
