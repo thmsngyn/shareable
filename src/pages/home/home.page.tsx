@@ -62,11 +62,11 @@ interface HomeState {
 }
 
 const LOGIN_MESSAGES = [
-  'Waking up the minions',
-  'Please wait while the minions do their work',
-  'Doing the heavy lifting',
-  "We're working very hard… really",
-  'Grabbing extra minions',
+  'Woah, look at it go!',
+  'Sautéing shallots',
+  'Crystallizing currants',
+  'Flambéing figs',
+  'Garnishing with ginger',
   'Our premium plan is faster',
 ];
 
@@ -148,7 +148,7 @@ class Home extends React.Component<HomeProps, HomeState> {
 
       if (this.lottieRef.current) {
         const wave = Math.sin(tickCount * 0.05) * 0.5 + 0.5;
-        (this.lottieRef.current as any).setSpeed(0.5 + wave * 3.5);
+        (this.lottieRef.current as any).setSpeed(0.5 + wave * 1.5);
       }
     }, tickInterval);
 
