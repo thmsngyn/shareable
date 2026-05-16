@@ -11,7 +11,7 @@ import shareButton from '../../assets/share-filled-white.svg';
 
 import { setUser, clearLatestShares } from '../../redux/actions';
 import * as AppStateTypes from 'AppStateTypes';
-import { Section, Track, Button } from '../../components';
+import { Section, Track, Button, Loader } from '../../components';
 import { SharedLayout } from '../shared-layout';
 import {
   SpotifyService,
@@ -30,7 +30,7 @@ import {
   StreamTypes,
   SharedTrack,
 } from '../../services/shareable';
-import { Spacing, FontSizes, Colors } from '../../styles';
+import { Spacing, FontSizes } from '../../styles';
 import { Account } from '../../redux/reducers/account.reducer';
 import { HasError } from '../shared-layout/share-layout.constants';
 
@@ -54,8 +54,6 @@ interface HomeState {
   loggedIn: boolean;
   isLoading: boolean;
   isLoggingIn: boolean;
-  loginMessageIndex: number;
-  loginProgress: number;
   name: string;
   likes: TracksEntity[];
   shares: SharedTrack[];
@@ -79,8 +77,6 @@ class Home extends React.Component<HomeProps, HomeState> {
       loggedIn: false,
       isLoading: true,
       isLoggingIn: false,
-      loginMessageIndex: 0,
-      loginProgress: 0,
       name: '',
       likes: [],
       shares: [],
@@ -125,65 +121,16 @@ class Home extends React.Component<HomeProps, HomeState> {
     this.setState({ loggedIn: !!token });
   }
 
-  private loginTimer: ReturnType<typeof setInterval> | null = null;
-  private lottieRef = React.createRef<HTMLElement>();
-
-  handleLogin = async () => {
-    this.setState({ isLoggingIn: true, loginMessageIndex: 0, loginProgress: 0 });
-
-    const messageInterval = 5000;
-    const tickInterval = 100;
-    let tickCount = 0;
-
-    const timer = setInterval(() => {
-      tickCount++;
-
-      if (tickCount % (messageInterval / tickInterval) === 0) {
-        this.setState((prev) => ({
-          loginMessageIndex: Math.min(prev.loginMessageIndex + 1, LOGIN_MESSAGES.length - 1),
-        }));
-      }
-
-      this.setState({ loginProgress: Math.min(tickCount / 3, 90) });
-
-      if (this.lottieRef.current) {
-        const wave = Math.sin(tickCount * 0.05) * 0.5 + 0.5;
-        (this.lottieRef.current as any).setSpeed(0.5 + wave * 1.5);
-      }
-    }, tickInterval);
-
-    const [, authResult] = await Promise.all([
-      new Promise((resolve) => setTimeout(resolve, 3000)),
-      (async () => {
-        const { verifier, challenge } = await generatePKCE();
-        sessionStorage.setItem('spotify_code_verifier', verifier);
-        return SpotifyService.getAuthUrl(challenge);
-      })(),
-    ]);
-
-    clearInterval(timer);
-
-    const currentProgress = this.state.loginProgress;
-    const animateStart = Date.now();
-    const animateDuration = 300;
-    const animate = () => {
-      const elapsed = Date.now() - animateStart;
-      const t = Math.min(elapsed / animateDuration, 1);
-      this.setState({ loginProgress: currentProgress + (100 - currentProgress) * t });
-      if (t < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        window.location.href = authResult;
-      }
-    };
-    requestAnimationFrame(animate);
+  handleLogin = () => {
+    this.setState({ isLoggingIn: true });
   };
 
-  componentWillUnmount() {
-    if (this.loginTimer) {
-      clearInterval(this.loginTimer);
-    }
-  }
+  handleLoginComplete = async () => {
+    const { verifier, challenge } = await generatePKCE();
+    sessionStorage.setItem('spotify_code_verifier', verifier);
+    const authUrl = await SpotifyService.getAuthUrl(challenge);
+    window.location.href = authUrl;
+  };
 
   async setCurrentlyPlayingState(onError: Function) {
     const currentlyPlaying: CurrentPlaybackResponse = await SpotifyService.getCurrentlyPlaying();
@@ -283,29 +230,20 @@ class Home extends React.Component<HomeProps, HomeState> {
       likes,
       shares = [],
       isLoggingIn,
-      loginMessageIndex,
-      loginProgress,
     } = this.state;
     const { focusedTrack, latestShares } = this.props;
 
     return (
       <SharedLayout hasError={hasError} isLoading={loggedIn && isLoading}>
         {isLoggingIn && (
-          <div style={styles.loginLoadingContainer}>
-            <lottie-player
-              ref={this.lottieRef as any}
-              src="https://lottie.host/f3d782fd-2ae2-4622-84ca-37ebfe662ad4/PVyXBvcmUn.json"
-              background="transparent"
-              speed="1"
-              style={{ width: 300, height: 300 }}
-              loop
-              autoplay
-            ></lottie-player>
-            <div style={styles.loginMessage}>{LOGIN_MESSAGES[loginMessageIndex]}</div>
-            <div style={styles.progressBarTrack}>
-              <div style={{ ...styles.progressBarFill, width: `${loginProgress}%` }} />
-            </div>
-          </div>
+          <Loader
+            fullScreen
+            showProgress
+            messages={LOGIN_MESSAGES}
+            minDuration={3000}
+            lottieSpeedWave
+            onComplete={this.handleLoginComplete}
+          />
         )}
         {!loggedIn && !isLoggingIn && (
           <Fragment>
@@ -409,39 +347,6 @@ const styles: Record<string, React.CSSProperties> = {
   shareButton: {
     width: 15,
     margin: `-${Spacing.s2}px 1px`,
-  },
-  loginLoadingContainer: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 10,
-    backgroundImage: `linear-gradient(to top, rgba(24, 13, 34, 0.95), rgba(2, 10, 26, 0.95))`,
-  },
-  loginMessage: {
-    ...FontSizes.Medium,
-    color: Colors.c100,
-    marginTop: Spacing.s16,
-    marginBottom: Spacing.s24,
-    textAlign: 'center' as const,
-  },
-  progressBarTrack: {
-    width: 280,
-    height: 4,
-    backgroundColor: Colors.c300,
-    borderRadius: 2,
-    overflow: 'hidden',
-  },
-  progressBarFill: {
-    height: '100%',
-    backgroundColor: Colors.ShareableLavender,
-    borderRadius: 2,
-    transition: 'width 100ms linear',
   },
 };
 

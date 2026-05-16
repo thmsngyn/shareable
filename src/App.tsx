@@ -13,7 +13,7 @@ import backgroundImage from './assets/bg.jpg';
 
 import { Colors, APP_FOOTER_HEIGHT, APP_HEADER_HEIGHT, Spacing } from './styles';
 import { MOBILE_NAV_HEIGHT } from './components/mobile-nav/mobile-nav.component';
-import { Footer, Header, ScrollToTop, Section } from './components';
+import { Footer, Header, ScrollToTop, Loader } from './components';
 import { MobileNav } from './components/mobile-nav/mobile-nav.component';
 import { Home } from './pages';
 import { SpotifyService } from './services';
@@ -37,6 +37,8 @@ interface AppProps {
 interface AppState {
   loggedIn: boolean;
   isResolving: boolean;
+  isMinDurationElapsed: boolean;
+  isFadingOut: boolean;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -46,6 +48,8 @@ class App extends React.Component<AppProps, AppState> {
     this.state = {
       loggedIn: false,
       isResolving: true,
+      isMinDurationElapsed: false,
+      isFadingOut: false,
     };
   }
 
@@ -60,10 +64,35 @@ class App extends React.Component<AppProps, AppState> {
       }
     }
     this.setState({ loggedIn: !!token, isResolving: false });
+    if (this.state.isMinDurationElapsed) {
+      this.startFadeOut();
+    }
   }
 
+  private fadeTimer: ReturnType<typeof setTimeout> | null = null;
+
+  startFadeOut = () => {
+    this.setState({ isFadingOut: true });
+    this.fadeTimer = setTimeout(() => {
+      this.setState({ isFadingOut: false });
+    }, 300);
+  };
+
+  componentWillUnmount() {
+    if (this.fadeTimer) {
+      clearTimeout(this.fadeTimer);
+    }
+  }
+
+  handleLoaderComplete = () => {
+    this.setState({ isMinDurationElapsed: true });
+    if (!this.state.isResolving) {
+      this.startFadeOut();
+    }
+  };
+
   renderRoutes(location: any) {
-    const { loggedIn, isResolving } = this.state;
+    const { loggedIn } = this.state;
     const { isMobile } = this.props;
 
     return (
@@ -71,29 +100,17 @@ class App extends React.Component<AppProps, AppState> {
         style={{ ...styles.routeContainer, ...(isMobile ? styles.routeContainerMobile : {}) }}
         className={'App-margins'}
       >
-        {isResolving && (
-          <Section>
-            <div style={styles.loadingContainer}>
-              <lottie-player
-                src="https://lottie.host/f3d782fd-2ae2-4622-84ca-37ebfe662ad4/PVyXBvcmUn.json"
-                background="transparent"
-                speed="1"
-                style={{ width: 350, height: 350 }}
-                loop
-                autoplay
-              ></lottie-player>
-            </div>
-          </Section>
-        )}
-        {!isResolving && !loggedIn && <Home />}
-        {!isResolving && loggedIn && <PageTransition key={location.pathname} location={location} isMobile={isMobile} />}
+        {!loggedIn && <Home />}
+        {loggedIn && <PageTransition key={location.pathname} location={location} isMobile={isMobile} />}
       </div>
     );
   }
 
   render() {
-    const { loggedIn } = this.state;
+    const { loggedIn, isResolving, isMinDurationElapsed, isFadingOut } = this.state;
     const { isMobile } = this.props;
+    const showLoader = isResolving || !isMinDurationElapsed || isFadingOut;
+    const showApp = !isResolving && isMinDurationElapsed;
 
     return (
       <Provider store={store}>
@@ -103,10 +120,15 @@ class App extends React.Component<AppProps, AppState> {
               <>
                 <ScrollToTop />
                 <div style={styles.app}>
-                  <Header loggedIn={loggedIn} isMobile={isMobile} />
-                  {this.renderRoutes(location)}
-                  {loggedIn && <Footer isMobile={isMobile} />}
-                  {loggedIn && isMobile && <MobileNav />}
+                  {showApp && <Header loggedIn={loggedIn} isMobile={isMobile} />}
+                  {showApp && this.renderRoutes(location)}
+                  {showApp && loggedIn && <Footer isMobile={isMobile} />}
+                  {showApp && loggedIn && isMobile && <MobileNav />}
+                  {showLoader && (
+                    <div style={{ ...styles.loadingOverlay, opacity: isFadingOut ? 0 : 1 }}>
+                      <Loader minDuration={2000} onComplete={this.handleLoaderComplete} />
+                    </div>
+                  )}
                 </div>
               </>
             )}
@@ -146,6 +168,20 @@ const styles: Record<string, React.CSSProperties> = {
     fontFamily: 'Muli',
     fontWeight: 500,
   },
+  loadingOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+    backgroundImage: `linear-gradient(to top, rgba(24, 13, 34, 0.95), rgba(2, 10, 26, 0.95))`,
+    transition: 'opacity 300ms ease-out',
+  },
   routeContainer: {
     marginTop: APP_HEADER_HEIGHT,
     marginBottom: APP_FOOTER_HEIGHT,
@@ -156,9 +192,5 @@ const styles: Record<string, React.CSSProperties> = {
   },
   pageTransition: {
     animation: 'pageSlideIn 300ms ease-out',
-  },
-  loadingContainer: {
-    display: 'flex',
-    justifyContent: 'center',
   },
 };

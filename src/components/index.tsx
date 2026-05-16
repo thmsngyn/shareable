@@ -5,3 +5,5 @@ export * from './header';
 export * from './shared';
 export * from './profile';
 export * from './repost';
+export * from './loader';
+export * from './search';

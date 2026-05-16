@@ -26,7 +26,7 @@ export class SharedLayout extends React.Component<SharedLayoutProps, SharedLayou
 
   private setContentRef = (ref: HTMLDivElement | null) => {
     this.contentRef = ref;
-  }
+  };
 
   private playAnimation() {
     if (this.contentRef) {
@@ -73,9 +73,9 @@ export class SharedLayout extends React.Component<SharedLayoutProps, SharedLayou
         <Section>
           <div style={styles.animation}>
             <lottie-player
-              src="https://lottie.host/f3d782fd-2ae2-4622-84ca-37ebfe662ad4/PVyXBvcmUn.json"
+              src="https://lottie.host/78504bd9-2ac7-4bac-a435-3baff0a5bcef/Up8aKe4Jr5.json"
               background="transparent"
-              speed="1"
+              speed="1.5"
               style={{ width: 350, height: 350 }}
               loop
               autoplay
